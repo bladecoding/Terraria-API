@@ -14,5 +14,11 @@ namespace TerrariaAPI
             if (OnUpdate != null)
                 OnUpdate(time);
         }
+        public static event Action<GameTime> OnDraw;
+        public static void Draw(GameTime time)
+        {
+            if (OnDraw != null)
+                OnDraw(time);
+        }
     }
 }
