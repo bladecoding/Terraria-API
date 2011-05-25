@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Terraria;
 using TerrariaAPI;
+using TerrariaAPI.Hooks;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TexturePlugin
@@ -39,13 +40,13 @@ namespace TexturePlugin
             : base(game)
         {
             Application.EnableVisualStyles();
-            
-            TerrariaHooks.OnUpdate += TerrariaHooks_OnUpdate;
+
+            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
         }
 
         public override void Dispose()
         {
-            TerrariaHooks.OnUpdate -= TerrariaHooks_OnUpdate;
+            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
             if (textureform != null)
                 textureform.Dispose();
             base.Dispose();

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Terraria;
 using TerrariaAPI;
+using TerrariaAPI.Hooks;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TrainerPlugin
@@ -40,12 +41,12 @@ namespace TrainerPlugin
         {
             Application.EnableVisualStyles();
 
-            TerrariaHooks.OnUpdate += TerrariaHooks_OnUpdate;
+            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
         }
 
         public override void Dispose()
         {
-            TerrariaHooks.OnUpdate -= TerrariaHooks_OnUpdate;
+            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
             if (trainerform != null)
                 trainerform.Dispose();
             base.Dispose();

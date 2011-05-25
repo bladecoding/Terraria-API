@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Terraria;
+using TerrariaAPI.Hooks;
 
 namespace TerrariaAPI
 {
@@ -29,11 +30,11 @@ namespace TerrariaAPI
         public ExamplePlugin(Main game)
             : base(game)
         {
-            TerrariaHooks.OnUpdate += TerrariaHooks_OnUpdate;
+            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
         }
         public override void Dispose()
         {
-            TerrariaHooks.OnUpdate -= TerrariaHooks_OnUpdate;
+            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
         }
 
         void TerrariaHooks_OnUpdate(GameTime obj)
