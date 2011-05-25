@@ -1,4 +1,4 @@
-﻿namespace TerrariaMod
+﻿namespace TexturePlugin
 {
     partial class TextureForm
     {
@@ -35,8 +35,8 @@
             // 
             // TextureList
             // 
-            this.TextureList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.TextureList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextureList.FormattingEnabled = true;
             this.TextureList.Location = new System.Drawing.Point(12, 12);

@@ -8,14 +8,14 @@ using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Xna.Framework.Graphics;
 using TexturePlugin;
 
-namespace TerrariaMod
+namespace TexturePlugin
 {
-    internal partial class TextureForm : Form
+    partial class TextureForm : Form
     {
         static readonly string ImgPath = "textures";
         GraphicsDevice Device;
 
-        internal TextureForm(GraphicsDevice device)
+        public TextureForm(GraphicsDevice device)
         {
             Device = device;
             InitializeComponent();

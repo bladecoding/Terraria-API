@@ -8,13 +8,13 @@ using Terraria;
 using TerrariaAPI;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
-namespace TexturePlugin
+namespace TrainerPlugin
 {
-    public class TexturePlugin : TerrariaPlugin
+    public class TrainerPlugin : TerrariaPlugin
     {
         public override string Name
         {
-            get { return "TextureLoader"; }
+            get { return "Trainer"; }
         }
 
         public override Version Version
@@ -29,25 +29,25 @@ namespace TexturePlugin
 
         public override string Description
         {
-            get { return "Allows you to reload textures from png files"; }
+            get { return "Just a simple 'trainer'"; }
         }
 
-        TextureForm textureform;
-        bool f8down = false;
+        TrainerForm trainerform;
+        bool f7down = false;
 
-        public TexturePlugin(Main game)
+        public TrainerPlugin(Main game)
             : base(game)
         {
             Application.EnableVisualStyles();
-            
+
             TerrariaHooks.OnUpdate += TerrariaHooks_OnUpdate;
         }
 
         public override void Dispose()
         {
             TerrariaHooks.OnUpdate -= TerrariaHooks_OnUpdate;
-            if (textureform != null)
-                textureform.Dispose();
+            if (trainerform != null)
+                trainerform.Dispose();
             base.Dispose();
         }
 
@@ -55,16 +55,16 @@ namespace TexturePlugin
         {
             if (!Game.IsActive)
                 return;
-            if (Main.keyState.IsKeyDown(Keys.F8))
+            if (Main.keyState.IsKeyDown(Keys.F7))
             {
-                f8down = true;
+                f7down = true;
             }
-            else if (Main.keyState.IsKeyUp(Keys.F8) && f8down)
+            else if (Main.keyState.IsKeyUp(Keys.F7) && f7down)
             {
-                f8down = false;
-                if (textureform == null)
-                    textureform = new TextureForm(Game.GraphicsDevice);
-                textureform.Show();
+                f7down = false;
+                if (trainerform == null)
+                    trainerform = new TrainerForm();
+                trainerform.Show();
             }
         }
     }
