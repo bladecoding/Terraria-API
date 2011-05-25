@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerrariaAPI", "TerrariaAPI\TerrariaAPI.csproj", "{6D26750B-AAAA-48E8-9457-917F9F6F8D94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TexturePlugin", "TexturePlugin\TexturePlugin.csproj", "{E51EDBDC-B8D0-4D5B-B7F1-62BC0B44D170}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{6D26750B-AAAA-48E8-9457-917F9F6F8D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D26750B-AAAA-48E8-9457-917F9F6F8D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D26750B-AAAA-48E8-9457-917F9F6F8D94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E51EDBDC-B8D0-4D5B-B7F1-62BC0B44D170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E51EDBDC-B8D0-4D5B-B7F1-62BC0B44D170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E51EDBDC-B8D0-4D5B-B7F1-62BC0B44D170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E51EDBDC-B8D0-4D5B-B7F1-62BC0B44D170}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
