@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Microsoft.Xna.Framework.Input;
+using System.Windows.Forms;
 using Terraria;
 using TerrariaAPI;
 using TerrariaMod;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TexturePlugin
 {
@@ -33,13 +34,13 @@ namespace TexturePlugin
         }
 
         TextureForm textureform;
-        Thread textureformthread;
         bool f8down = false;
 
         public TexturePlugin(Main game)
             : base(game)
         {
-            System.Windows.Forms.Application.EnableVisualStyles();
+            Application.EnableVisualStyles();
+            
             TerrariaHooks.OnUpdate += TerrariaHooks_OnUpdate;
         }
 
@@ -47,12 +48,9 @@ namespace TexturePlugin
         {
             TerrariaHooks.OnUpdate -= TerrariaHooks_OnUpdate;
             if (textureform != null)
-            {
                 textureform.Dispose();
-                textureformthread.Abort(); //BUG: Even after closing/disposing the form it continue running in Application.Run
-            }
             base.Dispose();
-        }       
+        }
 
         void TerrariaHooks_OnUpdate(Microsoft.Xna.Framework.GameTime obj)
         {
@@ -66,18 +64,9 @@ namespace TexturePlugin
             {
                 f8down = false;
                 if (textureform == null)
-                {
                     textureform = new TextureForm(Game.GraphicsDevice);
-                    textureformthread = new Thread(delegate() { System.Windows.Forms.Application.Run(textureform); });
-                    textureformthread.Start();
-                }
-                else if (!textureform.Visible)
-                {
-                    textureform.Visible = true;
-                }
+                textureform.Show();
             }
         }
-
-        
     }
 }
