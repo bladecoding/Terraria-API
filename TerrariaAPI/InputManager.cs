@@ -8,10 +8,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TerrariaAPI
 {
-    public class MouseClickEventArgs : EventArgs
-    {
-           
-    }
     public class InputManager
     {
         public delegate void MouseClickDelegate(Vector2 clickPosition, bool wasSingleClick);
