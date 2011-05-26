@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainerPlugin", "TrainerPlu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimapPlugin", "MinimapPlugin\MinimapPlugin.csproj", "{CF4C6FC7-078E-40BA-8939-011C079E5F8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResolutionPlugin", "ResolutionPlugin\ResolutionPlugin.csproj", "{7B080F28-5162-4628-9D9E-E0CD1650516F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{CF4C6FC7-078E-40BA-8939-011C079E5F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF4C6FC7-078E-40BA-8939-011C079E5F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF4C6FC7-078E-40BA-8939-011C079E5F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B080F28-5162-4628-9D9E-E0CD1650516F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B080F28-5162-4628-9D9E-E0CD1650516F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B080F28-5162-4628-9D9E-E0CD1650516F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B080F28-5162-4628-9D9E-E0CD1650516F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
