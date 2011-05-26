@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimapPlugin", "MinimapPlu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResolutionPlugin", "ResolutionPlugin\ResolutionPlugin.csproj", "{7B080F28-5162-4628-9D9E-E0CD1650516F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{F96AC17B-D909-43C9-80AD-8267BDFFEB0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,5 +42,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF4C6FC7-078E-40BA-8939-011C079E5F8C} = {F96AC17B-D909-43C9-80AD-8267BDFFEB0E}
+		{7B080F28-5162-4628-9D9E-E0CD1650516F} = {F96AC17B-D909-43C9-80AD-8267BDFFEB0E}
+		{E51EDBDC-B8D0-4D5B-B7F1-62BC0B44D170} = {F96AC17B-D909-43C9-80AD-8267BDFFEB0E}
+		{18349425-0A3A-4D5D-BF11-38DF09818332} = {F96AC17B-D909-43C9-80AD-8267BDFFEB0E}
 	EndGlobalSection
 EndGlobal
