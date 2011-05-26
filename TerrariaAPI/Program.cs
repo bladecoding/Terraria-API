@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using Terraria;
 
 namespace TerrariaAPI
@@ -17,6 +18,9 @@ namespace TerrariaAPI
         {
             if (!Directory.Exists(PluginsPath))
                 return;
+
+            bool error = false;
+
             foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.dll"))
             {
                 var asm = Assembly.LoadFile(f.FullName);
@@ -24,10 +28,21 @@ namespace TerrariaAPI
                 {
                     if (t.BaseType == typeof(TerrariaPlugin))
                     {
-                        Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
+                        try
+                        {
+                            Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
+                        }
+                        catch (Exception e)
+                        {
+                            File.WriteAllText(f.Name + "_ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message + Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+                            error = true;
+                        }
                     }
                 }
             }
+
+            if(error)
+                MessageBox.Show("There were errors while loading the mods, check the error logs for more details", "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         public static void DeInitialize()
         {
