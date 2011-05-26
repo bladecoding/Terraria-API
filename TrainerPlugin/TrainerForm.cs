@@ -12,6 +12,10 @@ namespace TrainerPlugin
 {
     public partial class TrainerForm : Form
     {
+        public bool InfMana { get { return InfManaChk.Checked; } }
+        public bool InfBreath { get { return InfBreathChk.Checked; } }
+        public bool InfAmmo { get { return InfAmmoChk.Checked; } }
+
         public TrainerForm()
         {
             InitializeComponent();

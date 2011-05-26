@@ -13,6 +13,7 @@ namespace TrainerPlugin
 {
     public class TrainerPlugin : TerrariaPlugin
     {
+        private InputManager input = new InputManager();
         public override string Name
         {
             get { return "Trainer"; }
@@ -56,7 +57,32 @@ namespace TrainerPlugin
         {
             if (!Game.IsActive)
                 return;
-            if (Main.keyState.IsKeyDown(Keys.F7))
+
+            input.Update();
+            
+            if(input.IsKeyUp(Keys.F7, true))
+            {
+                if (trainerform == null)
+                    trainerform = new TrainerForm();
+                trainerform.Show();
+            }
+
+            if(trainerform.InfAmmo)
+            {
+                for (int i = 0; i < Main.player[Main.myPlayer].inventory.Length; i++)
+                {
+                    if (Main.player[Main.myPlayer].inventory[i].ammo > 0)
+                        Main.player[Main.myPlayer].inventory[i].stack = 250;
+                }
+            }
+
+            if(trainerform.InfBreath)
+                Main.player[Main.myPlayer].breath = Main.player[Main.myPlayer].breathMax;
+
+            if (trainerform.InfMana)
+                Main.player[Main.myPlayer].statMana = Main.player[Main.myPlayer].statManaMax;
+
+            /*if (Main.keyState.IsKeyDown(Keys.F7))
             {
                 f7down = true;
             }
@@ -66,7 +92,7 @@ namespace TrainerPlugin
                 if (trainerform == null)
                     trainerform = new TrainerForm();
                 trainerform.Show();
-            }
+            }*/
         }
     }
 }

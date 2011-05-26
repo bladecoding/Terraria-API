@@ -33,6 +33,9 @@
             this.StopSpawnsChk = new System.Windows.Forms.CheckBox();
             this.DumbAIChk = new System.Windows.Forms.CheckBox();
             this.LightTilesChk = new System.Windows.Forms.CheckBox();
+            this.InfManaChk = new System.Windows.Forms.CheckBox();
+            this.InfBreathChk = new System.Windows.Forms.CheckBox();
+            this.InfAmmoChk = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // GrabSunChk
@@ -90,11 +93,44 @@
             this.LightTilesChk.UseVisualStyleBackColor = true;
             this.LightTilesChk.CheckedChanged += new System.EventHandler(this.LightTilesChk_CheckedChanged);
             // 
+            // InfManaChk
+            // 
+            this.InfManaChk.AutoSize = true;
+            this.InfManaChk.Location = new System.Drawing.Point(103, 12);
+            this.InfManaChk.Name = "InfManaChk";
+            this.InfManaChk.Size = new System.Drawing.Size(87, 17);
+            this.InfManaChk.TabIndex = 5;
+            this.InfManaChk.Text = "Infinite Mana";
+            this.InfManaChk.UseVisualStyleBackColor = true;
+            // 
+            // InfBreathChk
+            // 
+            this.InfBreathChk.AutoSize = true;
+            this.InfBreathChk.Location = new System.Drawing.Point(103, 35);
+            this.InfBreathChk.Name = "InfBreathChk";
+            this.InfBreathChk.Size = new System.Drawing.Size(91, 17);
+            this.InfBreathChk.TabIndex = 6;
+            this.InfBreathChk.Text = "Infinite Breath";
+            this.InfBreathChk.UseVisualStyleBackColor = true;
+            // 
+            // InfAmmoChk
+            // 
+            this.InfAmmoChk.AutoSize = true;
+            this.InfAmmoChk.Location = new System.Drawing.Point(103, 58);
+            this.InfAmmoChk.Name = "InfAmmoChk";
+            this.InfAmmoChk.Size = new System.Drawing.Size(89, 17);
+            this.InfAmmoChk.TabIndex = 7;
+            this.InfAmmoChk.Text = "Infinite Ammo";
+            this.InfAmmoChk.UseVisualStyleBackColor = true;
+            // 
             // TrainerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(116, 131);
+            this.ClientSize = new System.Drawing.Size(231, 131);
+            this.Controls.Add(this.InfAmmoChk);
+            this.Controls.Add(this.InfBreathChk);
+            this.Controls.Add(this.InfManaChk);
             this.Controls.Add(this.LightTilesChk);
             this.Controls.Add(this.DumbAIChk);
             this.Controls.Add(this.StopSpawnsChk);
@@ -117,5 +153,8 @@
         private System.Windows.Forms.CheckBox StopSpawnsChk;
         private System.Windows.Forms.CheckBox DumbAIChk;
         private System.Windows.Forms.CheckBox LightTilesChk;
+        private System.Windows.Forms.CheckBox InfManaChk;
+        private System.Windows.Forms.CheckBox InfBreathChk;
+        private System.Windows.Forms.CheckBox InfAmmoChk;
     }
 }
