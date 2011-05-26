@@ -67,6 +67,9 @@ namespace TrainerPlugin
                 trainerform.Show();
             }
 
+            if(trainerform == null)
+                return;
+
             if(trainerform.InfAmmo)
             {
                 for (int i = 0; i < Main.player[Main.myPlayer].inventory.Length; i++)
@@ -75,12 +78,14 @@ namespace TrainerPlugin
                         Main.player[Main.myPlayer].inventory[i].stack = 250;
                 }
             }
-
+            
             if(trainerform.InfBreath)
                 Main.player[Main.myPlayer].breath = Main.player[Main.myPlayer].breathMax;
 
             if (trainerform.InfMana)
                 Main.player[Main.myPlayer].statMana = Main.player[Main.myPlayer].statManaMax;
+            
+            
 
             /*if (Main.keyState.IsKeyDown(Keys.F7))
             {

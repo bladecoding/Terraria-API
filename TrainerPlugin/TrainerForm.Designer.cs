@@ -140,6 +140,7 @@
             this.Name = "TrainerForm";
             this.Text = "TrainerForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrainerForm_FormClosing);
+            this.Load += new System.EventHandler(this.TrainerForm_Load);
             this.Shown += new System.EventHandler(this.TrainerForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

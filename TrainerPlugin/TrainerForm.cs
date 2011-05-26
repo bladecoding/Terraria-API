@@ -60,5 +60,10 @@ namespace TrainerPlugin
             e.Cancel = true;
             this.Visible = false;
         }
+
+        private void TrainerForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
