@@ -1,2 +1,2 @@
 del terraria.exe
-"C:\Windows\Microsoft.NET\Framework\v4.0.30319\ilasm.exe" terraria.il /quiet /output=terraria.exe /res=terraria.res
+"C:\Windows\Microsoft.NET\Framework\v4.0.30319\ilasm.exe" Terraria.il /quiet /output=Terraria.exe /res=Terraria.res
