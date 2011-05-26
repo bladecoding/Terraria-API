@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hooks\DrawHooks.cs" />
     <Compile Include="Hooks\GameHooks.cs" />
     <Compile Include="Hooks\ServerHooks.cs" />
     <Compile Include="InputManager.cs" />

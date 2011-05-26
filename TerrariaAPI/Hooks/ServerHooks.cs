@@ -5,18 +5,18 @@ using System.Text;
 
 namespace TerrariaAPI.Hooks
 {
-    public class JoinEventArgs : EventArgs
+    public class AllowEventArgs : EventArgs
     {
         public bool Allow { get; set; }
-        public JoinEventArgs()
+        public AllowEventArgs()
         {
             Allow = true;
         }
     }
-    public class ChatEventArgs : EventArgs
+    public class HandledEventArgs : EventArgs
     {
         public bool Handled { get; set; }
-        public ChatEventArgs()
+        public HandledEventArgs()
         {
             Handled = false;
         }
@@ -26,10 +26,10 @@ namespace TerrariaAPI.Hooks
         /// <summary>
         /// arg1 = WhoAmI
         /// </summary>
-        public static event Action<int, JoinEventArgs> OnJoin;
+        public static event Action<int, AllowEventArgs> OnJoin;
         public static bool Join(int whoami)
         {
-            var args = new JoinEventArgs();
+            var args = new AllowEventArgs();
             if (OnJoin != null)
                 OnJoin(whoami, args);
             return args.Allow;
@@ -47,10 +47,10 @@ namespace TerrariaAPI.Hooks
         /// <summary>
         /// arg1 = WhoAmI, arg2 = Message
         /// </summary>
-        public static event Action<int, string, ChatEventArgs> OnChat;
+        public static event Action<int, string, HandledEventArgs> OnChat;
         public static bool Chat(int whoami, string msg)
         {
-            var args = new ChatEventArgs();
+            var args = new HandledEventArgs();
             if (OnChat != null)
                 OnChat(whoami, msg, args);
             return args.Handled;

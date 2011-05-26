@@ -23,25 +23,6 @@ namespace TerrariaAPI.Hooks
                 OnLoadContent(manager);
         }
 
-        /// <summary>
-        /// Called right after SpriteBatch.Begin
-        /// </summary>
-        public static event Action<GameTime, SpriteBatch> OnBeginDraw;
-        public static void BeginDraw(GameTime time, SpriteBatch batch)
-        {
-            if (OnBeginDraw != null)
-                OnBeginDraw(time, batch);
-        }
-        /// <summary>
-        /// Called right before SpriteBatch.End
-        /// </summary>
-        public static event Action<GameTime, SpriteBatch> OnEndDraw;
-        public static void EndDraw(GameTime time, SpriteBatch batch)
-        {
-            if (OnEndDraw != null)
-                OnEndDraw(time, batch);
-        }
-
         public static event Action OnPreInitialize;
         public static void PreInitialize()
         {
