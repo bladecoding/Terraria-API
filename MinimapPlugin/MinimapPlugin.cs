@@ -86,7 +86,7 @@ namespace MinimapPlugin
                     int b = c >> 16 & 0xFF;
                     int g = c >> 8 & 0xFF;
                     int r = c & 0xFF;
-                    ints[(y * height) + x] = (a << 24) | (r << 16) | (g << 8) | b;
+                    ints[(y * width) + x] = (a << 24) | (r << 16) | (g << 8) | b;
                 }
             }
             ret.SetData(ints);
