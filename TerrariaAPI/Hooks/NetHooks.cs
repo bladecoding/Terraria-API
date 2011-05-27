@@ -84,29 +84,13 @@ namespace TerrariaAPI.Hooks
         /// DO NOT USE. Will rarely get called due to GetData returning before the end.
         /// </summary>
         public static event GetDataD OnPostGetData;
-        public static bool GetData(bool pre, byte id, messageBuffer msg, int idx, int length)
+        public static bool GetData(byte id, messageBuffer msg, int idx, int length)
         {
             var args = new HandledEventArgs();
-            if (pre)
-            {
-                if (OnPreGetData != null)
-                    OnPreGetData(id, msg, idx, length, args);
-            }
-            else
-            {
-                if (OnPostGetData != null)
-                    OnPostGetData(id, msg, idx, length, args);
-            }
+            if (OnPreGetData != null)
+                OnPreGetData(id, msg, idx, length, args);
             return args.Handled;
         }
-
-        public static void RealSendData(int msgType, int remoteClient = -1, int ignoreClient = -2, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f)
-        {
-            if (!SendData(true, msgType, remoteClient, ignoreClient, text, number, number2, number3, number4))
-                return;
-            Environment.Exit(0);
-        }
-
 
     }
 }
