@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{F96A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleportPlugin", "TeleportPlugin\TeleportPlugin.csproj", "{AB0D33F2-8A78-4D20-9BB3-C231392093F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempPlugin", "TempPlugin\TempPlugin.csproj", "{C37B846D-6B4E-4819-8C2F-A39DBEB3FCC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{AB0D33F2-8A78-4D20-9BB3-C231392093F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB0D33F2-8A78-4D20-9BB3-C231392093F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB0D33F2-8A78-4D20-9BB3-C231392093F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C37B846D-6B4E-4819-8C2F-A39DBEB3FCC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C37B846D-6B4E-4819-8C2F-A39DBEB3FCC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C37B846D-6B4E-4819-8C2F-A39DBEB3FCC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C37B846D-6B4E-4819-8C2F-A39DBEB3FCC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,5 +61,6 @@ Global
 		{7B080F28-5162-4628-9D9E-E0CD1650516F} = {F96AC17B-D909-43C9-80AD-8267BDFFEB0E}
 		{E51EDBDC-B8D0-4D5B-B7F1-62BC0B44D170} = {F96AC17B-D909-43C9-80AD-8267BDFFEB0E}
 		{AB0D33F2-8A78-4D20-9BB3-C231392093F0} = {F96AC17B-D909-43C9-80AD-8267BDFFEB0E}
+		{C37B846D-6B4E-4819-8C2F-A39DBEB3FCC7} = {F96AC17B-D909-43C9-80AD-8267BDFFEB0E}
 	EndGlobalSection
 EndGlobal
