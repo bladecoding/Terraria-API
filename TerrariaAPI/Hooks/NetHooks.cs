@@ -78,24 +78,24 @@ namespace TerrariaAPI.Hooks
             }
             return args.Handled;
         }
-        public delegate void GetDataD(messageBuffer msg, int start, int length ,HandledEventArgs e);
+        public delegate void GetDataD(byte id, messageBuffer msg, int idx, int length, HandledEventArgs e);
         public static event GetDataD OnPreGetData;
         /// <summary>
         /// DO NOT USE. Will rarely get called due to GetData returning before the end.
         /// </summary>
         public static event GetDataD OnPostGetData;
-        public static bool GetData(bool pre, messageBuffer msg, int start, int length)
+        public static bool GetData(bool pre, byte id, messageBuffer msg, int idx, int length)
         {
             var args = new HandledEventArgs();
             if (pre)
             {
                 if (OnPreGetData != null)
-                    OnPreGetData(msg, start, length, args);
+                    OnPreGetData(id, msg, idx, length, args);
             }
             else
             {
                 if (OnPostGetData != null)
-                    OnPostGetData(msg, start, length, args);
+                    OnPostGetData(id, msg, idx, length, args);
             }
             return args.Handled;
         }
