@@ -59,15 +59,15 @@ namespace TerrariaAPI.Hooks
         }
 
         /// <summary>
-        /// arg2 = behindnpcs
+        /// arg2 = behindtiles
         /// Called right before DrawNpcs
         /// </summary>
         public static event Action<SpriteBatch, bool, HandledEventArgs> OnDrawNpcs;
-        public static bool DrawNpcs(SpriteBatch batch, bool behindnpcs)
+        public static bool DrawNpcs(SpriteBatch batch, bool behindtiles)
         {
             var args = new HandledEventArgs();
             if (OnDrawNpcs != null)
-                OnDrawNpcs(batch, behindnpcs, args);
+                OnDrawNpcs(batch, behindtiles, args);
             return args.Handled;
         }
 
