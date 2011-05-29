@@ -112,6 +112,7 @@
     <Compile Include="Hooks\NpcHooks.cs" />
     <Compile Include="Hooks\PlayerHooks.cs" />
     <Compile Include="Hooks\ServerHooks.cs" />
+    <Compile Include="Hooks\WorldHooks.cs" />
     <Compile Include="PacketTypes.cs" />
     <Compile Include="PluginContainer.cs" />
     <Compile Include="Program.cs" />
