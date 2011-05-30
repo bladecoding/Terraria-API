@@ -24,14 +24,21 @@ namespace TerrariaAPI.Hooks
                 OnSetDefaultsString(npcname, npc);
         }
 
-        public delegate void StrikeNpcD(NPC npc, int damage, float knockback, int hitdirection, HandledEventArgs e);
+        public delegate void StrikeNpcD(NPC npc, int damage, float knockback, int hitdirection, NpcStrikeEventArgs e);
         public static event StrikeNpcD OnStrikeNpc;
-        public static bool StrikeNpc(NPC npc, int damage, float knockback, int hitdirection)
+        public static bool StrikeNpc(NPC npc, int damage, float knockback, int hitdirection, out double retdamage)
         {
-            var args = new HandledEventArgs();
+            var args = new NpcStrikeEventArgs();
             if (OnStrikeNpc != null)
                 OnStrikeNpc(npc, damage, knockback, hitdirection, args);
+            retdamage = args.Damage;
             return args.Handled;
+        }
+
+
+        public class NpcStrikeEventArgs : HandledEventArgs
+        {
+            public double Damage { get; set; }
         }
     }
 }
