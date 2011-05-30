@@ -30,71 +30,75 @@ namespace TerrariaAPI
             bool error = false;
             foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.dll"))
             {
-                var asm = Assembly.LoadFile(f.FullName);
-                foreach (var t in asm.GetTypes())
+                try
                 {
-                    if (t.BaseType == typeof(TerrariaPlugin))
-                    {
-                        try
-                        {
-                            Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
-                        }
-                        catch (Exception e)
-                        {
-                            File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message + Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
-                            error = true;
-                        }
-                    }
-                }
-            }
-            
-            
-            foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.cs"))
-            {
-                var prov = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
-                var cp = new CompilerParameters();
-                cp.GenerateInMemory = true;
-                cp.GenerateExecutable = false;
-                cp.CompilerOptions = "/d:TERRARIA_API /unsafe";
-
-                foreach (var a in assemblies)
-                {
-                    if (!cp.ReferencedAssemblies.Contains(a.Location))
-                        cp.ReferencedAssemblies.Add(a.Location);
-                }
-                var r = prov.CompileAssemblyFromSource(cp, File.ReadAllText(f.FullName));
-                if (r.Errors.Count > 0)
-                {
-                    for (int i = 0; i < r.Errors.Count; i++)
-                    {
-                        File.AppendAllText("ErrorLog.txt",
-                                          "Error compiling: " + f.Name + Environment.NewLine + "Line number " + r.Errors[i].Line +
-                                             ", Error Number: " + r.Errors[i].ErrorNumber +
-                                             ", '" + r.Errors[i].ErrorText + ";" +
-                                             Environment.NewLine + Environment.NewLine);
-                        error = true;
-                    }
-                }
-                else
-                {
-                    foreach (var t in r.CompiledAssembly.GetTypes())
+                    var asm = Assembly.LoadFile(f.FullName);
+                    foreach (var t in asm.GetTypes())
                     {
                         if (t.BaseType == typeof(TerrariaPlugin))
                         {
-                            try
+
+                            Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message + Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+                    error = true;
+                }
+            }
+
+
+            foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.cs"))
+            {
+                try
+                {
+                    var prov = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
+                    var cp = new CompilerParameters();
+                    cp.GenerateInMemory = true;
+                    cp.GenerateExecutable = false;
+                    cp.CompilerOptions = "/d:TERRARIA_API /unsafe";
+
+                    foreach (var a in assemblies)
+                    {
+                        if (!cp.ReferencedAssemblies.Contains(a.Location))
+                            cp.ReferencedAssemblies.Add(a.Location);
+                    }
+                    var r = prov.CompileAssemblyFromSource(cp, File.ReadAllText(f.FullName));
+                    if (r.Errors.Count > 0)
+                    {
+                        for (int i = 0; i < r.Errors.Count; i++)
+                        {
+                            File.AppendAllText("ErrorLog.txt",
+                                              "Error compiling: " + f.Name + Environment.NewLine + "Line number " + r.Errors[i].Line +
+                                                 ", Error Number: " + r.Errors[i].ErrorNumber +
+                                                 ", '" + r.Errors[i].ErrorText + ";" +
+                                                 Environment.NewLine + Environment.NewLine);
+                            error = true;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var t in r.CompiledAssembly.GetTypes())
+                        {
+                            if (t.BaseType == typeof(TerrariaPlugin))
                             {
+
                                 Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
-                            }
-                            catch (Exception e)
-                            {
-                                File.AppendAllText("ErrorLog.txt",
-                                                  "Exception while trying to load: " + f.Name + Environment.NewLine +
-                                                  e.Message + Environment.NewLine + "Stack trace: " +
-                                                  Environment.NewLine + e.StackTrace);
-                                error = true;
+
                             }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    File.AppendAllText("ErrorLog.txt",
+                                      "Exception while trying to load: " + f.Name + Environment.NewLine +
+                                      e.Message + Environment.NewLine + "Stack trace: " +
+                                      Environment.NewLine + e.StackTrace);
+                    error = true;
                 }
             }
             if (error)
