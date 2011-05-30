@@ -50,9 +50,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HandledEventArgs.cs" />
     <Compile Include="Hooks\DrawHooks.cs" />
     <Compile Include="Hooks\GameHooks.cs" />
     <Compile Include="Hooks\NetHooks.cs" />
+    <Compile Include="Hooks\ServerHooks.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
