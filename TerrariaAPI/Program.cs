@@ -45,6 +45,8 @@ namespace TerrariaAPI
                 }
                 catch (Exception e)
                 {
+                    if (e is TargetInvocationException)
+                        e = ((TargetInvocationException)e).InnerException;
                     File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message + Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
                     error = true;
                 }
@@ -94,10 +96,13 @@ namespace TerrariaAPI
                 }
                 catch (Exception e)
                 {
+                    if (e is TargetInvocationException)
+                        e = ((TargetInvocationException)e).InnerException;
                     File.AppendAllText("ErrorLog.txt",
                                       "Exception while trying to load: " + f.Name + Environment.NewLine +
                                       e.Message + Environment.NewLine + "Stack trace: " +
-                                      Environment.NewLine + e.StackTrace);
+                                      Environment.NewLine + e.StackTrace +
+                                                 Environment.NewLine + Environment.NewLine);
                     error = true;
                 }
             }
