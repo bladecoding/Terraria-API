@@ -80,10 +80,6 @@ namespace TerrariaAPI.Hooks
         }
         public delegate void GetDataD(byte id, messageBuffer msg, int idx, int length, HandledEventArgs e);
         public static event GetDataD OnPreGetData;
-        /// <summary>
-        /// DO NOT USE. Will rarely get called due to GetData returning before the end.
-        /// </summary>
-        public static event GetDataD OnPostGetData;
         public static bool GetData(byte id, messageBuffer msg, int idx, int length)
         {
             var args = new HandledEventArgs();
