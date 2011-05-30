@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Microsoft.Xna.Framework.Content;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
-using System.Windows.Forms;
 
 namespace ResolutionPlugin
 {
@@ -24,12 +24,12 @@ namespace ResolutionPlugin
 
         public override string Author
         {
-            get { return "High"; }
+            get { return "Juzz"; }
         }
 
         public override string Description
         {
-            get { return "Lets you set Terrarias resolution"; }
+            get { return "Lets you set Terraria's resolution"; }
         }
 
         bool enabled = false;
@@ -41,33 +41,54 @@ namespace ResolutionPlugin
             GameHooks.OnLoadContent += GameHooks_OnLoadContent;
         }
 
-        void GameHooks_OnLoadContent(Microsoft.Xna.Framework.Content.ContentManager obj)
-        {
-            if (enabled)
-                Main.backgroundHeight[0] = Main.screenHeight + 200;
-        }
-
-        void GameHooks_OnPreInitialize()
+        private void GameHooks_OnPreInitialize()
         {
             string cmd = Environment.CommandLine;
 
-            var sx = Regex.Match(cmd, "-x(\\d+)");
-            var sy = Regex.Match(cmd, "-y(\\d+)");
+            if (CheckCommand(cmd, "fs", "fullscreen"))
+            {
+                Game.graphics.IsFullScreen = true;
+            }
 
-            if (!sx.Success || !sy.Success)
-                return;
+            if (CheckCommand(cmd, "auto"))
+            {
+                Size screenSize = SystemInformation.VirtualScreen.Size;
+                Main.screenWidth = screenSize.Width;
+                Main.screenHeight = screenSize.Height;
+                enabled = true;
+            }
+            else
+            {
+                Match w = Regex.Match(cmd, @"-(?:w|width|x)\s*(\d+)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+                Match h = Regex.Match(cmd, @"-(?:h|height|y)\s*(\d+)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-            int x;
-            if (!int.TryParse(sx.Groups[1].Value, out x))
-                return;
+                int width, height;
 
-            int y;
-            if (!int.TryParse(sy.Groups[1].Value, out y))
-                return;
+                if (w.Success && h.Success && int.TryParse(w.Groups[1].Value, out width) && int.TryParse(h.Groups[1].Value, out height))
+                {
+                    Main.screenWidth = width;
+                    Main.screenHeight = height;
+                    enabled = true;
+                }
+            }
 
-            Main.screenWidth = x;
-            Main.screenHeight = y;
-            enabled = true;
+            if (CheckCommand(cmd, "skip", "skipintro"))
+            {
+                Main.showSplash = false;
+            }
+        }
+
+        private void GameHooks_OnLoadContent(ContentManager obj)
+        {
+            if (enabled)
+            {
+                Main.backgroundHeight[0] = Main.screenHeight + 200;
+            }
+        }
+
+        private bool CheckCommand(string text, params string[] command)
+        {
+            return command.Any(x => text.IndexOf("-" + x, StringComparison.InvariantCultureIgnoreCase) >= 0);
         }
     }
 }

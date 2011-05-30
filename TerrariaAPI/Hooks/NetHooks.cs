@@ -6,9 +6,6 @@ using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
-    
-    
-
     public static class NetHooks
     {
         public delegate void SendDataD(int msgType, int remoteClient, int ignoreClient, string text, int number, float number2, float number3, float number4, HandledEventArgs e);
