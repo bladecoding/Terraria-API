@@ -36,6 +36,7 @@
             this.InfManaChk = new System.Windows.Forms.CheckBox();
             this.InfBreathChk = new System.Windows.Forms.CheckBox();
             this.InfAmmoChk = new System.Windows.Forms.CheckBox();
+            this.DebugChk = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // GrabSunChk
@@ -43,9 +44,9 @@
             this.GrabSunChk.AutoSize = true;
             this.GrabSunChk.Location = new System.Drawing.Point(12, 12);
             this.GrabSunChk.Name = "GrabSunChk";
-            this.GrabSunChk.Size = new System.Drawing.Size(68, 17);
+            this.GrabSunChk.Size = new System.Drawing.Size(71, 17);
             this.GrabSunChk.TabIndex = 0;
-            this.GrabSunChk.Text = "GrabSun";
+            this.GrabSunChk.Text = "Grab Sun";
             this.GrabSunChk.UseVisualStyleBackColor = true;
             this.GrabSunChk.CheckedChanged += new System.EventHandler(this.GrabSunChk_CheckedChanged);
             // 
@@ -54,9 +55,9 @@
             this.GodModeChk.AutoSize = true;
             this.GodModeChk.Location = new System.Drawing.Point(12, 35);
             this.GodModeChk.Name = "GodModeChk";
-            this.GodModeChk.Size = new System.Drawing.Size(73, 17);
+            this.GodModeChk.Size = new System.Drawing.Size(76, 17);
             this.GodModeChk.TabIndex = 1;
-            this.GodModeChk.Text = "GodMode";
+            this.GodModeChk.Text = "God Mode";
             this.GodModeChk.UseVisualStyleBackColor = true;
             this.GodModeChk.CheckedChanged += new System.EventHandler(this.GodModeChk_CheckedChanged);
             // 
@@ -65,9 +66,9 @@
             this.StopSpawnsChk.AutoSize = true;
             this.StopSpawnsChk.Location = new System.Drawing.Point(12, 58);
             this.StopSpawnsChk.Name = "StopSpawnsChk";
-            this.StopSpawnsChk.Size = new System.Drawing.Size(86, 17);
+            this.StopSpawnsChk.Size = new System.Drawing.Size(89, 17);
             this.StopSpawnsChk.TabIndex = 2;
-            this.StopSpawnsChk.Text = "StopSpawns";
+            this.StopSpawnsChk.Text = "Stop Spawns";
             this.StopSpawnsChk.UseVisualStyleBackColor = true;
             this.StopSpawnsChk.CheckedChanged += new System.EventHandler(this.StopSpawnsChk_CheckedChanged);
             // 
@@ -76,9 +77,9 @@
             this.DumbAIChk.AutoSize = true;
             this.DumbAIChk.Location = new System.Drawing.Point(12, 81);
             this.DumbAIChk.Name = "DumbAIChk";
-            this.DumbAIChk.Size = new System.Drawing.Size(64, 17);
+            this.DumbAIChk.Size = new System.Drawing.Size(67, 17);
             this.DumbAIChk.TabIndex = 3;
-            this.DumbAIChk.Text = "DumbAI";
+            this.DumbAIChk.Text = "Dumb AI";
             this.DumbAIChk.UseVisualStyleBackColor = true;
             this.DumbAIChk.CheckedChanged += new System.EventHandler(this.DumbAIChk_CheckedChanged);
             // 
@@ -87,9 +88,9 @@
             this.LightTilesChk.AutoSize = true;
             this.LightTilesChk.Location = new System.Drawing.Point(12, 104);
             this.LightTilesChk.Name = "LightTilesChk";
-            this.LightTilesChk.Size = new System.Drawing.Size(71, 17);
+            this.LightTilesChk.Size = new System.Drawing.Size(74, 17);
             this.LightTilesChk.TabIndex = 4;
-            this.LightTilesChk.Text = "LightTiles";
+            this.LightTilesChk.Text = "Light Tiles";
             this.LightTilesChk.UseVisualStyleBackColor = true;
             this.LightTilesChk.CheckedChanged += new System.EventHandler(this.LightTilesChk_CheckedChanged);
             // 
@@ -123,11 +124,23 @@
             this.InfAmmoChk.Text = "Infinite Ammo";
             this.InfAmmoChk.UseVisualStyleBackColor = true;
             // 
+            // DebugChk
+            // 
+            this.DebugChk.AutoSize = true;
+            this.DebugChk.Location = new System.Drawing.Point(103, 81);
+            this.DebugChk.Name = "DebugChk";
+            this.DebugChk.Size = new System.Drawing.Size(88, 17);
+            this.DebugChk.TabIndex = 8;
+            this.DebugChk.Text = "Debug Mode";
+            this.DebugChk.UseVisualStyleBackColor = true;
+            this.DebugChk.CheckedChanged += new System.EventHandler(this.DebugChk_CheckedChanged);
+            // 
             // TrainerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(231, 131);
+            this.Controls.Add(this.DebugChk);
             this.Controls.Add(this.InfAmmoChk);
             this.Controls.Add(this.InfBreathChk);
             this.Controls.Add(this.InfManaChk);
@@ -157,5 +170,6 @@
         private System.Windows.Forms.CheckBox InfManaChk;
         private System.Windows.Forms.CheckBox InfBreathChk;
         private System.Windows.Forms.CheckBox InfAmmoChk;
+        private System.Windows.Forms.CheckBox DebugChk;
     }
 }

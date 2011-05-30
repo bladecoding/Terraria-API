@@ -34,7 +34,7 @@ namespace TrainerPlugin
             get { return "Just a simple 'trainer'"; }
         }
 
-        TrainerForm trainerform;
+        TrainerForm trainerform = new TrainerForm();
         bool f7down = false;
 
         public TrainerPlugin(Main game)
@@ -48,8 +48,7 @@ namespace TrainerPlugin
         public override void Dispose()
         {
             GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
-            if (trainerform != null)
-                trainerform.Dispose();
+            trainerform.Dispose();
             base.Dispose();
         }
 
@@ -62,13 +61,8 @@ namespace TrainerPlugin
             
             if(input.IsKeyUp(Keys.F7, true))
             {
-                if (trainerform == null)
-                    trainerform = new TrainerForm();
-                trainerform.Show();
+                trainerform.Visible = !trainerform.Visible;
             }
-
-            if(trainerform == null)
-                return;
 
             if(trainerform.InfAmmo)
             {
@@ -84,20 +78,6 @@ namespace TrainerPlugin
 
             if (trainerform.InfMana)
                 Main.player[Main.myPlayer].statMana = Main.player[Main.myPlayer].statManaMax;
-            
-            
-
-            /*if (Main.keyState.IsKeyDown(Keys.F7))
-            {
-                f7down = true;
-            }
-            else if (Main.keyState.IsKeyUp(Keys.F7) && f7down)
-            {
-                f7down = false;
-                if (trainerform == null)
-                    trainerform = new TrainerForm();
-                trainerform.Show();
-            }*/
         }
     }
 }
