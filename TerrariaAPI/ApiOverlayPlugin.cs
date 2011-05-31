@@ -41,7 +41,7 @@ namespace TerrariaAPI
         string version;
         public override void Initialize()
         {
-            version = string.Format("TerrariaAPI v{0}", Assembly.GetExecutingAssembly().GetName().Version);
+            version = string.Format("TerrariaAPI v{0}", Program.ApiVersion);
             DrawHooks.OnEndDrawMenu += DrawHooks_OnEndDraw;
         }
 

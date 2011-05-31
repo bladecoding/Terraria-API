@@ -17,6 +17,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
+        public static readonly Version ApiVersion = new Version(1, 1, 0, 1);
         static readonly string PluginsPath = "plugins";
         static List<TerrariaPlugin> Plugins = new List<TerrariaPlugin>();
         public static void Initialize(Main main)
@@ -119,10 +120,9 @@ namespace TerrariaAPI
             Plugins.Add(new ApiOverlayPlugin(main));
 
             error = false;
-            var ver = Assembly.GetExecutingAssembly().GetName().Version;
             foreach (var p in Plugins)
             {
-                if (p.APIVersion.Major != ver.Major || p.APIVersion.Minor != ver.Minor)
+                if (p.APIVersion.Major != ApiVersion.Major || p.APIVersion.Minor != ApiVersion.Minor)
                 {
                     File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + p.Name + " (" + p.GetType() + ")");
                     error = true;
