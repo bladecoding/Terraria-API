@@ -31,6 +31,15 @@ namespace TerrariaAPI.Hooks
                 OnDrawMenu(batch, args);
             return args.Handled;
         }
+        /// <summary>
+        /// Called right after DrawMenu
+        /// </summary>
+        public static event Action<SpriteBatch> OnEndDrawMenu;
+        public static void EndDrawMenu(SpriteBatch batch)
+        {
+            if (OnEndDrawMenu != null)
+                OnEndDrawMenu(batch);
+        }
 
         /// <summary>
         /// arg2 = background
