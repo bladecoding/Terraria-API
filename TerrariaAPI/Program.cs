@@ -8,7 +8,10 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.CSharp;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using TerrariaAPI.Hooks;
 
 namespace TerrariaAPI
 {
@@ -32,13 +35,13 @@ namespace TerrariaAPI
             {
                 try
                 {
-                    var asm = Assembly.LoadFile(f.FullName);
+                    var asm = Assembly.Load(File.ReadAllBytes(f.FullName));
                     foreach (var t in asm.GetTypes())
                     {
-                        if (t.BaseType == typeof (TerrariaPlugin))
+                        if (t.BaseType == typeof(TerrariaPlugin))
                         {
 
-                            Plugins.Add((TerrariaPlugin) Activator.CreateInstance(t, main));
+                            Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
 
                         }
                     }
@@ -46,7 +49,7 @@ namespace TerrariaAPI
                 catch (Exception e)
                 {
                     if (e is TargetInvocationException)
-                        e = ((TargetInvocationException) e).InnerException;
+                        e = ((TargetInvocationException)e).InnerException;
                     File.AppendAllText("ErrorLog.txt",
                                        "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message +
                                        Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
@@ -59,7 +62,7 @@ namespace TerrariaAPI
             {
                 try
                 {
-                    var prov = new CSharpCodeProvider(new Dictionary<string, string>() {{"CompilerVersion", "v4.0"}});
+                    var prov = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
                     var cp = new CompilerParameters();
                     cp.GenerateInMemory = true;
                     cp.GenerateExecutable = false;
@@ -88,10 +91,10 @@ namespace TerrariaAPI
                     {
                         foreach (var t in r.CompiledAssembly.GetTypes())
                         {
-                            if (t.BaseType == typeof (TerrariaPlugin))
+                            if (t.BaseType == typeof(TerrariaPlugin))
                             {
 
-                                Plugins.Add((TerrariaPlugin) Activator.CreateInstance(t, main));
+                                Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
 
                             }
                         }
@@ -100,7 +103,7 @@ namespace TerrariaAPI
                 catch (Exception e)
                 {
                     if (e is TargetInvocationException)
-                        e = ((TargetInvocationException) e).InnerException;
+                        e = ((TargetInvocationException)e).InnerException;
                     File.AppendAllText("ErrorLog.txt",
                                        "Exception while trying to load: " + f.Name + Environment.NewLine +
                                        e.Message + Environment.NewLine + "Stack trace: " +
@@ -112,6 +115,8 @@ namespace TerrariaAPI
             if (error)
                 MessageBox.Show("There were errors while loading the mods, check the error logs for more details",
                                 "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            Plugins.Add(new ApiOverlayPlugin(main));
 
             error = false;
             var ver = Assembly.GetExecutingAssembly().GetName().Version;
@@ -139,4 +144,7 @@ namespace TerrariaAPI
                 p.Dispose();
         }
     }
+
+
+    
 }
