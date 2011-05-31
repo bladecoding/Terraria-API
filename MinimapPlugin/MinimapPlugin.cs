@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -28,6 +30,11 @@ namespace MinimapPlugin
             get { return new Version(1, 0); }
         }
 
+        public override Version APIVersion
+        {
+            get { return new Version(1, 1); }
+        }
+
         public override string Author
         {
             get { return "high"; }
@@ -41,39 +48,92 @@ namespace MinimapPlugin
         public MinimapPlugin(Main main)
             : base(main)
         {
-            GameHooks.OnUpdate += GameHooks_OnUpdate;
-            DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
+            
         }
 
-        public override void Dispose()
+        void GameHooks_OnLoadContent(Microsoft.Xna.Framework.Content.ContentManager obj)
         {
-            GameHooks.OnUpdate -= GameHooks_OnUpdate;
-            DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
-            base.Dispose();
+            //chest = BitmapToTexture(Game.GraphicsDevice, Properties.Resources.chest);
         }
-        WorldRenderer rend;
+
+        WorldRenderer rend = null;
+        InputManager input = new InputManager();
+        Texture2D minimap = null;
+        Texture2D chest;
+        Thread renderthread;
+
         void DrawHooks_OnEndDraw(SpriteBatch arg1)
         {
-            if (rend != null)
+            if (rend != null && minimap != null)
             {
-                int width = 200;
-                int height = 200;
-                var img = rend.FromTiles((int)(Main.player[Main.myPlayer].position.X / 16) - 100, (int)(Main.player[Main.myPlayer].position.Y / 16) - 100, width, height);
-                for (int x = 0; x < width; x++)
-                    img[x, 0] = -16777216;
-                for (int x = 0; x < width; x++)
-                    img[x, height - 1] = -16777216;
-                for (int x = 0; x < height; x++)
-                    img[0, x] = -16777216;
-                for (int x = 0; x < height; x++)
-                    img[width - 1, x] = -16777216;
+                Game.spriteBatch.Draw(minimap, new Vector2(Main.screenWidth - minimap.Width, Main.screenHeight - minimap.Height), Color.White);
+                for (int i = 0; i < Main.player.Length; i++)
+                {
+                    if (!Main.player[i].active)
+                        continue;
+                    int mex = (int)(Main.player[Main.myPlayer].position.X / 16);
+                    int mey = (int)(Main.player[Main.myPlayer].position.Y / 16);
+                    int targetx = (int)(Main.player[i].position.X / 16);
+                    int targety = (int)(Main.player[i].position.Y / 16);
+                    if (targetx < mex - 100)
+                        continue;
+                    if (targetx > mex + 100)
+                        continue;
+                    if (targety < mey - 100)
+                        continue;
+                    if (targety > mey + 100)
+                        continue;
 
-                Texture2D text = BitmapToTexture(Game.GraphicsDevice, img, width, height);
-                Game.spriteBatch.Draw(text, new Vector2(Main.screenWidth - width, Main.screenHeight - height), Color.White);
+                    targetx = targetx - mex + 100;
+                    targety = targety - mey + 100;
+
+                    targetx -= Main.player[i].width / 2;
+                    targety -= Main.player[i].height;
+                    
+                    
+                    //Game.spriteBatch.Draw(chest, new Vector2(Main.screenWidth - minimap.Width + targetx, Main.screenHeight - minimap.Height + targety), Color.White);
+                }
             }
         }
 
-        static Texture2D BitmapToTexture(GraphicsDevice gd, int[,] img, int width, int height)
+        void RenderMap()
+        {
+            while (renderthread != null)
+            {
+                if (rend != null)
+                {
+                    int width = 200;
+                    int height = 200;
+                    int curx = (int)(Main.player[Main.myPlayer].position.X / 16) - 100;
+                    int cury = (int)(Main.player[Main.myPlayer].position.Y / 16) - 100;
+                    var img = rend.FromTiles(curx, cury, width, height);
+                    for (int x = 0; x < width; x++)
+                        img[x, 0] = -16777216;
+                    for (int x = 0; x < height; x++)
+                        img[0, x] = -16777216;
+
+                    minimap = IntsToTexture(Game.GraphicsDevice, img, width, height);
+                }
+                Thread.Sleep(33);
+            }
+        }
+
+        static Texture2D BitmapToTexture(GraphicsDevice gd, Bitmap img)
+        {
+            int width = img.Width;
+            int height = img.Height;
+            int[,] ints = new int[width, height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    ints[x, y] = img.GetPixel(x, y).ToArgb();
+                }
+            }
+            return IntsToTexture(gd, ints, width, height);
+        }
+
+        static Texture2D IntsToTexture(GraphicsDevice gd, int[,] img, int width, int height)
         {
             var ret = new Texture2D(gd, width, height);
             int[] ints = new int[width * height];
@@ -92,25 +152,39 @@ namespace MinimapPlugin
             ret.SetData(ints);
             return ret;
         }
-
-        bool f6down = false;
         void GameHooks_OnUpdate(GameTime obj)
         {
             if (!Game.IsActive)
                 return;
-            if (Main.keyState.IsKeyDown(Keys.F6))
-            {
-                f6down = true;
-            }
-            else if (Main.keyState.IsKeyUp(Keys.F6) && f6down)
-            {
-                f6down = false;
 
+            input.Update();
+
+            if (input.IsKeyUp(Keys.F6, true))
+            {
                 if (rend == null)
-                    rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY);
+                    rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY) { SurfaceY = (int)Main.worldSurface };
                 else
                     rend = null;
             }
+        }
+
+
+
+
+        public override void Initialize()
+        {
+            renderthread = new Thread(RenderMap);
+            renderthread.Start();
+            GameHooks.OnLoadContent += GameHooks_OnLoadContent;
+            GameHooks.OnUpdate += GameHooks_OnUpdate;
+            DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
+        }
+
+        public override void DeInitialize()
+        {
+            renderthread = null;
+            GameHooks.OnUpdate -= GameHooks_OnUpdate;
+            DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
         }
     }
 }

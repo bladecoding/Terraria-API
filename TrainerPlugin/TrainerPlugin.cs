@@ -23,7 +23,10 @@ namespace TrainerPlugin
         {
             get { return new Version(1, 0); }
         }
-
+        public override Version APIVersion
+        {
+            get { return new Version(1, 1); }
+        }
         public override string Author
         {
             get { return "High"; }
@@ -40,14 +43,12 @@ namespace TrainerPlugin
         public TrainerPlugin(Main game)
             : base(game)
         {
-            Application.EnableVisualStyles();
-
-            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
+            
         }
 
         public override void Dispose()
         {
-            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
+            
             trainerform.Dispose();
             base.Dispose();
         }
@@ -78,6 +79,17 @@ namespace TrainerPlugin
 
             if (trainerform.InfMana)
                 Main.player[Main.myPlayer].statMana = Main.player[Main.myPlayer].statManaMax;
+        }
+
+        public override void Initialize()
+        {
+            Application.EnableVisualStyles();
+            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
+        }
+
+        public override void DeInitialize()
+        {
+            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
         }
     }
 }

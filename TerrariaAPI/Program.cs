@@ -8,12 +8,16 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.CSharp;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using TerrariaAPI.Hooks;
 
 namespace TerrariaAPI
 {
     public static class Program
     {
+        public static readonly Version ApiVersion = new Version(1, 1, 0, 1);
         static readonly string PluginsPath = "plugins";
         static List<TerrariaPlugin> Plugins = new List<TerrariaPlugin>();
         public static void Initialize(Main main)
@@ -32,7 +36,7 @@ namespace TerrariaAPI
             {
                 try
                 {
-                    var asm = Assembly.LoadFile(f.FullName);
+                    var asm = Assembly.Load(File.ReadAllBytes(f.FullName));
                     foreach (var t in asm.GetTypes())
                     {
                         if (t.BaseType == typeof(TerrariaPlugin))
@@ -47,7 +51,9 @@ namespace TerrariaAPI
                 {
                     if (e is TargetInvocationException)
                         e = ((TargetInvocationException)e).InnerException;
-                    File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message + Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+                    File.AppendAllText("ErrorLog.txt",
+                                       "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message +
+                                       Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
                     error = true;
                 }
             }
@@ -74,10 +80,11 @@ namespace TerrariaAPI
                         for (int i = 0; i < r.Errors.Count; i++)
                         {
                             File.AppendAllText("ErrorLog.txt",
-                                              "Error compiling: " + f.Name + Environment.NewLine + "Line number " + r.Errors[i].Line +
-                                                 ", Error Number: " + r.Errors[i].ErrorNumber +
-                                                 ", '" + r.Errors[i].ErrorText + ";" +
-                                                 Environment.NewLine + Environment.NewLine);
+                                               "Error compiling: " + f.Name + Environment.NewLine + "Line number " +
+                                               r.Errors[i].Line +
+                                               ", Error Number: " + r.Errors[i].ErrorNumber +
+                                               ", '" + r.Errors[i].ErrorText + ";" +
+                                               Environment.NewLine + Environment.NewLine);
                             error = true;
                         }
                     }
@@ -99,20 +106,45 @@ namespace TerrariaAPI
                     if (e is TargetInvocationException)
                         e = ((TargetInvocationException)e).InnerException;
                     File.AppendAllText("ErrorLog.txt",
-                                      "Exception while trying to load: " + f.Name + Environment.NewLine +
-                                      e.Message + Environment.NewLine + "Stack trace: " +
-                                      Environment.NewLine + e.StackTrace +
-                                                 Environment.NewLine + Environment.NewLine);
+                                       "Exception while trying to load: " + f.Name + Environment.NewLine +
+                                       e.Message + Environment.NewLine + "Stack trace: " +
+                                       Environment.NewLine + e.StackTrace +
+                                       Environment.NewLine + Environment.NewLine);
                     error = true;
                 }
             }
             if (error)
-                MessageBox.Show("There were errors while loading the mods, check the error logs for more details", "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("There were errors while loading the mods, check the error logs for more details",
+                                "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            Plugins.Add(new ApiOverlayPlugin(main));
+
+            error = false;
+            foreach (var p in Plugins)
+            {
+                if (p.APIVersion.Major != ApiVersion.Major || p.APIVersion.Minor != ApiVersion.Minor)
+                {
+                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + p.Name + " (" + p.GetType() + ")");
+                    error = true;
+                }
+                else
+                {
+                    p.Initialize();
+                }
+            }
+            if (error)
+                MessageBox.Show("Outdated plugins found. Check ErrorLog.txt for details.",
+                                "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         public static void DeInitialize()
         {
             foreach (var p in Plugins)
+                p.DeInitialize();
+            foreach (var p in Plugins)
                 p.Dispose();
         }
     }
+
+
+    
 }
