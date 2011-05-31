@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hooks\Classes\HandledEventArgs.cs" />
+    <Compile Include="Hooks\Classes\SetDefaults.cs" />
     <Compile Include="Hooks\DrawHooks.cs" />
     <Compile Include="Hooks\GameHooks.cs" />
     <Compile Include="Hooks\ItemHooks.cs" />

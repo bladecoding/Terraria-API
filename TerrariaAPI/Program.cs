@@ -35,10 +35,10 @@ namespace TerrariaAPI
                     var asm = Assembly.LoadFile(f.FullName);
                     foreach (var t in asm.GetTypes())
                     {
-                        if (t.BaseType == typeof(TerrariaPlugin))
+                        if (t.BaseType == typeof (TerrariaPlugin))
                         {
 
-                            Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
+                            Plugins.Add((TerrariaPlugin) Activator.CreateInstance(t, main));
 
                         }
                     }
@@ -46,8 +46,10 @@ namespace TerrariaAPI
                 catch (Exception e)
                 {
                     if (e is TargetInvocationException)
-                        e = ((TargetInvocationException)e).InnerException;
-                    File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message + Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+                        e = ((TargetInvocationException) e).InnerException;
+                    File.AppendAllText("ErrorLog.txt",
+                                       "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message +
+                                       Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
                     error = true;
                 }
             }
@@ -57,7 +59,7 @@ namespace TerrariaAPI
             {
                 try
                 {
-                    var prov = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
+                    var prov = new CSharpCodeProvider(new Dictionary<string, string>() {{"CompilerVersion", "v4.0"}});
                     var cp = new CompilerParameters();
                     cp.GenerateInMemory = true;
                     cp.GenerateExecutable = false;
@@ -74,10 +76,11 @@ namespace TerrariaAPI
                         for (int i = 0; i < r.Errors.Count; i++)
                         {
                             File.AppendAllText("ErrorLog.txt",
-                                              "Error compiling: " + f.Name + Environment.NewLine + "Line number " + r.Errors[i].Line +
-                                                 ", Error Number: " + r.Errors[i].ErrorNumber +
-                                                 ", '" + r.Errors[i].ErrorText + ";" +
-                                                 Environment.NewLine + Environment.NewLine);
+                                               "Error compiling: " + f.Name + Environment.NewLine + "Line number " +
+                                               r.Errors[i].Line +
+                                               ", Error Number: " + r.Errors[i].ErrorNumber +
+                                               ", '" + r.Errors[i].ErrorText + ";" +
+                                               Environment.NewLine + Environment.NewLine);
                             error = true;
                         }
                     }
@@ -85,10 +88,10 @@ namespace TerrariaAPI
                     {
                         foreach (var t in r.CompiledAssembly.GetTypes())
                         {
-                            if (t.BaseType == typeof(TerrariaPlugin))
+                            if (t.BaseType == typeof (TerrariaPlugin))
                             {
 
-                                Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
+                                Plugins.Add((TerrariaPlugin) Activator.CreateInstance(t, main));
 
                             }
                         }
@@ -97,20 +100,41 @@ namespace TerrariaAPI
                 catch (Exception e)
                 {
                     if (e is TargetInvocationException)
-                        e = ((TargetInvocationException)e).InnerException;
+                        e = ((TargetInvocationException) e).InnerException;
                     File.AppendAllText("ErrorLog.txt",
-                                      "Exception while trying to load: " + f.Name + Environment.NewLine +
-                                      e.Message + Environment.NewLine + "Stack trace: " +
-                                      Environment.NewLine + e.StackTrace +
-                                                 Environment.NewLine + Environment.NewLine);
+                                       "Exception while trying to load: " + f.Name + Environment.NewLine +
+                                       e.Message + Environment.NewLine + "Stack trace: " +
+                                       Environment.NewLine + e.StackTrace +
+                                       Environment.NewLine + Environment.NewLine);
                     error = true;
                 }
             }
             if (error)
-                MessageBox.Show("There were errors while loading the mods, check the error logs for more details", "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("There were errors while loading the mods, check the error logs for more details",
+                                "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            error = false;
+            var ver = Assembly.GetExecutingAssembly().GetName().Version;
+            foreach (var p in Plugins)
+            {
+                if (p.APIVersion.Major != ver.Major || p.APIVersion.Minor != ver.Minor)
+                {
+                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + p.Name + " (" + p.GetType() + ")");
+                    error = true;
+                }
+                else
+                {
+                    p.Initialize();
+                }
+            }
+            if (error)
+                MessageBox.Show("Outdated plugins found. Check ErrorLog.txt for details.",
+                                "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         public static void DeInitialize()
         {
+            foreach (var p in Plugins)
+                p.DeInitialize();
             foreach (var p in Plugins)
                 p.Dispose();
         }

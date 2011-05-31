@@ -8,20 +8,34 @@ namespace TerrariaAPI.Hooks
 {
     public static class ItemHooks
     {
-        public delegate void SetDefaultsIntD(int itemtype, Item item);
-        public delegate void SetDefaultsStringD(string itemname, Item item);
-        public static event SetDefaultsIntD OnSetDefaultsInt;
-        public static event SetDefaultsStringD OnSetDefaultsString;
+        public static event SetDefaultsD<Item, int> OnSetDefaultsInt;
+        public static event SetDefaultsD<Item, string> OnSetDefaultsString;
 
-        public static void SetDefaultsInt(int itemtype, Item item)
+        public static void SetDefaultsInt(ref int itemtype, Item item)
         {
+            var args = new SetDefaultsEventArgs<Item, int>()
+            {
+                Object = item,
+                Info = itemtype,
+            };
+
             if (OnSetDefaultsInt != null)
-                OnSetDefaultsInt(itemtype, item);
+                OnSetDefaultsInt(args);
+
+            itemtype = args.Info;
         }
-        public static void SetDefaultsString(string itemname, Item item)
+        public static void SetDefaultsString(ref string itemname, Item item)
         {
+            var args = new SetDefaultsEventArgs<Item, string>()
+            {
+                Object = item,
+                Info = itemname,
+            };
+
             if (OnSetDefaultsString != null)
-                OnSetDefaultsString(itemname, item);
+                OnSetDefaultsString(args);
+
+            itemname = args.Info;
         }
     }
 }

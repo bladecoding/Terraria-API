@@ -21,10 +21,13 @@ namespace ResolutionPlugin
         {
             get { return new Version(1, 0); }
         }
-
+        public override Version APIVersion
+        {
+            get { return new Version(1, 1); }
+        }
         public override string Author
         {
-            get { return "Juzz"; }
+            get { return "Juzz/High"; }
         }
 
         public override string Description
@@ -37,8 +40,7 @@ namespace ResolutionPlugin
         public ResolutionPlugin(Main game)
             : base(game)
         {
-            GameHooks.OnPreInitialize += GameHooks_OnPreInitialize;
-            GameHooks.OnLoadContent += GameHooks_OnLoadContent;
+            
         }
 
         private void GameHooks_OnPreInitialize()
@@ -89,6 +91,18 @@ namespace ResolutionPlugin
         private bool CheckCommand(string text, params string[] command)
         {
             return command.Any(x => text.IndexOf("-" + x, StringComparison.InvariantCultureIgnoreCase) >= 0);
+        }
+
+        public override void Initialize()
+        {
+            GameHooks.OnPreInitialize += GameHooks_OnPreInitialize;
+            GameHooks.OnLoadContent += GameHooks_OnLoadContent;
+        }
+
+        public override void DeInitialize()
+        {
+            GameHooks.OnPreInitialize -= GameHooks_OnPreInitialize;
+            GameHooks.OnLoadContent -= GameHooks_OnLoadContent;
         }
     }
 }

@@ -22,7 +22,10 @@ namespace TexturePlugin
         {
             get { return new Version(1, 0); }
         }
-
+        public override Version APIVersion
+        {
+            get { return new Version(1, 1); }
+        }
         public override string Author
         {
             get { return "High"; }
@@ -39,14 +42,10 @@ namespace TexturePlugin
         public TexturePlugin(Main game)
             : base(game)
         {
-            Application.EnableVisualStyles();
-
-            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
         }
 
         public override void Dispose()
         {
-            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
             if (textureform != null)
                 textureform.Dispose();
             base.Dispose();
@@ -67,6 +66,17 @@ namespace TexturePlugin
                     textureform = new TextureForm(Game.GraphicsDevice);
                 textureform.Show();
             }
+        }
+
+        public override void Initialize()
+        {
+            Application.EnableVisualStyles();
+            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
+        }
+
+        public override void DeInitialize()
+        {
+            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
         }
     }
 }

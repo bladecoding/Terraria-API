@@ -12,18 +12,20 @@ namespace MinimapPlugin
     public class WorldRenderer
     {
         public Tile[,] Tiles { get; set; }
+        public int SurfaceY { get; set; }
         public int MaxX { get; set; }
         public int MaxY { get; set; }
         public int[] Colors { get; set; }
         public WorldRenderer(Tile[,] tiles, int width, int height)
         {
+            SurfaceY = -1;
             Tiles = tiles;
             MaxX = width;
             MaxY = height;
             var r = new Random();
             Colors = new int[0x53];
 
-            Colors[0] = Color.SaddleBrown.ToArgb();
+            Colors[0] = 0xFF << 24 | 0x976b4b;
             Colors[1] = Color.Gray.ToArgb();
             Colors[2] = Color.DarkGreen.ToArgb();
             Colors[4] = Color.OrangeRed.ToArgb();
@@ -62,14 +64,17 @@ namespace MinimapPlugin
             for (int y = 0; y < height; y++)
             {
                 if (y + tiley < 0 || y + tiley >= MaxY)
-                    break;
+                    continue;
                 for (int x = 0; x < width; x++)
                 {
                     if (x + tilex < 0 || x + tilex > MaxX)
-                        break;
+                        continue;
                     var tile = Tiles[x + tilex, y + tiley];
                     if (tile == null)
                         continue;
+
+                    if (tile.wall > 0 || y + tiley > SurfaceY)
+                        ints[x, y] = 0xFF << 24 | 0x725138;
                     if (tile.active)
                         ints[x, y] = Colors[tile.type];
                     if (tile.liquid > 0)

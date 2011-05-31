@@ -6,33 +6,87 @@ using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
+    public class SendDataEventArgs : HandledEventArgs
+    {
+        public int msgType { get; set; }
+        public int remoteClient { get; set; }
+        public int ignoreClient { get; set; }
+        public string text { get; set; }
+        public int number { get; set; }
+        public float number2 { get; set; }
+        public float number3 { get; set; }
+        public float number4 { get; set; }
+    }
+    public class GetDataEventArgs : HandledEventArgs
+    {
+        public byte MsgID { get; set; }
+        public messageBuffer Msg { get; set; }
+        public int Index { get; set; }
+        public int Length { get; set; }
+    }
     public static class NetHooks
     {
-        public delegate void SendDataD(int msgType, int remoteClient, int ignoreClient, string text, int number, float number2, float number3, float number4, HandledEventArgs e);
+        public delegate void SendDataD(SendDataEventArgs e);
         public static event SendDataD OnPreSendData;
         public static event SendDataD OnPostSendData;
-        public static bool SendData(bool pre, int msgType, int remoteClient, int ignoreClient, string text, int number, float number2, float number3, float number4)
+        public static bool SendData(bool pre, ref int msgType, ref int remoteClient, ref int ignoreClient, ref string text, ref int number, ref float number2, ref float number3, ref float number4)
         {
-            var args = new HandledEventArgs();
+            var args = new SendDataEventArgs()
+            {
+                msgType = msgType,
+                remoteClient = remoteClient,
+                ignoreClient = ignoreClient,
+                text = text,
+                number = number,
+                number2 = number2,
+                number3 = number3,
+                number4 = number4,
+            };
+
             if (pre)
             {
                 if (OnPreSendData != null)
-                    OnPreSendData(msgType, remoteClient, ignoreClient, text, number, number2, number3, number4, args);
+                    OnPreSendData(args);
             }
             else
             {
                 if (OnPostSendData != null)
-                    OnPostSendData(msgType, remoteClient, ignoreClient, text, number, number2, number3, number4, args);
+                    OnPostSendData(args);
             }
+
+            msgType = args.msgType;
+            remoteClient = args.remoteClient;
+            ignoreClient = args.ignoreClient;
+            text = args.text;
+            number = args.number;
+            number2 = args.number2;
+            number3 = args.number3;
+            number4 = args.number4;
+
             return args.Handled;
         }
-        public delegate void GetDataD(byte id, messageBuffer msg, int idx, int length, HandledEventArgs e);
+
+
+
+        public delegate void GetDataD(GetDataEventArgs e);
         public static event GetDataD OnPreGetData;
-        public static bool GetData(byte id, messageBuffer msg, int idx, int length)
+        public static bool GetData(ref byte msgid, messageBuffer msg, ref int idx, ref int length)
         {
-            var args = new HandledEventArgs();
+            var args = new GetDataEventArgs()
+            {
+                MsgID = msgid,
+                Msg = msg,
+                Index = idx,
+                Length = length
+            };
+
             if (OnPreGetData != null)
-                OnPreGetData(id, msg, idx, length, args);
+                OnPreGetData(args);
+
+            msgid = args.MsgID;
+            idx = args.Index;
+            length = args.Length;
+
             return args.Handled;
         }
 

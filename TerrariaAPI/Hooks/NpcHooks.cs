@@ -8,37 +8,66 @@ namespace TerrariaAPI.Hooks
 {
     public static class NpcHooks
     {
-        public delegate void SetDefaultsIntD(int npctype, NPC npc);
-        public delegate void SetDefaultsStringD(string npcname, NPC npc);
-        public static event SetDefaultsIntD OnSetDefaultsInt;
-        public static event SetDefaultsStringD OnSetDefaultsString;
+        public static event SetDefaultsD<NPC, int> OnSetDefaultsInt;
+        public static event SetDefaultsD<NPC, string> OnSetDefaultsString;
 
-        public static void SetDefaultsInt(int npctype, NPC npc)
+        public static void SetDefaultsInt(ref int npctype, NPC npc)
         {
+            var args = new SetDefaultsEventArgs<NPC, int>()
+            {
+                Object = npc,
+                Info = npctype,
+            };
+
             if (OnSetDefaultsInt != null)
-                OnSetDefaultsInt(npctype, npc);
+                OnSetDefaultsInt(args);
+
+            npctype = args.Info;
         }
-        public static void SetDefaultsString(string npcname, NPC npc)
+        public static void SetDefaultsString(ref string npcname, NPC npc)
         {
+            var args = new SetDefaultsEventArgs<NPC, string>()
+            {
+                Object = npc,
+                Info = npcname,
+            };
+
             if (OnSetDefaultsString != null)
-                OnSetDefaultsString(npcname, npc);
+                OnSetDefaultsString(args);
+
+            npcname = args.Info;
         }
 
-        public delegate void StrikeNpcD(NPC npc, int damage, float knockback, int hitdirection, NpcStrikeEventArgs e);
+        public delegate void StrikeNpcD(NpcStrikeEventArgs e);
         public static event StrikeNpcD OnStrikeNpc;
-        public static bool StrikeNpc(NPC npc, int damage, float knockback, int hitdirection, out double retdamage)
+        public static bool StrikeNpc(NPC npc, ref int damage, ref float knockback, ref int hitdirection, ref double retdamage)
         {
-            var args = new NpcStrikeEventArgs();
+            var args = new NpcStrikeEventArgs()
+            {
+                Npc = npc,
+                Damage = damage,
+                KnockBack = knockback,
+                HitDirection = hitdirection,
+                ReturnDamage = 0,
+            };
+
             if (OnStrikeNpc != null)
-                OnStrikeNpc(npc, damage, knockback, hitdirection, args);
-            retdamage = args.Damage;
+                OnStrikeNpc(args);
+
+            retdamage = args.ReturnDamage;
+            damage = args.Damage;
+            knockback = args.KnockBack;
+            hitdirection = args.HitDirection;
+
             return args.Handled;
         }
-
-
-        public class NpcStrikeEventArgs : HandledEventArgs
-        {
-            public double Damage { get; set; }
-        }
+    }
+    public class NpcStrikeEventArgs : HandledEventArgs
+    {
+        public NPC Npc { get; set; }
+        public int Damage { get; set; }
+        public float KnockBack { get; set; }
+        public int HitDirection { get; set; }
+        public double ReturnDamage { get; set; }
     }
 }
