@@ -183,7 +183,7 @@ namespace TeleportPlugin
 
         private void DrawHooks_OnEndDraw(SpriteBatch obj)
         {
-            if (Game.IsActive)
+            if (Game.IsActive && !Main.playerInventory)
             {
                 int depth = helper.GetDepth();
 
@@ -203,8 +203,40 @@ namespace TeleportPlugin
                     depthText = "Level";
                 }
 
-                string position = string.Format("Position: X {0}, Y {1}\r\nDepth: {2}", (int)helper.Me.position.X, (int)helper.Me.position.Y, depthText);
-                Game.spriteBatch.DrawString(Main.fontMouseText, position, new Vector2(20, Main.screenHeight - 60), new Color(0, 255, 0));
+                string text = string.Format("Position: X {0}, Y {1}\r\nDepth: {2}", (int)helper.Me.position.X, (int)helper.Me.position.Y, depthText);
+                DrawInfoTextWithShadow(text);
+            }
+        }
+
+        private void DrawInfoTextWithShadow(string text)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                int x = 0;
+                int y = 0;
+                Color color = Color.Black;
+
+                switch (i)
+                {
+                    case 0:
+                        x = -2;
+                        break;
+                    case 1:
+                        x = 2;
+                        break;
+                    case 2:
+                        y = -2;
+                        break;
+                    case 3:
+                        y = 2;
+                        break;
+                    case 4:
+                        color = new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor);
+                        break;
+                }
+
+                Vector2 newPosition = new Vector2((float)(22 + x), (float)(74 + 22 + y));
+                Game.spriteBatch.DrawString(Main.fontMouseText, text, newPosition, color);
             }
         }
 
