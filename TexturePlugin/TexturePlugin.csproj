@@ -48,8 +48,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Terraria">
-      <HintPath>..\..\Terraria.exe</HintPath>
-      <Private>False</Private>
+      <HintPath>..\Terraria\Terraria.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
