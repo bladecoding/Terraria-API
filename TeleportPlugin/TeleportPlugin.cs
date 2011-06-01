@@ -76,7 +76,12 @@ namespace TeleportPlugin
                 {
                     helper.TeleportToLastPlayer();
                 }
+                else if (input.IsKeyDown(Keys.F6))
+                {
+                    helper.TeleportToLastLocation();
+                }
 
+                // TODO: Use spriteBatch.Draw
                 if (teleportForm != null && teleportForm.Visible)
                 {
                     teleportForm.curPosLabel.Text = string.Format("Current position - X:{0} Y:{1}", Main.player[Main.myPlayer].position.X, Main.player[Main.myPlayer].position.Y);
@@ -105,13 +110,34 @@ namespace TeleportPlugin
                         case "tp":
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
-                                helper.TeleportToPlayerByName(msg.Parameter);
+                                helper.TeleportToLocation(msg.Parameter);
                             }
                             else
                             {
-                                // If /tp then use last player
+                                helper.TeleportToLastLocation();
+                            }
+
+                            return true;
+                        case "settp":
+                            if (!string.IsNullOrEmpty(msg.Parameter))
+                            {
+                                helper.AddCurrentLocation(msg.Parameter);
+                            }
+
+                            return true;
+                        case "ptp":
+                            if (!string.IsNullOrEmpty(msg.Parameter))
+                            {
+                                helper.TeleportToPlayer(msg.Parameter);
+                            }
+                            else
+                            {
                                 helper.TeleportToLastPlayer();
                             }
+
+                            return true;
+                        case "home":
+                            helper.TeleportToHome();
 
                             return true;
                     }
