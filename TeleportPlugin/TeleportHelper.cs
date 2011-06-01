@@ -126,6 +126,7 @@ namespace TeleportPlugin
             Me.grapCount = 0;
             Me.position = position;
             Me.fallStart = (int)(Me.position.Y / 16f);
+            Me.velocity = Vector2.Zero;
         }
 
         public Player FindPlayerByName(string name, bool ignoreMe = true)
@@ -151,10 +152,37 @@ namespace TeleportPlugin
 
         public void TeleportToHome()
         {
-            float x = (float)(Me.SpawnX * 16 + 8 - Me.width / 2);
-            float y = (float)(Me.SpawnY * 16 - Me.height);
+            Me.FindSpawn();
+
+            float x, y;
+
+            if (Player.CheckSpawn(Me.SpawnX, Me.SpawnY))
+            {
+                x = (float)(Me.SpawnX * 16 + 8 - Me.width / 2);
+                y = (float)(Me.SpawnY * 16 - Me.height);
+            }
+            else
+            {
+                x = (float)(Main.spawnTileX * 16 + 8 - Me.width / 2);
+                y = (float)(Main.spawnTileY * 16 - Me.height);
+            }
 
             TeleportToPosition(x, y);
+        }
+
+        public List<string> GetPlayerList()
+        {
+            List<string> players = new List<string>();
+
+            foreach (Player player in Main.player)
+            {
+                if (player != null && player.active && !string.IsNullOrEmpty(player.name))
+                {
+                    players.Add(player.name);
+                }
+            }
+
+            return players;
         }
     }
 }

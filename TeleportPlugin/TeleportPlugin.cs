@@ -67,6 +67,7 @@ namespace TeleportPlugin
 
                 if (input.IsKeyUp(Keys.F4, true))
                 {
+                    // TODO: Not useable in fullscreen :( ?
                     if (teleportForm == null)
                         teleportForm = new TeleportForm();
                     teleportForm.Show();
@@ -79,6 +80,10 @@ namespace TeleportPlugin
                 else if (input.IsKeyDown(Keys.F6))
                 {
                     helper.TeleportToLastLocation();
+                }
+                else if (input.IsKeyDown(Keys.F7))
+                {
+                    helper.TeleportToHome();
                 }
 
                 // TODO: Use spriteBatch.Draw
@@ -107,6 +112,7 @@ namespace TeleportPlugin
                 {
                     switch (msg.Command.ToLowerInvariant())
                     {
+                        case "teleport":
                         case "tp":
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
@@ -118,6 +124,7 @@ namespace TeleportPlugin
                             }
 
                             return true;
+                        case "setteleport":
                         case "settp":
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
@@ -125,6 +132,15 @@ namespace TeleportPlugin
                             }
 
                             return true;
+                        case "locationlist":
+                        case "teleportlist":
+                        case "tplist":
+                            string locationList = string.Join(", ", helper.Locations);
+                            Main.NewText("Locations: " + locationList, 0, 255, 0);
+
+                            return true;
+                        case "playerteleport":
+                        case "partyteleport":
                         case "ptp":
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
@@ -134,6 +150,13 @@ namespace TeleportPlugin
                             {
                                 helper.TeleportToLastPlayer();
                             }
+
+                            return true;
+                        case "playerlist":
+                        case "plist":
+                            List<string> players = helper.GetPlayerList();
+                            string playerList = string.Join(", ", players);
+                            Main.NewText("Players: " + playerList, 0, 255, 0);
 
                             return true;
                         case "home":
