@@ -49,6 +49,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatCommand.cs" />
+    <Compile Include="TeleportHelper.cs" />
     <Compile Include="SaveLocForm.cs">
       <SubType>Form</SubType>
     </Compile>

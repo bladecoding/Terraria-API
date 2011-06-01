@@ -10,8 +10,8 @@ namespace TeleportPlugin
 {
     public partial class TeleportForm : Form
     {
-        private const string SAVE_FOLDER = "plugins/Teleport";
-        private const string SAVE_FILE_PATH = "plugins/Teleport/save.txt";
+        private const string SAVE_FOLDER = "Plugins/Teleport";
+        private const string SAVE_FILE_PATH = SAVE_FOLDER + "/save.txt";
 
         public TeleportForm()
         {
