@@ -1,11 +1,8 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
 using Microsoft.CSharp;
 using Microsoft.Xna.Framework;
@@ -17,9 +14,11 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 1, 0, 1);
+        public static readonly Version ApiVersion = new Version(1, 1, 0, 2);
         static readonly string PluginsPath = "plugins";
-        static List<TerrariaPlugin> Plugins = new List<TerrariaPlugin>();
+        static List<PluginContainer> Plugins = new List<PluginContainer>();
+        static List<string> FailedPlugins = new List<string>();
+
         public static void Initialize(Main main)
         {
             if (!Directory.Exists(PluginsPath))
@@ -41,9 +40,7 @@ namespace TerrariaAPI
                     {
                         if (t.BaseType == typeof(TerrariaPlugin))
                         {
-
-                            Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
-
+                            Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, main)));
                         }
                     }
                 }
@@ -54,10 +51,10 @@ namespace TerrariaAPI
                     File.AppendAllText("ErrorLog.txt",
                                        "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message +
                                        Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+                    FailedPlugins.Add(f.Name);
                     error = true;
                 }
             }
-
 
             foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.cs"))
             {
@@ -85,6 +82,7 @@ namespace TerrariaAPI
                                                ", Error Number: " + r.Errors[i].ErrorNumber +
                                                ", '" + r.Errors[i].ErrorText + ";" +
                                                Environment.NewLine + Environment.NewLine);
+                            FailedPlugins.Add(f.Name);
                             error = true;
                         }
                     }
@@ -94,9 +92,7 @@ namespace TerrariaAPI
                         {
                             if (t.BaseType == typeof(TerrariaPlugin))
                             {
-
-                                Plugins.Add((TerrariaPlugin)Activator.CreateInstance(t, main));
-
+                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, main)));
                             }
                         }
                     }
@@ -110,6 +106,7 @@ namespace TerrariaAPI
                                        e.Message + Environment.NewLine + "Stack trace: " +
                                        Environment.NewLine + e.StackTrace +
                                        Environment.NewLine + Environment.NewLine);
+                    FailedPlugins.Add(f.Name);
                     error = true;
                 }
             }
@@ -117,14 +114,12 @@ namespace TerrariaAPI
                 MessageBox.Show("There were errors while loading the mods, check the error logs for more details",
                                 "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            Plugins.Add(new ApiOverlayPlugin(main));
-
             error = false;
             foreach (var p in Plugins)
             {
-                if (p.APIVersion.Major != ApiVersion.Major || p.APIVersion.Minor != ApiVersion.Minor)
+                if (p.Plugin.APIVersion.Major != ApiVersion.Major || p.Plugin.APIVersion.Minor != ApiVersion.Minor)
                 {
-                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + p.Name + " (" + p.GetType() + ")");
+                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + p.Plugin.Name + " (" + p.GetType() + ")");
                     error = true;
                 }
                 else
@@ -135,7 +130,72 @@ namespace TerrariaAPI
             if (error)
                 MessageBox.Show("Outdated plugins found. Check ErrorLog.txt for details.",
                                 "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            DrawHooks.OnEndDrawMenu += DrawHooks_OnEndDrawMenu;
         }
+
+        private static void DrawHooks_OnEndDrawMenu(SpriteBatch obj)
+        {
+            DrawFancyText(obj, string.Format("TerrariaAPI v{0}", ApiVersion), new Vector2(10, 6), Color.White);
+
+            int pos = 1;
+            foreach (var p in Plugins)
+            {
+                if (pos > 34)
+                    break;
+                string str = string.Format("{0} v{1} ({2})", p.Plugin.Name, p.Plugin.Version, p.Plugin.Author);
+                DrawFancyText(obj, str, new Vector2(10, 6 + (24 * pos)), p.Initialized ? Color.White : Color.Yellow);
+                pos++;
+            }
+            foreach (var f in FailedPlugins)
+            {
+                if (pos > 34)
+                    break;
+                DrawFancyText(obj, f, new Vector2(10, 6 + (24 * pos)), Color.Red);
+                pos++;
+            }
+        }
+
+        private static void DrawFancyText(SpriteBatch sb, string text, Vector2 position, Color color)
+        {
+            for (int n = 0x0; n < 0x5; n++)
+            {
+                Color color9 = Color.Black;
+                if (n == 0x4)
+                {
+                    color9 = color;
+                    color9.R = (byte)((0xff + color9.R) / 0x2);
+                    color9.G = (byte)((0xff + color9.G) / 0x2);
+                    color9.B = (byte)((0xff + color9.B) / 0x2);
+                }
+                color9.A = (byte)(color9.A * 0.3f);
+                float offsetx = 0x0;
+                float offsety = 0x0;
+                switch (n)
+                {
+                    case 0x0:
+                        offsetx = -2;
+                        break;
+
+                    case 0x1:
+                        offsetx = 0x2;
+                        break;
+
+                    case 0x2:
+                        offsety = -2;
+                        break;
+
+                    case 0x3:
+                        offsety = 0x2;
+                        break;
+                }
+                Vector2 vector7 = Main.fontMouseText.MeasureString(text);
+                vector7.X *= 0.5f;
+                vector7.Y *= 0.5f;
+                sb.DrawString(Main.fontMouseText, text, new Vector2(position.X + offsetx, position.Y + offsety), color9);
+            }
+        }
+
         public static void DeInitialize()
         {
             foreach (var p in Plugins)
@@ -144,7 +204,4 @@ namespace TerrariaAPI
                 p.Dispose();
         }
     }
-
-
-    
 }

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
 namespace MinimapPlugin
@@ -16,6 +12,7 @@ namespace MinimapPlugin
         public int MaxX { get; set; }
         public int MaxY { get; set; }
         public int[] Colors { get; set; }
+
         public WorldRenderer(Tile[,] tiles, int width, int height)
         {
             SurfaceY = -1;
@@ -55,8 +52,8 @@ namespace MinimapPlugin
                 }
                 Colors[i] = c;
             }
-
         }
+
         public int[,] FromTiles(int tilex, int tiley, int width, int height)
         {
             var ints = new int[width, height];
@@ -86,6 +83,7 @@ namespace MinimapPlugin
 
             return ints;
         }
+
         public Bitmap FromColors()
         {
             var img = new Bitmap(1, Colors.Length);
@@ -95,6 +93,7 @@ namespace MinimapPlugin
 
             return img;
         }
+
         /*public Bitmap FromWalls()
         {
             var img = new Bitmap(TheWorld.MaxTilesX, TheWorld.MaxTilesY);
@@ -113,6 +112,7 @@ namespace MinimapPlugin
             img.UnlockBits(bd);
             return img;
         }*/
+
         public void ToColors(Bitmap img)
         {
             if (img.Height != Colors.Length)
@@ -124,5 +124,4 @@ namespace MinimapPlugin
             }
         }
     }
-
 }

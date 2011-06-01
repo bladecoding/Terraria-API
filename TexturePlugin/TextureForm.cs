@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Xna.Framework.Graphics;
-using TexturePlugin;
 
 namespace TexturePlugin
 {
@@ -22,7 +19,8 @@ namespace TexturePlugin
         }
 
         Thread loadthread = null;
-        void loadfunc(object obj)
+
+        private void loadfunc(object obj)
         {
             var prov = (IFileProvider)obj;
             SetText("Loading images");
@@ -32,6 +30,7 @@ namespace TexturePlugin
             SetText("Done");
             loadthread = null;
         }
+
         private void LoadBtn_Click(object sender, EventArgs e)
         {
             if (loadthread != null)
@@ -57,7 +56,7 @@ namespace TexturePlugin
             loadthread.Start(prov);
         }
 
-        void SetText(string text)
+        private void SetText(string text)
         {
             if (this.InvokeRequired)
                 this.Invoke(new Action<string>(SetText), text);

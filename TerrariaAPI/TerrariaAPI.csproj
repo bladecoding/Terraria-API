@@ -47,13 +47,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Terraria">
-      <HintPath>..\..\Terraria.exe</HintPath>
+    <Reference Include="Terraria, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>..\Terraria\Terraria.exe</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiOverlayPlugin.cs" />
     <Compile Include="Hooks\Classes\HandledEventArgs.cs" />
     <Compile Include="Hooks\Classes\SetDefaults.cs" />
     <Compile Include="Hooks\DrawHooks.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Hooks\NpcHooks.cs" />
     <Compile Include="Hooks\ServerHooks.cs" />
     <Compile Include="InputManager.cs" />
+    <Compile Include="PluginContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamExt.cs" />

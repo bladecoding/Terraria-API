@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Terraria;
+﻿using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
@@ -17,6 +13,7 @@ namespace TerrariaAPI.Hooks
         public float number3 { get; set; }
         public float number4 { get; set; }
     }
+
     public class GetDataEventArgs : HandledEventArgs
     {
         public byte MsgID { get; set; }
@@ -24,11 +21,13 @@ namespace TerrariaAPI.Hooks
         public int Index { get; set; }
         public int Length { get; set; }
     }
+
     public static class NetHooks
     {
         public delegate void SendDataD(SendDataEventArgs e);
         public static event SendDataD OnPreSendData;
         public static event SendDataD OnPostSendData;
+
         public static bool SendData(bool pre, ref int msgType, ref int remoteClient, ref int ignoreClient, ref string text, ref int number, ref float number2, ref float number3, ref float number4)
         {
             var args = new SendDataEventArgs()
@@ -66,10 +65,9 @@ namespace TerrariaAPI.Hooks
             return args.Handled;
         }
 
-
-
         public delegate void GetDataD(GetDataEventArgs e);
         public static event GetDataD OnPreGetData;
+
         public static bool GetData(ref byte msgid, messageBuffer msg, ref int idx, ref int length)
         {
             var args = new GetDataEventArgs()
@@ -92,6 +90,7 @@ namespace TerrariaAPI.Hooks
 
         public delegate void GreetPlayerD(int who, HandledEventArgs e);
         public static event GreetPlayerD OnGreetPlayer;
+
         public static bool GreetPlayer(int who)
         {
             var args = new HandledEventArgs();

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -15,8 +10,8 @@ namespace TeleportPlugin
 {
     public partial class TeleportForm : Form
     {
-        private const string SAVE_FOLDER = "plugins/Teleport";
-        private const string SAVE_FILE_PATH = "plugins/Teleport/save.txt";
+        private const string SAVE_FOLDER = "Plugins/Teleport";
+        private const string SAVE_FILE_PATH = SAVE_FOLDER + "/save.txt";
 
         public TeleportForm()
         {
@@ -25,7 +20,7 @@ namespace TeleportPlugin
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(listBox1.SelectedIndex < 0)
+            if (listBox1.SelectedIndex < 0)
                 return;
 
             var selectedLoc = (TeleportLocation)listBox1.SelectedItem;
@@ -34,7 +29,7 @@ namespace TeleportPlugin
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if(listBox1.SelectedIndex < 0)
+            if (listBox1.SelectedIndex < 0)
                 return;
 
             SaveLocForm saveLocForm = new SaveLocForm((TeleportLocation)listBox1.SelectedItem);
@@ -57,7 +52,7 @@ namespace TeleportPlugin
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if(listBox1.SelectedIndex < 0)
+            if (listBox1.SelectedIndex < 0)
                 return;
 
             listBox1.Items.RemoveAt(listBox1.SelectedIndex);
@@ -65,10 +60,10 @@ namespace TeleportPlugin
 
         private void TeleportForm_Load(object sender, EventArgs e)
         {
-            if(!Directory.Exists(SAVE_FOLDER))
+            if (!Directory.Exists(SAVE_FOLDER))
                 Directory.CreateDirectory(SAVE_FOLDER);
 
-            if(!File.Exists(SAVE_FILE_PATH))
+            if (!File.Exists(SAVE_FILE_PATH))
                 return;
 
             string[] saveFile = File.ReadAllLines(SAVE_FILE_PATH);
@@ -87,7 +82,7 @@ namespace TeleportPlugin
                     errorOccured = true;
                 }
             }
-            if(errorOccured)
+            if (errorOccured)
                 MessageBox.Show("Error loading saved locations, some previous saved locations will not be available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 

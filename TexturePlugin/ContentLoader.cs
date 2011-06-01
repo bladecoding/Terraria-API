@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
 namespace TexturePlugin
 {
-    static class ContentLoader
+    internal static class ContentLoader
     {
-
         internal static Dictionary<string, Texture2D> GetTextures(GraphicsDevice gd, IFileProvider provider)
         {
             var textures = new Dictionary<string, Texture2D>();
@@ -42,7 +38,7 @@ namespace TexturePlugin
             LoadMisc(textures);
         }
 
-        static Texture2D BitmapToTexture(GraphicsDevice gd, Bitmap img)
+        private static Texture2D BitmapToTexture(GraphicsDevice gd, Bitmap img)
         {
             var ret = new Texture2D(gd, img.Width, img.Height);
             var bd = img.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
@@ -66,7 +62,7 @@ namespace TexturePlugin
             return ret;
         }
 
-        static Texture2D GetOrNull(Dictionary<string, Texture2D> textures, string name)
+        private static Texture2D GetOrNull(Dictionary<string, Texture2D> textures, string name)
         {
             Texture2D ret;
             if (!textures.TryGetValue(name, out ret))
@@ -74,7 +70,7 @@ namespace TexturePlugin
             return ret;
         }
 
-        static void LoadTiles(Dictionary<string, Texture2D> textures)
+        private static void LoadTiles(Dictionary<string, Texture2D> textures)
         {
             for (int j = 0x0; j < 0x50; j++)
             {
@@ -83,7 +79,8 @@ namespace TexturePlugin
                 Main.tileTexture[j] = textures["Tiles_" + j];
             }
         }
-        static void LoadWalls(Dictionary<string, Texture2D> textures)
+
+        private static void LoadWalls(Dictionary<string, Texture2D> textures)
         {
             for (int k = 0x1; k < 0xe; k++)
             {
@@ -92,7 +89,8 @@ namespace TexturePlugin
                 Main.wallTexture[k] = textures["Wall_" + k];
             }
         }
-        static void LoadBackgrounds(Dictionary<string, Texture2D> textures)
+
+        private static void LoadBackgrounds(Dictionary<string, Texture2D> textures)
         {
             for (int m = 0x0; m < 0x7; m++)
             {
@@ -103,7 +101,8 @@ namespace TexturePlugin
                 Main.backgroundHeight[m] = Main.backgroundTexture[m].Height;
             }
         }
-        static void LoadItems(Dictionary<string, Texture2D> textures)
+
+        private static void LoadItems(Dictionary<string, Texture2D> textures)
         {
             for (int n = 0x0; n < 0xeb; n++)
             {
@@ -112,7 +111,8 @@ namespace TexturePlugin
                 Main.itemTexture[n] = textures["Item_" + n];
             }
         }
-        static void LoadNpcs(Dictionary<string, Texture2D> textures)
+
+        private static void LoadNpcs(Dictionary<string, Texture2D> textures)
         {
             for (int n = 0x0; n < 0x2c; n++)
             {
@@ -121,7 +121,8 @@ namespace TexturePlugin
                 Main.npcTexture[n] = textures["NPC_" + n];
             }
         }
-        static void LoadProjectiles(Dictionary<string, Texture2D> textures)
+
+        private static void LoadProjectiles(Dictionary<string, Texture2D> textures)
         {
             for (int n = 0x0; n < 0x25; n++)
             {
@@ -130,7 +131,8 @@ namespace TexturePlugin
                 Main.projectileTexture[n] = textures["Projectile_" + n];
             }
         }
-        static void LoadGores(Dictionary<string, Texture2D> textures)
+
+        private static void LoadGores(Dictionary<string, Texture2D> textures)
         {
             for (int n = 0x0; n < 0x49; n++)
             {
@@ -139,7 +141,8 @@ namespace TexturePlugin
                 Main.goreTexture[n] = textures["Gore_" + n];
             }
         }
-        static void LoadClouds(Dictionary<string, Texture2D> textures)
+
+        private static void LoadClouds(Dictionary<string, Texture2D> textures)
         {
             for (int n = 0x0; n < 0x4; n++)
             {
@@ -148,7 +151,8 @@ namespace TexturePlugin
                 Main.cloudTexture[n] = textures["Cloud_" + n];
             }
         }
-        static void LoadStars(Dictionary<string, Texture2D> textures)
+
+        private static void LoadStars(Dictionary<string, Texture2D> textures)
         {
             for (int n = 0x0; n < 0x5; n++)
             {
@@ -157,7 +161,8 @@ namespace TexturePlugin
                 Main.starTexture[n] = textures["Star_" + n];
             }
         }
-        static void LoadLiquids(Dictionary<string, Texture2D> textures)
+
+        private static void LoadLiquids(Dictionary<string, Texture2D> textures)
         {
             for (int n = 0x0; n < 0x2; n++)
             {
@@ -166,7 +171,8 @@ namespace TexturePlugin
                 Main.liquidTexture[n] = textures["Liquid_" + n];
             }
         }
-        static void LoadArmors(Dictionary<string, Texture2D> textures)
+
+        private static void LoadArmors(Dictionary<string, Texture2D> textures)
         {
             for (int n = 0x1; n < 0xa; n++)
             {
@@ -183,7 +189,8 @@ namespace TexturePlugin
                 Main.playerHairTexture[n] = GetOrNull(textures, "Player_Hair_" + n + 1) ?? Main.playerHairTexture[n];
             }
         }
-        static void LoadMisc(Dictionary<string, Texture2D> textures)
+
+        private static void LoadMisc(Dictionary<string, Texture2D> textures)
         {
             Main.cdTexture = GetOrNull(textures, "CoolDown") ?? Main.cdTexture;
             Main.logoTexture = GetOrNull(textures, "Logo") ?? Main.logoTexture;
@@ -222,19 +229,20 @@ namespace TexturePlugin
             Main.chain5Texture = GetOrNull(textures, "Chain5") ?? Main.chain5Texture;
             Main.chain6Texture = GetOrNull(textures, "Chain6") ?? Main.chain6Texture;
             Main.boneArmTexture = GetOrNull(textures, "Arm_Bone") ?? Main.boneArmTexture;
-
         }
-
     }
+
     interface IFileProvider
     {
         string[] GetFiles();
+
         byte[] GetData(string name);
     }
 
-    class DirProvider : IFileProvider
+    internal class DirProvider : IFileProvider
     {
         DirectoryInfo Dir;
+
         public DirProvider(DirectoryInfo di)
         {
             Dir = di;
@@ -257,9 +265,10 @@ namespace TexturePlugin
         }
     }
 
-    class ZipProvider : IFileProvider
+    internal class ZipProvider : IFileProvider
     {
         ZipFile Zip;
+
         internal ZipProvider(Stream stream)
         {
             Zip = new ZipFile(stream);

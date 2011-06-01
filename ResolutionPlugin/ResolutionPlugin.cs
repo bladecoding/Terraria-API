@@ -27,7 +27,7 @@ namespace ResolutionPlugin
         }
         public override string Author
         {
-            get { return "Juzz/High"; }
+            get { return "Jaex / High"; }
         }
 
         public override string Description
@@ -40,7 +40,6 @@ namespace ResolutionPlugin
         public ResolutionPlugin(Main game)
             : base(game)
         {
-            
         }
 
         private void GameHooks_OnPreInitialize()
