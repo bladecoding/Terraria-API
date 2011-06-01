@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace TerrariaAPI.Hooks
+﻿namespace TerrariaAPI.Hooks
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <typeparam name="T">Class Type (NPC, Item)</typeparam>
     /// <typeparam name="F">Fnfo Type (String, Int)</typeparam>
@@ -15,8 +10,9 @@ namespace TerrariaAPI.Hooks
         public T Object { get; set; }
         public F Info { get; set; }
     }
+
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <typeparam name="T">Class Type (NPC, Item)</typeparam>
     /// <typeparam name="F">Fnfo Type (String, Int)</typeparam>

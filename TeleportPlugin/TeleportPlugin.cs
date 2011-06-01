@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using TerrariaAPI;
 using Terraria;
+using TerrariaAPI;
 using TerrariaAPI.Hooks;
 
 namespace TeleportPlugin
 {
     public class TeleportPlugin : TerrariaPlugin
     {
-        private static List<TeleportLocation> teleports = new List<TeleportLocation>();
-        InputManager input = new InputManager();
-        TeleportForm telForm;
-
         public override string Author
         {
             get { return "Fox-Face"; }
@@ -39,16 +33,21 @@ namespace TeleportPlugin
         {
             get { return new Version(1, 1); }
         }
+
+        private List<TeleportLocation> teleports = new List<TeleportLocation>();
+        private InputManager input = new InputManager();
+        private TeleportForm telForm;
+
         public TeleportPlugin(Main game)
             : base(game)
         {
-
         }
 
         public void UpdateHook(GameTime gameTime)
         {
             if (!Game.IsActive)
                 return;
+
             input.Update();
 
             if (input.IsKeyUp(Keys.F4, true))

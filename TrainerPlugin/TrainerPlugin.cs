@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using Terraria;
 using TerrariaAPI;
@@ -13,7 +9,6 @@ namespace TrainerPlugin
 {
     public class TrainerPlugin : TerrariaPlugin
     {
-        private InputManager input = new InputManager();
         public override string Name
         {
             get { return "Trainer"; }
@@ -23,10 +18,12 @@ namespace TrainerPlugin
         {
             get { return new Version(1, 0); }
         }
+
         public override Version APIVersion
         {
             get { return new Version(1, 1); }
         }
+
         public override string Author
         {
             get { return "High"; }
@@ -37,35 +34,34 @@ namespace TrainerPlugin
             get { return "Just a simple 'trainer'"; }
         }
 
+        private InputManager input = new InputManager();
         TrainerForm trainerform = new TrainerForm();
         bool f7down = false;
 
         public TrainerPlugin(Main game)
             : base(game)
         {
-            
         }
 
         public override void Dispose()
         {
-            
             trainerform.Dispose();
             base.Dispose();
         }
 
-        void TerrariaHooks_OnUpdate(Microsoft.Xna.Framework.GameTime obj)
+        private void TerrariaHooks_OnUpdate(Microsoft.Xna.Framework.GameTime obj)
         {
             if (!Game.IsActive)
                 return;
 
             input.Update();
-            
-            if(input.IsKeyUp(Keys.F7, true))
+
+            if (input.IsKeyUp(Keys.F7, true))
             {
                 trainerform.Visible = !trainerform.Visible;
             }
 
-            if(trainerform.InfAmmo)
+            if (trainerform.InfAmmo)
             {
                 for (int i = 0; i < Main.player[Main.myPlayer].inventory.Length; i++)
                 {
@@ -73,8 +69,8 @@ namespace TrainerPlugin
                         Main.player[Main.myPlayer].inventory[i].stack = 250;
                 }
             }
-            
-            if(trainerform.InfBreath)
+
+            if (trainerform.InfBreath)
                 Main.player[Main.myPlayer].breath = Main.player[Main.myPlayer].breathMax;
 
             if (trainerform.InfMana)

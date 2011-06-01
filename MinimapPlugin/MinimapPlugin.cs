@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,7 +8,6 @@ using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
 using Color = Microsoft.Xna.Framework.Color;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MinimapPlugin
 {
@@ -48,10 +41,9 @@ namespace MinimapPlugin
         public MinimapPlugin(Main main)
             : base(main)
         {
-            
         }
 
-        void GameHooks_OnLoadContent(Microsoft.Xna.Framework.Content.ContentManager obj)
+        private void GameHooks_OnLoadContent(Microsoft.Xna.Framework.Content.ContentManager obj)
         {
             //chest = BitmapToTexture(Game.GraphicsDevice, Properties.Resources.chest);
         }
@@ -62,7 +54,7 @@ namespace MinimapPlugin
         Texture2D chest;
         Thread renderthread;
 
-        void DrawHooks_OnEndDraw(SpriteBatch arg1)
+        private void DrawHooks_OnEndDraw(SpriteBatch arg1)
         {
             if (rend != null && minimap != null)
             {
@@ -89,14 +81,13 @@ namespace MinimapPlugin
 
                     targetx -= Main.player[i].width / 2;
                     targety -= Main.player[i].height;
-                    
-                    
+
                     //Game.spriteBatch.Draw(chest, new Vector2(Main.screenWidth - minimap.Width + targetx, Main.screenHeight - minimap.Height + targety), Color.White);
                 }
             }
         }
 
-        void RenderMap()
+        private void RenderMap()
         {
             while (renderthread != null)
             {
@@ -118,7 +109,7 @@ namespace MinimapPlugin
             }
         }
 
-        static Texture2D BitmapToTexture(GraphicsDevice gd, Bitmap img)
+        private static Texture2D BitmapToTexture(GraphicsDevice gd, Bitmap img)
         {
             int width = img.Width;
             int height = img.Height;
@@ -133,7 +124,7 @@ namespace MinimapPlugin
             return IntsToTexture(gd, ints, width, height);
         }
 
-        static Texture2D IntsToTexture(GraphicsDevice gd, int[,] img, int width, int height)
+        private static Texture2D IntsToTexture(GraphicsDevice gd, int[,] img, int width, int height)
         {
             var ret = new Texture2D(gd, width, height);
             int[] ints = new int[width * height];
@@ -152,7 +143,8 @@ namespace MinimapPlugin
             ret.SetData(ints);
             return ret;
         }
-        void GameHooks_OnUpdate(GameTime obj)
+
+        private void GameHooks_OnUpdate(GameTime obj)
         {
             if (!Game.IsActive)
                 return;
@@ -167,9 +159,6 @@ namespace MinimapPlugin
                     rend = null;
             }
         }
-
-
-
 
         public override void Initialize()
         {

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
 using Microsoft.CSharp;
 using Microsoft.Xna.Framework;
@@ -21,6 +18,7 @@ namespace TerrariaAPI
         static readonly string PluginsPath = "plugins";
         static List<PluginContainer> Plugins = new List<PluginContainer>();
         static List<string> FailedPlugins = new List<string>();
+
         public static void Initialize(Main main)
         {
             if (!Directory.Exists(PluginsPath))
@@ -57,7 +55,6 @@ namespace TerrariaAPI
                     error = true;
                 }
             }
-
 
             foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.cs"))
             {
@@ -135,10 +132,9 @@ namespace TerrariaAPI
                                 "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             DrawHooks.OnEndDrawMenu += DrawHooks_OnEndDrawMenu;
-
         }
 
-        static void DrawHooks_OnEndDrawMenu(SpriteBatch obj)
+        private static void DrawHooks_OnEndDrawMenu(SpriteBatch obj)
         {
             DrawFancyText(obj, string.Format("TerrariaAPI v{0}", ApiVersion), new Vector2(10, 6), Color.White);
 
@@ -159,7 +155,8 @@ namespace TerrariaAPI
                 pos++;
             }
         }
-        static void DrawFancyText(SpriteBatch sb, string text, Vector2 position, Color color)
+
+        private static void DrawFancyText(SpriteBatch sb, string text, Vector2 position, Color color)
         {
             for (int n = 0x0; n < 0x5; n++)
             {
@@ -198,7 +195,6 @@ namespace TerrariaAPI
                 sb.DrawString(Main.fontMouseText, text, new Vector2(position.X + offsetx, position.Y + offsety), color9);
             }
         }
-
 
         public static void DeInitialize()
         {

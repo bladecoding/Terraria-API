@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
 using Terraria;
-using TerrariaAPI.Hooks;
 
 namespace TerrariaAPI
 {
@@ -31,13 +26,16 @@ namespace TerrariaAPI
         {
             Game = game;
         }
+
         public virtual void Dispose()
         {
         }
+
         /// <summary>
         /// Called when the plugin is initialized
         /// </summary>
         public abstract void Initialize();
+
         /// <summary>
         /// Called when the plugin is DeInitialized
         /// </summary>

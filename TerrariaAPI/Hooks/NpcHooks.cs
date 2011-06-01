@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Terraria;
+﻿using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
@@ -24,6 +20,7 @@ namespace TerrariaAPI.Hooks
 
             npctype = args.Info;
         }
+
         public static void SetDefaultsString(ref string npcname, NPC npc)
         {
             var args = new SetDefaultsEventArgs<NPC, string>()
@@ -40,6 +37,7 @@ namespace TerrariaAPI.Hooks
 
         public delegate void StrikeNpcD(NpcStrikeEventArgs e);
         public static event StrikeNpcD OnStrikeNpc;
+
         public static bool StrikeNpc(NPC npc, ref int damage, ref float knockback, ref int hitdirection, ref double retdamage)
         {
             var args = new NpcStrikeEventArgs()
@@ -62,6 +60,7 @@ namespace TerrariaAPI.Hooks
             return args.Handled;
         }
     }
+
     public class NpcStrikeEventArgs : HandledEventArgs
     {
         public NPC Npc { get; set; }

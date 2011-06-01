@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace TerrariaAPI.Hooks
 {
@@ -11,6 +8,7 @@ namespace TerrariaAPI.Hooks
         /// arg1 = WhoAmI
         /// </summary>
         public static event Action<int, AllowEventArgs> OnJoin;
+
         public static bool Join(int whoami)
         {
             var args = new AllowEventArgs();
@@ -18,10 +16,12 @@ namespace TerrariaAPI.Hooks
                 OnJoin(whoami, args);
             return args.Allow;
         }
+
         /// <summary>
         /// arg1 = WhoAmI
         /// </summary>
         public static event Action<int> OnLeave;
+
         public static void Leave(int whoami)
         {
             if (OnLeave != null)
@@ -32,6 +32,7 @@ namespace TerrariaAPI.Hooks
         /// arg1 = WhoAmI, arg2 = Message
         /// </summary>
         public static event Action<int, string, HandledEventArgs> OnChat;
+
         public static bool Chat(int whoami, string msg)
         {
             var args = new HandledEventArgs();

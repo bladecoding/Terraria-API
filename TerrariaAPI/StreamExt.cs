@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
 
 namespace Packable.StreamBinary
@@ -34,50 +33,59 @@ namespace Packable.StreamBinary
                 }
                 while (offset < numBytes);
             }
-
         }
+
         public static void WriteBoolean(this Stream s, bool num)
         {
             s.WriteByte((byte)(num ? 1 : 0));
         }
+
         public static void WriteInt8(this Stream s, byte num)
         {
             s.WriteByte(num);
         }
+
         public static void WriteInt16(this Stream s, Int16 num)
         {
             s.WriteInt8((byte)(num & 0xff));
             s.WriteInt8((byte)(num >> 8));
         }
+
         public static void WriteInt32(this Stream s, Int32 num)
         {
             s.WriteInt16((Int16)(num & 0xffff));
             s.WriteInt16((Int16)(num >> 16));
         }
+
         public static void WriteInt64(this Stream s, Int64 num)
         {
             s.WriteInt32((Int32)(num & 0xffffffff));
             s.WriteInt32((Int32)(num >> 32));
         }
+
         public static unsafe void WriteDouble(this Stream s, double num)
         {
             var n1 = *((Int64*)&num);
             s.WriteInt64(n1);
         }
+
         public static unsafe void WriteSingle(this Stream s, float num)
         {
             var n1 = *((Int32*)&num);
             s.WriteInt32(n1);
         }
+
         public static void WriteBytes(this Stream s, byte[] bytes)
         {
             s.WriteInt32(bytes.Length);
             s.WriteBytes(bytes, bytes.Length);
         }
+
         public static void WriteBytes(this Stream s, byte[] bytes, Int32 len)
         {
             s.Write(bytes, 0, len);
         }
+
         public static void WriteString(this Stream s, string str)
         {
             if (str == null)
@@ -87,6 +95,7 @@ namespace Packable.StreamBinary
             if (str.Length > 0)
                 s.WriteBytes(Encoding.UTF8.GetBytes(str), str.Length);
         }
+
         public static void WriteEncodedInt(this Stream s, int value)
         {
             uint num = (uint)value;
@@ -107,6 +116,7 @@ namespace Packable.StreamBinary
             }
             return (byte)read;
         }
+
         public static bool ReadBoolean(this Stream s)
         {
             return s.ReadInt8() != 0;
@@ -118,6 +128,7 @@ namespace Packable.StreamBinary
             byte n2 = s.ReadInt8();
             return (Int16)(n1 | (n2 << 8));
         }
+
         public static UInt16 ReadUInt16(this Stream s)
         {
             byte n1 = s.ReadInt8();
@@ -131,6 +142,7 @@ namespace Packable.StreamBinary
             Int16 n2 = s.ReadInt16();
             return (Int32)(n1 | (n2 << 16));
         }
+
         public static UInt32 ReadUInt32(this Stream s)
         {
             UInt16 n1 = s.ReadUInt16();
@@ -144,6 +156,7 @@ namespace Packable.StreamBinary
             Int64 n2 = s.ReadInt32();
             return (Int64)(n1 | (n2 << 32));
         }
+
         public static UInt64 ReadUInt64(this Stream s)
         {
             UInt64 n1 = s.ReadUInt32();
@@ -156,6 +169,7 @@ namespace Packable.StreamBinary
             var ret = s.ReadUInt64();
             return *((double*)&ret);
         }
+
         public static unsafe float ReadSingle(this Stream s)
         {
             var ret = s.ReadUInt32();
@@ -167,12 +181,14 @@ namespace Packable.StreamBinary
             Int32 len = s.ReadInt32();
             return s.ReadBytes(len);
         }
+
         public static byte[] ReadBytes(this Stream s, Int32 len)
         {
             byte[] ret = new byte[len];
             s.FillBuffer(ret, len);
             return ret;
         }
+
         public static string ReadString(this Stream s)
         {
             int len = s.ReadEncodedInt();
@@ -180,6 +196,7 @@ namespace Packable.StreamBinary
                 return Encoding.UTF8.GetString(s.ReadBytes(len));
             return string.Empty;
         }
+
         public static int ReadEncodedInt(this Stream s)
         {
             byte num3;
@@ -199,6 +216,7 @@ namespace Packable.StreamBinary
             return num;
         }
     }
+
     public static class MemoryStreamExt
     {
         public static void Reset(this MemoryStream ms)
@@ -222,6 +240,7 @@ namespace Packable.StreamBinary.Generic
             {typeof(byte[]), (s, o) => s.WriteBytes((byte[])o)},
             {typeof(string), (s, o) => s.WriteString((string)o)},
         };
+
         public static void Write<T>(this Stream stream, T obj)
         {
             if (WriteFuncs.ContainsKey(typeof(T)))
@@ -232,6 +251,7 @@ namespace Packable.StreamBinary.Generic
 
             throw new NotImplementedException();
         }
+
         static Dictionary<Type, Func<Stream, object>> ReadFuncs = new Dictionary<Type, Func<Stream, object>>()
         {
             {typeof(bool), s => s.ReadBoolean()},
@@ -241,6 +261,7 @@ namespace Packable.StreamBinary.Generic
             {typeof(Int64), s => s.ReadInt64()},
             {typeof(string), s => s.ReadString()},
         };
+
         public static T Read<T>(this Stream stream)
         {
             if (ReadFuncs.ContainsKey(typeof(T)))

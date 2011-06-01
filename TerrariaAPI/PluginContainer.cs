@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace TerrariaAPI
 {
@@ -9,6 +6,7 @@ namespace TerrariaAPI
     {
         public TerrariaPlugin Plugin { get; protected set; }
         public bool Initialized { get; protected set; }
+
         public PluginContainer(TerrariaPlugin plugin)
         {
             Plugin = plugin;
@@ -20,6 +18,7 @@ namespace TerrariaAPI
             Plugin.Initialize();
             Initialized = true;
         }
+
         public void DeInitialize()
         {
             Plugin.DeInitialize();

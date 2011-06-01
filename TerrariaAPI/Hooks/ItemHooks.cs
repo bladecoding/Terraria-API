@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Terraria;
+﻿using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
@@ -24,6 +20,7 @@ namespace TerrariaAPI.Hooks
 
             itemtype = args.Info;
         }
+
         public static void SetDefaultsString(ref string itemname, Item item)
         {
             var args = new SetDefaultsEventArgs<Item, string>()

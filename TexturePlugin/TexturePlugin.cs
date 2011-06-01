@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using Terraria;
 using TerrariaAPI;
@@ -51,7 +47,7 @@ namespace TexturePlugin
             base.Dispose();
         }
 
-        void TerrariaHooks_OnUpdate(Microsoft.Xna.Framework.GameTime obj)
+        private void TerrariaHooks_OnUpdate(Microsoft.Xna.Framework.GameTime obj)
         {
             if (!Game.IsActive)
                 return;
