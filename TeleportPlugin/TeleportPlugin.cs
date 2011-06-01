@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using TerrariaAPI;
@@ -22,7 +23,7 @@ namespace TeleportPlugin
 
         public override string Author
         {
-            get { return "Fox-Face / Jaex"; }
+            get { return "Jaex / Fox-Face"; }
         }
 
         public override string Description
@@ -35,9 +36,8 @@ namespace TeleportPlugin
             get { return new Version(1, 1); }
         }
 
-        private const int chatMessage = 0x19;
+        private const int ChatText = 0x19;
 
-        private List<TeleportLocation> teleports = new List<TeleportLocation>();
         private InputManager input = new InputManager();
         private TeleportHelper helper = new TeleportHelper();
         private TeleportForm teleportForm;
@@ -50,13 +50,15 @@ namespace TeleportPlugin
         public override void Initialize()
         {
             GameHooks.OnUpdate += GameHooks_OnUpdate;
-            NetHooks.OnPreSendData += new NetHooks.SendDataD(NetHooks_OnPreSendData);
+            NetHooks.OnPreSendData += NetHooks_OnPreSendData;
+            DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
         }
 
         public override void DeInitialize()
         {
             GameHooks.OnUpdate -= GameHooks_OnUpdate;
             NetHooks.OnPreSendData -= NetHooks_OnPreSendData;
+            DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
         }
 
         public void GameHooks_OnUpdate(GameTime gameTime)
@@ -67,9 +69,12 @@ namespace TeleportPlugin
 
                 if (input.IsKeyUp(Keys.F4, true))
                 {
-                    // TODO: Not useable in fullscreen :( ?
+                    // TODO: TeleportForm need to use TeleportHelper also need redesign for show player list etc.
                     if (teleportForm == null)
+                    {
                         teleportForm = new TeleportForm();
+                    }
+
                     teleportForm.Show();
                     teleportForm.BringToFront();
                 }
@@ -85,18 +90,16 @@ namespace TeleportPlugin
                 {
                     helper.TeleportToHome();
                 }
-
-                // TODO: Use spriteBatch.Draw
-                if (teleportForm != null && teleportForm.Visible)
+                else if (input.IsKeyDown(Keys.F8, true))
                 {
-                    teleportForm.curPosLabel.Text = string.Format("Current position - X:{0} Y:{1}", Main.player[Main.myPlayer].position.X, Main.player[Main.myPlayer].position.Y);
+                    ShowHelp();
                 }
             }
         }
 
         private void NetHooks_OnPreSendData(SendDataEventArgs e)
         {
-            if (Main.netMode == 1 && e.msgType == chatMessage)
+            if (Main.netMode == 1 && e.msgType == ChatText)
             {
                 e.Handled = OnMessageSend(e.number, e.text);
             }
@@ -112,8 +115,8 @@ namespace TeleportPlugin
                 {
                     switch (msg.Command.ToLowerInvariant())
                     {
-                        case "teleport":
                         case "tp":
+                        case "teleport":
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
                                 helper.TeleportToLocation(msg.Parameter);
@@ -124,24 +127,24 @@ namespace TeleportPlugin
                             }
 
                             return true;
-                        case "setteleport":
                         case "settp":
+                        case "setteleport":
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
                                 helper.AddCurrentLocation(msg.Parameter);
                             }
 
                             return true;
-                        case "locationlist":
-                        case "teleportlist":
                         case "tplist":
+                        case "teleportlist":
+                        case "locationlist":
                             string locationList = string.Join(", ", helper.Locations);
                             Main.NewText("Locations: " + locationList, 0, 255, 0);
 
                             return true;
+                        case "ptp":
                         case "playerteleport":
                         case "partyteleport":
-                        case "ptp":
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
                                 helper.TeleportToPlayer(msg.Parameter);
@@ -152,8 +155,8 @@ namespace TeleportPlugin
                             }
 
                             return true;
-                        case "playerlist":
                         case "plist":
+                        case "playerlist":
                             List<string> players = helper.GetPlayerList();
                             string playerList = string.Join(", ", players);
                             Main.NewText("Players: " + playerList, 0, 255, 0);
@@ -163,11 +166,59 @@ namespace TeleportPlugin
                             helper.TeleportToHome();
 
                             return true;
+                        case "sethome":
+                            // TODO: Sethome not working correctly yet
+
+                            return true;
+                        case "tphelp":
+                            ShowHelp();
+
+                            return true;
                     }
                 }
             }
 
             return false;
+        }
+
+        private void DrawHooks_OnEndDraw(SpriteBatch obj)
+        {
+            if (Game.IsActive)
+            {
+                int depth = helper.GetDepth();
+
+                string depthText;
+
+                if (depth > 0)
+                {
+                    depthText = depth + " feet below";
+                }
+                else if (depth < 0)
+                {
+                    depth *= -1;
+                    depthText = depth + " feet above";
+                }
+                else
+                {
+                    depthText = "Level";
+                }
+
+                string position = string.Format("Position: X {0}, Y {1}\r\nDepth: {2}", (int)helper.Me.position.X, (int)helper.Me.position.Y, depthText);
+                Game.spriteBatch.DrawString(Main.fontMouseText, position, new Vector2(20, Main.screenHeight - 60), new Color(0, 255, 0));
+            }
+        }
+
+        private void ShowHelp()
+        {
+            Main.NewText("Teleport plugin commands:", 0, 200, 50);
+            Main.NewText("/tp [LocationName] (/teleport) - Teleports to location", 0, 255, 0);
+            Main.NewText("/settp [LocationName] (/setteleport) - Current location will be added with name", 0, 255, 0);
+            Main.NewText("/tplist (/teleportlist, /locationlist) - Lists saved location names", 0, 255, 0);
+            Main.NewText("/ptp [PlayerName] (/playerteleport, /partyteleport) - Teleport to player position", 0, 255, 0);
+            Main.NewText("/plist (/playerlist) - Shows online players names in server", 0, 255, 0);
+            Main.NewText("/home - Teleports to spawn point", 0, 255, 0);
+            Main.NewText("/sethome - Changes spawn point to your location", 0, 255, 0);
+            Main.NewText("/tphelp - Shows this texts :)", 0, 255, 0);
         }
     }
 }

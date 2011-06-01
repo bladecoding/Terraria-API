@@ -35,8 +35,7 @@ namespace TeleportPlugin
                 }
                 else
                 {
-                    location = new TeleportLocation(locationName, Me.position);
-                    Locations.Add(location);
+                    Locations.Add(new TeleportLocation(locationName));
                 }
             }
 
@@ -49,7 +48,8 @@ namespace TeleportPlugin
             {
                 foreach (TeleportLocation location in Locations)
                 {
-                    if (location.Name.Equals(locationName, StringComparison.InvariantCultureIgnoreCase))
+                    if (location.WorldName == Main.worldName && location.WorldID == Main.worldID &&
+                        location.Name.Equals(locationName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return location;
                     }
@@ -170,6 +170,20 @@ namespace TeleportPlugin
             TeleportToPosition(x, y);
         }
 
+        public void SetHome()
+        {
+            SetHome(Me.position);
+        }
+
+        public void SetHome(Vector2 position)
+        {
+            int x = (int)(Me.position.X / 16);
+            int y = (int)(Me.position.Y / 16);
+
+            Me.ChangeSpawn(x, y);
+            Main.NewText("Spawn point set!", 255, 240, 20);
+        }
+
         public List<string> GetPlayerList()
         {
             List<string> players = new List<string>();
@@ -183,6 +197,11 @@ namespace TeleportPlugin
             }
 
             return players;
+        }
+
+        public int GetDepth()
+        {
+            return (int)((double)((Me.position.Y + (float)Me.height) * 2f / 16f) - Main.worldSurface * 2.0);
         }
     }
 }
