@@ -64,6 +64,7 @@ namespace TerrariaAPI
                     var cp = new CompilerParameters();
                     cp.GenerateInMemory = true;
                     cp.GenerateExecutable = false;
+                    cp.IncludeDebugInformation = true;
                     cp.CompilerOptions = "/d:TERRARIA_API /unsafe";
 
                     foreach (var a in assemblies)
