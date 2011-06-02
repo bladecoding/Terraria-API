@@ -67,6 +67,7 @@ namespace TeleportPlugin
 
                 if (input.IsKeyUp(Keys.F4, true))
                 {
+                    // TODO: Not useable in fullscreen :( ?
                     if (teleportForm == null)
                         teleportForm = new TeleportForm();
                     teleportForm.Show();
@@ -76,7 +77,16 @@ namespace TeleportPlugin
                 {
                     helper.TeleportToLastPlayer();
                 }
+                else if (input.IsKeyDown(Keys.F6))
+                {
+                    helper.TeleportToLastLocation();
+                }
+                else if (input.IsKeyDown(Keys.F7))
+                {
+                    helper.TeleportToHome();
+                }
 
+                // TODO: Use spriteBatch.Draw
                 if (teleportForm != null && teleportForm.Visible)
                 {
                     teleportForm.curPosLabel.Text = string.Format("Current position - X:{0} Y:{1}", Main.player[Main.myPlayer].position.X, Main.player[Main.myPlayer].position.Y);
@@ -102,16 +112,55 @@ namespace TeleportPlugin
                 {
                     switch (msg.Command.ToLowerInvariant())
                     {
+                        case "teleport":
                         case "tp":
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
-                                helper.TeleportToPlayerByName(msg.Parameter);
+                                helper.TeleportToLocation(msg.Parameter);
                             }
                             else
                             {
-                                // If /tp then use last player
+                                helper.TeleportToLastLocation();
+                            }
+
+                            return true;
+                        case "setteleport":
+                        case "settp":
+                            if (!string.IsNullOrEmpty(msg.Parameter))
+                            {
+                                helper.AddCurrentLocation(msg.Parameter);
+                            }
+
+                            return true;
+                        case "locationlist":
+                        case "teleportlist":
+                        case "tplist":
+                            string locationList = string.Join(", ", helper.Locations);
+                            Main.NewText("Locations: " + locationList, 0, 255, 0);
+
+                            return true;
+                        case "playerteleport":
+                        case "partyteleport":
+                        case "ptp":
+                            if (!string.IsNullOrEmpty(msg.Parameter))
+                            {
+                                helper.TeleportToPlayer(msg.Parameter);
+                            }
+                            else
+                            {
                                 helper.TeleportToLastPlayer();
                             }
+
+                            return true;
+                        case "playerlist":
+                        case "plist":
+                            List<string> players = helper.GetPlayerList();
+                            string playerList = string.Join(", ", players);
+                            Main.NewText("Players: " + playerList, 0, 255, 0);
+
+                            return true;
+                        case "home":
+                            helper.TeleportToHome();
 
                             return true;
                     }
