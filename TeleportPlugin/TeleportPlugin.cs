@@ -41,6 +41,7 @@ namespace TeleportPlugin
         private InputManager input = new InputManager();
         private TeleportHelper helper = new TeleportHelper();
         private TeleportForm teleportForm;
+        private bool showTexts;
 
         public TeleportPlugin(Main game)
             : base(game)
@@ -92,7 +93,7 @@ namespace TeleportPlugin
                 }
                 else if (input.IsKeyDown(Keys.F8, true))
                 {
-                    ShowHelp();
+                    showTexts = !showTexts;
                 }
             }
         }
@@ -170,8 +171,12 @@ namespace TeleportPlugin
                             // TODO: Sethome not working correctly yet
 
                             return true;
+                        case "tpinfo":
+                            showTexts = !showTexts;
+
+                            return true;
                         case "tphelp":
-                            ShowHelp();
+                            ShowHelp(msg.Parameter);
 
                             return true;
                     }
@@ -183,7 +188,7 @@ namespace TeleportPlugin
 
         private void DrawHooks_OnEndDraw(SpriteBatch obj)
         {
-            if (Game.IsActive && !Main.playerInventory)
+            if (Game.IsActive && showTexts && !Main.playerInventory)
             {
                 int depth = helper.GetDepth();
 
@@ -204,12 +209,22 @@ namespace TeleportPlugin
                 }
 
                 string text = string.Format("Position: X {0}, Y {1}\r\nDepth: {2}", (int)helper.Me.position.X, (int)helper.Me.position.Y, depthText);
+
+                if (Main.netMode != 0)
+                {
+                    List<string> players = helper.GetPlayerList();
+                    string playerList = string.Join(", ", players);
+                    text += "\r\nPlayers: " + playerList;
+                }
+
                 DrawInfoTextWithShadow(text);
             }
         }
 
         private void DrawInfoTextWithShadow(string text)
         {
+            int lineOffset = 0;
+
             for (int i = 0; i < 5; i++)
             {
                 int x = 0;
@@ -235,22 +250,32 @@ namespace TeleportPlugin
                         break;
                 }
 
-                Vector2 newPosition = new Vector2((float)(22 + x), (float)(74 + 22 + y));
+                Vector2 newPosition = new Vector2((float)(22 + x), (float)(74 + 22 * lineOffset + y));
                 Game.spriteBatch.DrawString(Main.fontMouseText, text, newPosition, color);
             }
         }
 
-        private void ShowHelp()
+        private void ShowHelp(string page)
         {
-            Main.NewText("Teleport plugin commands:", 0, 200, 50);
-            Main.NewText("/tp [LocationName] (/teleport) - Teleports to location", 0, 255, 0);
-            Main.NewText("/settp [LocationName] (/setteleport) - Current location will be added with name", 0, 255, 0);
-            Main.NewText("/tplist (/teleportlist, /locationlist) - Lists saved location names", 0, 255, 0);
-            Main.NewText("/ptp [PlayerName] (/playerteleport, /partyteleport) - Teleport to player position", 0, 255, 0);
-            Main.NewText("/plist (/playerlist) - Shows online players names in server", 0, 255, 0);
-            Main.NewText("/home - Teleports to spawn point", 0, 255, 0);
-            Main.NewText("/sethome - Changes spawn point to your location", 0, 255, 0);
-            Main.NewText("/tphelp - Shows this texts :)", 0, 255, 0);
+            if (string.IsNullOrEmpty(page) || page == "1")
+            {
+                Main.NewText("/tp [LocationName] (/teleport) - Teleports to location", 0, 255, 0);
+                Main.NewText("/tp (F6, /teleport) - Teleports to last location", 0, 255, 0);
+                Main.NewText("/settp [LocationName] (/setteleport) - Current location will be added with name", 0, 255, 0);
+                Main.NewText("/tplist (/teleportlist, /locationlist) - Lists saved location names", 0, 255, 0);
+                Main.NewText("/ptp [PlayerName] (/playerteleport, /partyteleport) - Teleports to player position", 0, 255, 0);
+                Main.NewText("/ptp (F5, /playerteleport, /partyteleport) - Teleports to last player position", 0, 255, 0);
+                Main.NewText("Page 1 / 2", 0, 255, 0);
+            }
+            else if (page == "2")
+            {
+                Main.NewText("/plist (/playerlist) - Shows online players names in server", 0, 255, 0);
+                Main.NewText("/home (F7) - Teleports to spawn point", 0, 255, 0);
+                Main.NewText("/sethome - Changes spawn point to your location", 0, 255, 0);
+                Main.NewText("/tpinfo (F8) - Shows position, depth, player list in left top corner of screen", 0, 255, 0);
+                Main.NewText("/tphelp [PageNumber] - Shows this texts :)", 0, 255, 0);
+                Main.NewText("Page 2 / 2", 0, 255, 0);
+            }
         }
     }
 }
