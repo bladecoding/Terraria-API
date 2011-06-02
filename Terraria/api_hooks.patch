@@ -1,0 +1,607 @@
+11,14d10
+< .assembly extern TerrariaAPI
+< {
+<   .ver 1:0:0:0
+< }
+87c83
+< // Image base: 0x04B50000
+---
+> // Image base: 0x05CB0000
+15116,15124c15112
+< 	
+< 	//ADD
+< 	ldsfld     class Terraria.ServerSock[] Terraria.Netplay::serverSock
+<     ldloc.s    V_5
+<     ldelem.ref
+< 	ldfld      int32 Terraria.ServerSock::whoAmI
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.ServerHooks::Leave(int32)
+< 	//-ADD-
+< 	
+---
+> 
+16068,16071c16056,16057
+<   //EDIT
+<   .field public class [Microsoft.Xna.Framework.Game]Microsoft.Xna.Framework.GraphicsDeviceManager graphics
+<   .field public class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch
+<   //-EDIT-
+---
+>   .field private class [Microsoft.Xna.Framework.Game]Microsoft.Xna.Framework.GraphicsDeviceManager graphics
+>   .field private class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch
+17104,17107c17090
+<              valuetype [mscorlib]System.DateTime V_17)
+< 	//ADD
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.GameHooks::PreInitialize()
+< 	//-ADD-
+---
+>              valuetype [mscorlib]System.DateTime V_17)
+18365,18368c18348
+<     IL_0b48:  call       void Terraria.Star::SpawnStars()
+< 	//ADD
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.GameHooks::PostInitialize()
+< 	//-ADD-
+---
+>     IL_0b48:  call       void Terraria.Star::SpawnStars()
+19457,19462c19437
+<     IL_0cd7:  stsfld     class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteFont Terraria.Main::fontCombatText
+< 	//ADD
+< 	ldarg.0
+<     call  instance class [Microsoft.Xna.Framework]Microsoft.Xna.Framework.Content.ContentManager [Microsoft.Xna.Framework.Game]Microsoft.Xna.Framework.Game::get_Content()
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.GameHooks::LoadContent(class [Microsoft.Xna.Framework]Microsoft.Xna.Framework.Content.ContentManager)
+< 	//-ADD-
+---
+>     IL_0cd7:  stsfld     class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteFont Terraria.Main::fontCombatText
+19960,19965d19934
+< 	
+< 	//ADD
+< 	ldarg.1
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.GameHooks::Update(class [Microsoft.Xna.Framework.Game]Microsoft.Xna.Framework.GameTime)
+< 	//-ADD-
+< 	
+23527,23536d23495
+< 			 
+< 	//ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	ldarg.1
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::DrawTiles(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch, bool)
+< 	brfalse IL_0000
+< 	ret
+< 	//-ADD-
+< 			 
+25981,25990d25939
+< 			 
+< 	//ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	ldarg.1
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::DrawWater(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch, bool)
+< 	brfalse IL_0000
+< 	ret
+< 	//-ADD-
+< 			 
+26885,26893d26833
+< 			 
+< 	//ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::DrawGore(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch)
+< 	brfalse IL_0000
+< 	ret
+< 	//-ADD-
+< 			 
+27110,27119d27049
+< 			 
+< 	//ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	ldarg.1
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::DrawNpcs(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch, bool)
+< 	brfalse IL_0000
+< 	ret
+< 	//-ADD-
+< 			 
+28277,28286d28206
+< 			 
+< 	//ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	ldarg.1
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::DrawPlayer(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch, class Terraria.Player)
+< 	brfalse IL_0000
+< 	ret
+< 	//-ADD-
+< 			 
+32048,32069c31968
+< 	
+< 	IL_030f:  
+< 	
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+<     ldc.i4.2
+<     div
+<     ldsfld     class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.Texture2D Terraria.Main::chatBackTexture
+<     callvirt   instance int32 [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.Texture2D::get_Width()
+<     ldc.i4.2
+<     div
+<     sub
+< 	ldc.i4 20
+< 	add
+< //-ADD-
+< 
+< //DEL
+< /*
+<     ldc.i4     0xaa
+< */
+< //-DEL-
+< 
+---
+>     IL_030f:  ldc.i4     0xaa
+32515,32536c32414
+< 	
+< 	IL_06e5:  
+< 	
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+<     ldc.i4.2
+<     div
+<     ldsfld     class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.Texture2D Terraria.Main::chatBackTexture
+<     callvirt   instance int32 [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.Texture2D::get_Width()
+<     ldc.i4.2
+<     div
+<     sub
+< 	ldc.i4 30
+< 	add
+< //-ADD-
+< 
+< //DEL
+< /*
+<     ldc.i4     0xb4
+< */
+< //-DEL-
+<     
+---
+>     IL_06e5:  ldc.i4     0xb4
+33514,33522d33391
+< 			 
+< 	//ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::DrawInterface(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch)
+< 	brfalse IL_0000
+< 	ret
+< 	//-ADD-
+< 			 
+34351,34363c34220
+< 	
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	ldc.i4     300
+< 	sub
+< //-ADD-
+< 	
+< //DEL
+< /*
+< 	IL_085c:  ldc.i4     0x1f4
+< */
+< //-DEL-
+<     
+---
+>     IL_085c:  ldc.i4     0x1f4
+34486,34498c34343
+< 	
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	ldc.i4     300
+< 	sub
+< //-ADD-
+< 	
+< //DEL
+< /*
+< 	IL_0986:  ldc.i4     0x1f4
+< */
+< //-DEL-
+< 	
+---
+>     IL_0986:  ldc.i4     0x1f4
+34596,34605d34440
+< 	
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	conv.r4
+< 	ldc.r4     50.
+< 	sub
+< //-ADD
+< 	
+< //DEL
+< /*
+34607,34609d34441
+< */
+< //-DEL-
+< 	
+34702,34711d34533
+< 	
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	conv.r4
+< 	ldc.r4     25.
+< 	sub
+< //-ADD
+< 	
+< //DEL
+< /*
+34713,34716d34534
+< */
+< //-DEL-
+< 	
+<     
+34827,34839c34645
+<     
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	ldc.i4     300
+< 	sub
+< //-ADD-
+< 	
+< //DEL
+< /*
+< 	IL_0c67:  ldc.i4     0x1f4
+< */
+< //-DEL-	
+< 
+---
+>     IL_0c67:  ldc.i4     0x1f4
+34965,34977c34771
+<     
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	ldc.i4     300
+< 	sub
+< //-ADD-
+< 	
+< //DEL
+< /*
+< 	IL_0d91:  ldc.i4     0x1f4
+< */
+< //-DEL-
+< 	
+---
+>     IL_0d91:  ldc.i4     0x1f4
+45236,45248c45030
+<     
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	ldc.i4     300
+< 	sub
+< //-ADD-
+< 	
+< //DEL
+< /*
+< 	IL_7b24:  ldc.i4     0x1f4
+< */
+< //-DEL-
+< 	
+---
+>     IL_7b24:  ldc.i4     0x1f4
+45253,45265c45035
+<     
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	ldc.i4     300
+< 	sub
+< //-ADD-
+< 	
+< //DEL
+< /*
+< 	IL_7b38:  ldc.i4     0x1f4
+< */
+< //-DEL-
+< 	
+---
+>     IL_7b38:  ldc.i4     0x1f4
+45328,45340c45098
+< 
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	ldc.i4     38
+< 	sub
+< //-ADD-
+< 	
+< //DEL
+< /*
+< 	IL_7bec:  ldc.i4     0x2fa
+< */
+< //-DEL-
+< 
+---
+>     IL_7bec:  ldc.i4     0x2fa
+45345,45357c45103
+<     
+< //ADD
+< 	ldsfld     int32 Terraria.Main::screenWidth
+< 	ldc.i4     38
+< 	sub
+< //-ADD-
+< 	
+< //DEL
+< /*
+< 	IL_7c00:  ldc.i4     0x2fa
+< */
+< //-DEL-
+< 	
+---
+>     IL_7c00:  ldc.i4     0x2fa
+46526,46534d46271
+< 			 
+< 	//ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::DrawMenu(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch)
+< 	brfalse IL_0000
+< 	ret
+< 	//-ADD-
+< 			 
+53213,53221c52950
+<     IL_38f6: 
+< 
+< //ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::EndDrawMenu(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch)
+< //-ADD-
+< 
+< 	ldarg.0
+---
+>     IL_38f6:  ldarg.0
+53607c53336
+<              object[] V_134)			 
+---
+>              object[] V_134)
+60179,60190c59908,59909
+<     IL_42b6:  call       instance void Terraria.Main::DrawInterface()
+< 	
+< 	
+< 	IL_42bb:
+< 	
+< 	//ADD
+< 	ldarg.0
+<     ldfld      class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch Terraria.Main::spriteBatch
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.DrawHooks::EndDraw(class [Microsoft.Xna.Framework.Graphics]Microsoft.Xna.Framework.Graphics.SpriteBatch)
+< 	//-ADD-
+< 	
+<     ldarg.0
+---
+>     IL_42b6:  call       instance void Terraria.Main::DrawInterface()
+>     IL_42bb:  ldarg.0
+63819,63824c63538
+< 	  
+< //ADD
+< 	  ldloc.0
+< 	  call void [TerrariaAPI]TerrariaAPI.Program::Initialize(class Terraria.Main)
+< //-ADD-
+< 	  
+---
+> 
+63827,63831d63540
+< 	  
+< 	  //ADD
+< 	  call void [TerrariaAPI]TerrariaAPI.Program::DeInitialize()
+< 	  //-ADD-
+< 	  
+63849,63850c63558
+< //EDIT
+< .class public auto ansi beforefieldinit Terraria.WorldGen
+---
+> .class private auto ansi beforefieldinit Terraria.WorldGen
+63852d63559
+< //-EDIT-
+139813,139817c139520,139523
+< //EDIT private to public
+<   .field public static int32 spawnSpaceX
+<   .field public static int32 spawnSpaceY
+<   .field public static int32 spawnRangeX
+<   .field public static int32 spawnRangeY
+---
+>   .field private static int32 spawnSpaceX
+>   .field private static int32 spawnSpaceY
+>   .field private static int32 spawnRangeX
+>   .field private static int32 spawnRangeY
+139820,139826c139526,139532
+<   .field public static int32 activeRangeX
+<   .field public static int32 activeRangeY
+<   .field public static int32 townRangeX
+<   .field public static int32 townRangeY
+<   .field public static int32 activeTime
+<   .field public static int32 defaultSpawnRate
+<   .field public static int32 defaultMaxSpawns
+---
+>   .field private static int32 activeRangeX
+>   .field private static int32 activeRangeY
+>   .field private static int32 townRangeX
+>   .field private static int32 townRangeY
+>   .field private static int32 activeTime
+>   .field private static int32 defaultSpawnRate
+>   .field private static int32 defaultMaxSpawns
+139833,139835c139539,139540
+<   .field public static int32 spawnRate
+<   .field public static int32 maxSpawns
+< //-EDIT-
+---
+>   .field private static int32 spawnRate
+>   .field private static int32 maxSpawns
+140228,140236c139933
+< 	IL_0328:
+< 	
+< //ADD
+< 	ldarga 1
+< 	ldarg.0
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.NpcHooks::SetDefaultsString(string&, class Terraria.NPC)
+< //-ADD-
+< 	
+<     ret
+---
+>     IL_0328:  ret
+142277,142286c141974
+< 	
+< 	IL_1522: 
+< 	
+< //ADD
+< 	ldarga 1
+< 	ldarg.0
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.NpcHooks::SetDefaultsInt(int32&, class Terraria.NPC)
+< //-ADD-
+< 	
+<     ret
+---
+>     IL_1522:  ret
+160284,160298d159971
+< 	
+< //ADD
+< 	ldarg 0
+< 	ldarga 1
+< 	ldarga 2
+< 	ldarga 3
+< 	ldloca 0
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.NpcHooks::StrikeNpc(class Terraria.NPC, int32&, float32&, int32&, float64&)
+< 	brfalse dontret
+< 	ldloc 0
+< 	ret
+< 	dontret:
+< //-ADD-
+< 	
+< 	
+170465,170473c170138
+< 	IL_0707:
+< 	
+< //ADD
+< 	ldarga 1
+< 	ldarg.0
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.ItemHooks::SetDefaultsString(string&, class Terraria.Item)
+< //-ADD-
+< 	
+<     ret
+---
+>     IL_0707:  ret
+179704,179713c179369
+< 	
+< 	IL_6228:
+< 	
+< //ADD
+< 	ldarga 1
+< 	ldarg.0
+< 	call void [TerrariaAPI]TerrariaAPI.Hooks.ItemHooks::SetDefaultsInt(int32&, class Terraria.Item)
+< //-ADD-
+< 	
+<     ret
+---
+>     IL_6228:  ret
+185156d184811
+< 
+185236,185249d184890
+< 	
+< 	IL_008d: 
+< 	
+< //ADD
+< 	ldloca 0
+< 	ldarg 0
+< 	ldloca 1
+< 	ldarga 2
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.NetHooks::GetData(uint8&, class Terraria.messageBuffer, int32&, int32&)
+< 	brfalse dontret
+< 	ret
+< 	dontret:
+< //-ADD-
+< 	
+185251c184892
+<      ldsfld     int32 Terraria.Main::netMode
+---
+>     IL_008d:  ldsfld     int32 Terraria.Main::netMode
+185300,185306d184940
+< 	
+< 	//ADD
+< 	ldarg.0
+<     ldfld      int32 Terraria.messageBuffer::whoAmI
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.ServerHooks::Join(int32)
+< 	brfalse     IL_36f8
+< 	//-ADD-
+185433,185436c185067,185069
+< 	
+<     IL_0205:  
+< 	ldloc.0
+< 	ldc.i4.3
+---
+> 
+>     IL_0205:  ldloc.0
+>     IL_0206:  ldc.i4.3
+189454,189463d189086
+< 	
+< 	//ADD
+< 	
+< 	ldarg.0
+<     ldfld      int32 Terraria.messageBuffer::whoAmI
+< 	ldloc.s    V_108
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.ServerHooks::Chat(int32, string)
+< 	brtrue     IL_36f8
+< 	
+< 	//-ADD-
+189466c189089
+<     IL_23b9:  callvirt   instance string [mscorlib]System.String::ToLower()	
+---
+>     IL_23b9:  callvirt   instance string [mscorlib]System.String::ToLower()
+191843c191466
+<     IL_36f8: ret
+---
+>     IL_36f8:  ret
+191887c191510
+<     .maxstack  12
+---
+>     .maxstack  7
+192172,192187d191794
+< 			 
+< //ADD
+< 	ldc.i4.1
+< 	ldarga msgType
+< 	ldarga remoteClient
+< 	ldarga ignoreClient
+< 	ldarga text
+< 	ldarga number
+< 	ldarga number2
+< 	ldarga number3
+< 	ldarga number4
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.NetHooks::SendData(bool, int32&, int32&, int32&, string&, int32&, float32&, float32&, float32&)
+< 	brfalse IL_0000
+< 	ret
+< //-ADD-
+< 
+199179,199195c198786
+<     IL_3441: 
+< 
+< //ADD
+< 	ldc.i4.0
+< 	ldarga msgType
+< 	ldarga remoteClient
+< 	ldarga ignoreClient
+< 	ldarga text
+< 	ldarga number
+< 	ldarga number2
+< 	ldarga number3
+< 	ldarga number4
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.NetHooks::SendData(bool, int32&, int32&, int32&, string&, int32&, float32&, float32&, float32&)
+< 	pop
+< //-ADD-
+< 
+< 	ret
+---
+>     IL_3441:  ret
+199616,199623d199206
+< 	
+< //ADD
+< 	ldarg.0
+< 	call bool [TerrariaAPI]TerrariaAPI.Hooks.NetHooks::GreetPlayer(int32)
+< 	brfalse IL_0000
+< 	ret
+< //-ADD-
+< 			 
+223641c223224
+< // WARNING: Created Win32 resource file C:\Program Files (x86)\Steam\steamapps\common\terraria\TerrariaAPI\Terraria\Terraria.res
+---
+> // WARNING: Created Win32 resource file D:\Program Files (x86)\terraria Test\Terraria_il_v2.res
