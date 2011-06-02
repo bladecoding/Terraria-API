@@ -14,17 +14,19 @@ namespace ResolutionPlugin
     {
         public override string Name
         {
-            get { return "ResolutionPlugin"; }
+            get { return "Resolution"; }
         }
 
         public override Version Version
         {
-            get { return new Version(1, 0); }
+            get { return new Version(2, 0); }
         }
+
         public override Version APIVersion
         {
             get { return new Version(1, 1); }
         }
+
         public override string Author
         {
             get { return "Jaex / High"; }
