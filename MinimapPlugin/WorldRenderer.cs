@@ -19,79 +19,84 @@ namespace MinimapPlugin
             Tiles = tiles;
             MaxX = width;
             MaxY = height;
-            var r = new Random();
-            Colors = new int[0x53];
 
-            Colors[0] = 0xFF << 24 | 0x976b4b;
+            Random r = new Random();
+
+            Colors = new int[83];
+
+            Colors[0] = Color.FromArgb(175, 131, 101).ToArgb();
             Colors[1] = Color.Gray.ToArgb();
             Colors[2] = Color.DarkGreen.ToArgb();
             Colors[4] = Color.OrangeRed.ToArgb();
             Colors[5] = Color.RosyBrown.ToArgb();
-
             Colors[22] = Color.Purple.ToArgb();
             Colors[23] = Color.MediumPurple.ToArgb();
-
             Colors[53] = Color.Yellow.ToArgb();
+            Colors[80] = Color.Blue.ToArgb();
+            Colors[81] = Color.Red.ToArgb();
+            Colors[82] = Color.FromArgb(1, 1, 1).ToArgb();
 
-            Colors[0x50] = Color.Blue.ToArgb();
-            Colors[0x51] = Color.Red.ToArgb();
-            unchecked
-            {
-                Colors[0x52] = (int)0xFF010101;
-            }
-
+            // Fill other colors randomly
             for (int i = 0; i < Colors.Length; i++)
             {
-                if (Colors[i] != 0)
-                    continue;
-                int c = (int)(r.Next(int.MinValue, int.MaxValue) | 0xFF000000);
-                if (Colors.Any(o => o == c))
+                if (Colors[i] == 0)
                 {
-                    i--;
-                    continue;
+                    int c = 0;
+
+                    do
+                    {
+                        c = r.Next(int.MinValue, int.MaxValue) | 0xFF << 24;
+                    }
+                    while (Colors.Contains(c));
+
+                    Colors[i] = c;
                 }
-                Colors[i] = c;
             }
         }
 
-        public int[,] FromTiles(int tilex, int tiley, int width, int height)
+        public int[,] GenerateMinimap(int tilex, int tiley, int width, int height)
         {
-            var ints = new int[width, height];
+            tilex -= width / 2;
+            tiley -= height / 2;
+
+            int[,] ints = new int[width, height];
 
             for (int y = 0; y < height; y++)
             {
                 if (y + tiley < 0 || y + tiley >= MaxY)
                     continue;
+
                 for (int x = 0; x < width; x++)
                 {
                     if (x + tilex < 0 || x + tilex > MaxX)
                         continue;
-                    var tile = Tiles[x + tilex, y + tiley];
-                    if (tile == null)
-                        continue;
 
-                    if (tile.wall > 0 || y + tiley > SurfaceY)
-                        ints[x, y] = 0xFF << 24 | 0x725138;
-                    if (tile.active)
-                        ints[x, y] = Colors[tile.type];
-                    if (tile.liquid > 0)
-                        ints[x, y] = Colors[0x50];
-                    if (tile.lava)
-                        ints[x, y] = Colors[0x51];
+                    Tile tile = Tiles[x + tilex, y + tiley];
+
+                    if (tile != null)
+                    {
+                        if (tile.wall > 0 || y + tiley > SurfaceY)
+                            ints[x, y] = 0xFF << 24 | 0x725138;
+
+                        if (tile.active)
+                            ints[x, y] = Colors[tile.type];
+
+                        if (tile.liquid > 0)
+                        {
+                            if (tile.lava)
+                            {
+                                ints[x, y] = Colors[81];
+                            }
+                            else
+                            {
+                                ints[x, y] = Colors[80];
+                            }
+                        }
+                    }
                 }
             }
 
             return ints;
-        }
-
-        public Bitmap FromColors()
-        {
-            var img = new Bitmap(1, Colors.Length);
-
-            for (int y = 0; y < Colors.Length; y++)
-                img.SetPixel(0, y, Color.FromArgb(Colors[y]));
-
-            return img;
         }
 
         /*public Bitmap FromWalls()
@@ -112,16 +117,5 @@ namespace MinimapPlugin
             img.UnlockBits(bd);
             return img;
         }*/
-
-        public void ToColors(Bitmap img)
-        {
-            if (img.Height != Colors.Length)
-                throw new NotSupportedException();
-
-            for (int i = 0; i < Colors.Length; i++)
-            {
-                Colors[i] = img.GetPixel(0, i).ToArgb();
-            }
-        }
     }
 }
