@@ -15,12 +15,21 @@ namespace TerrariaAPI
     public static class Program
     {
         public static readonly Version ApiVersion = new Version(1, 1, 0, 2);
+#if SERVER
+        static readonly string PluginsPath = "serverplugins";
+#else
         static readonly string PluginsPath = "plugins";
+#endif
+
         static List<PluginContainer> Plugins = new List<PluginContainer>();
         static List<string> FailedPlugins = new List<string>();
+        static Assembly[] Assemblies;
+        static Main Game;
 
         public static void Initialize(Main main)
         {
+            Game = main;
+
             if (!Directory.Exists(PluginsPath))
             {
                 Directory.CreateDirectory(PluginsPath);
@@ -28,7 +37,7 @@ namespace TerrariaAPI
 
             //Not loaded for some reason :s
             Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            Assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             bool error = false;
             foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.dll"))
@@ -60,39 +69,15 @@ namespace TerrariaAPI
             {
                 try
                 {
-                    var prov = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
-                    var cp = new CompilerParameters();
-                    cp.GenerateInMemory = true;
-                    cp.GenerateExecutable = false;
-                    cp.CompilerOptions = "/d:TERRARIA_API /unsafe";
-
-                    foreach (var a in assemblies)
+                    var asm = Compile(f.Name, File.ReadAllText(f.FullName));
+                    if (asm != null)
                     {
-                        if (!cp.ReferencedAssemblies.Contains(a.Location))
-                            cp.ReferencedAssemblies.Add(a.Location);
-                    }
-                    var r = prov.CompileAssemblyFromSource(cp, File.ReadAllText(f.FullName));
-                    if (r.Errors.Count > 0)
-                    {
-                        for (int i = 0; i < r.Errors.Count; i++)
-                        {
-                            File.AppendAllText("ErrorLog.txt",
-                                               "Error compiling: " + f.Name + Environment.NewLine + "Line number " +
-                                               r.Errors[i].Line +
-                                               ", Error Number: " + r.Errors[i].ErrorNumber +
-                                               ", '" + r.Errors[i].ErrorText + ";" +
-                                               Environment.NewLine + Environment.NewLine);
-                            FailedPlugins.Add(f.Name);
-                            error = true;
-                        }
-                    }
-                    else
-                    {
-                        foreach (var t in r.CompiledAssembly.GetTypes())
+                        foreach (var t in asm.GetTypes())
                         {
                             if (t.BaseType == typeof(TerrariaPlugin))
                             {
-                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, main)));
+                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game),
+                                                                false));
                             }
                         }
                     }
@@ -132,6 +117,98 @@ namespace TerrariaAPI
                                 "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             DrawHooks.OnEndDrawMenu += DrawHooks_OnEndDrawMenu;
+            NetHooks.OnPreSendData += NetHooks_OnPreSendData;
+        }
+
+        static Assembly Compile(string name, string data, bool addfail = true)
+        {
+            var prov = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
+            var cp = new CompilerParameters();
+            cp.GenerateInMemory = true;
+            cp.GenerateExecutable = false;
+            cp.CompilerOptions = "/d:TERRARIA_API /unsafe";
+
+            foreach (var a in Assemblies)
+            {
+                if (!cp.ReferencedAssemblies.Contains(a.Location))
+                    cp.ReferencedAssemblies.Add(a.Location);
+            }
+            var r = prov.CompileAssemblyFromSource(cp, data);
+            if (r.Errors.Count > 0)
+            {
+                for (int i = 0; i < r.Errors.Count; i++)
+                {
+                    File.AppendAllText("ErrorLog.txt",
+                                       "Error compiling: " + name + Environment.NewLine + "Line number " +
+                                       r.Errors[i].Line +
+                                       ", Error Number: " + r.Errors[i].ErrorNumber +
+                                       ", '" + r.Errors[i].ErrorText + ";" +
+                                       Environment.NewLine + Environment.NewLine);
+                    if (addfail)
+                        FailedPlugins.Add(name);
+                }
+                return null;
+            }
+            return r.CompiledAssembly;
+        }
+
+        private static void NetHooks_OnPreSendData(SendDataEventArgs e)
+        {
+            if (Main.netMode != 1)
+                return;
+
+            if (e.msgType != 0x19)
+                return;
+
+            if (!e.text.StartsWith("/reload"))
+                return;
+
+            Main.NewText("Reloading plugins");
+
+            for (int i = Plugins.Count - 1; i >= 0; i--)
+            {
+                if (!Plugins[i].Dll)
+                {
+                    Plugins[i].DeInitialize();
+                    Plugins[i].Dispose();
+                    Plugins.RemoveAt(i);
+                }
+            }
+
+            foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.cs"))
+            {
+                try
+                {
+                    var asm = Compile(f.Name, File.ReadAllText(f.FullName));
+                    if (asm != null)
+                    {
+                        foreach (var t in asm.GetTypes())
+                        {
+                            if (t.BaseType == typeof(TerrariaPlugin))
+                            {
+                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game), false));
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (ex is TargetInvocationException)
+                        ex = ((TargetInvocationException)ex).InnerException;
+                    File.AppendAllText("ErrorLog.txt",
+                                       "Exception while trying to load: " + f.Name + Environment.NewLine +
+                                       ex.Message + Environment.NewLine + "Stack trace: " +
+                                       Environment.NewLine + ex.StackTrace +
+                                       Environment.NewLine + Environment.NewLine);
+                    FailedPlugins.Add(f.Name);
+                }
+            }
+
+            for (int i = 0; i < Plugins.Count; i++)
+            {
+                if (!Plugins[i].Dll)
+                    Plugins[i].Initialize();
+            }
         }
 
         private static void DrawHooks_OnEndDrawMenu(SpriteBatch obj)

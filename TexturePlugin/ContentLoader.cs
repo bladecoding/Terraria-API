@@ -202,8 +202,8 @@ namespace TexturePlugin
             Main.bubbleTexture = GetOrNull(textures, "Bubble") ?? Main.bubbleTexture;
             Main.manaTexture = GetOrNull(textures, "Mana") ?? Main.manaTexture;
             Main.cursorTexture = GetOrNull(textures, "Cursor") ?? Main.cursorTexture;
-            Main.treeTopTexture = GetOrNull(textures, "Tree_Tops") ?? Main.treeTopTexture;
-            Main.treeBranchTexture = GetOrNull(textures, "Tree_Branches") ?? Main.treeBranchTexture;
+            //Main.treeTopTexture = GetOrNull(textures, "Tree_Tops") ?? Main.treeTopTexture;
+            //Main.treeBranchTexture = GetOrNull(textures, "Tree_Branches") ?? Main.treeBranchTexture;
             Main.shroomCapTexture = GetOrNull(textures, "Shroom_Tops") ?? Main.shroomCapTexture;
             Main.inventoryBackTexture = GetOrNull(textures, "Inventory_Back") ?? Main.inventoryBackTexture;
             Main.textBackTexture = GetOrNull(textures, "Text_Back") ?? Main.textBackTexture;

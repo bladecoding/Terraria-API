@@ -1,9 +1,31 @@
 ﻿using System;
+using System.Text;
+using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
     public static class ServerHooks
     {
+        static ServerHooks()
+        {
+            NetHooks.OnPreGetData += NetHooks_OnPreGetData;
+        }
+
+        static void NetHooks_OnPreGetData(GetDataEventArgs e)
+        {
+            if (e.MsgID == 0x1)
+            {
+                e.Handled = !Join(e.Msg.whoAmI);
+                if (e.Handled)
+                    Netplay.serverSock[e.Msg.whoAmI].kill = true;
+            }
+            else if (e.MsgID == 0x19)
+            {
+                string str = Encoding.ASCII.GetString(e.Msg.readBuffer, e.Index + 0x4, e.Length - 0x5);
+                e.Handled = Chat(e.Msg.whoAmI, str);
+            }
+        }
+
         /// <summary>
         /// arg1 = WhoAmI
         /// </summary>
