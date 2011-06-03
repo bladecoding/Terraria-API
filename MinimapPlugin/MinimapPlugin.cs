@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
@@ -30,22 +31,12 @@ namespace MinimapPlugin
 
         public override string Author
         {
-            get { return "high"; }
+            get { return "High"; }
         }
 
         public override string Description
         {
             get { return "Its a minimap, what do you think?"; }
-        }
-
-        public MinimapPlugin(Main main)
-            : base(main)
-        {
-        }
-
-        private void GameHooks_OnLoadContent(Microsoft.Xna.Framework.Content.ContentManager obj)
-        {
-            //chest = BitmapToTexture(Game.GraphicsDevice, Properties.Resources.chest);
         }
 
         WorldRenderer rend = null;
@@ -54,36 +45,59 @@ namespace MinimapPlugin
         Texture2D chest;
         Thread renderthread;
 
+        public MinimapPlugin(Main main)
+            : base(main)
+        {
+        }
+
+        public override void Initialize()
+        {
+            renderthread = new Thread(RenderMap);
+            renderthread.Start();
+            GameHooks.OnLoadContent += GameHooks_OnLoadContent;
+            GameHooks.OnUpdate += GameHooks_OnUpdate;
+            DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
+        }
+
+        public override void DeInitialize()
+        {
+            renderthread = null;
+            GameHooks.OnLoadContent -= GameHooks_OnLoadContent;
+            GameHooks.OnUpdate -= GameHooks_OnUpdate;
+            DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
+        }
+
+        private void GameHooks_OnLoadContent(ContentManager obj)
+        {
+            // chest = BitmapToTexture(Game.GraphicsDevice, Properties.Resources.chest);
+        }
+
+        private void GameHooks_OnUpdate(GameTime obj)
+        {
+            if (Game.IsActive)
+            {
+                input.Update();
+
+                if (input.IsKeyUp(Keys.F6, true))
+                {
+                    if (rend == null)
+                    {
+                        rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY) { SurfaceY = (int)Main.worldSurface };
+                    }
+                    else
+                    {
+                        rend = null;
+                    }
+                }
+            }
+        }
+
         private void DrawHooks_OnEndDraw(SpriteBatch arg1)
         {
             if (rend != null && minimap != null)
             {
-                Game.spriteBatch.Draw(minimap, new Vector2(Main.screenWidth - minimap.Width, Main.screenHeight - minimap.Height), Color.White);
-                for (int i = 0; i < Main.player.Length; i++)
-                {
-                    if (!Main.player[i].active)
-                        continue;
-                    int mex = (int)(Main.player[Main.myPlayer].position.X / 16);
-                    int mey = (int)(Main.player[Main.myPlayer].position.Y / 16);
-                    int targetx = (int)(Main.player[i].position.X / 16);
-                    int targety = (int)(Main.player[i].position.Y / 16);
-                    if (targetx < mex - 100)
-                        continue;
-                    if (targetx > mex + 100)
-                        continue;
-                    if (targety < mey - 100)
-                        continue;
-                    if (targety > mey + 100)
-                        continue;
-
-                    targetx = targetx - mex + 100;
-                    targety = targety - mey + 100;
-
-                    targetx -= Main.player[i].width / 2;
-                    targety -= Main.player[i].height;
-
-                    //Game.spriteBatch.Draw(chest, new Vector2(Main.screenWidth - minimap.Width + targetx, Main.screenHeight - minimap.Height + targety), Color.White);
-                }
+                Game.spriteBatch.Draw(minimap, new Vector2(Main.screenWidth - minimap.Width - 1, Main.screenHeight - minimap.Height - 1), Color.White);
+                // DrawPlayers();
             }
         }
 
@@ -93,18 +107,22 @@ namespace MinimapPlugin
             {
                 if (rend != null)
                 {
+                    int curx = (int)(Main.player[Main.myPlayer].position.X / 16);
+                    int cury = (int)(Main.player[Main.myPlayer].position.Y / 16);
                     int width = 200;
                     int height = 200;
-                    int curx = (int)(Main.player[Main.myPlayer].position.X / 16) - 100;
-                    int cury = (int)(Main.player[Main.myPlayer].position.Y / 16) - 100;
-                    var img = rend.FromTiles(curx, cury, width, height);
+
+                    int[,] img = rend.GenerateMinimap(curx, cury, width, height);
+
                     for (int x = 0; x < width; x++)
                         img[x, 0] = -16777216;
+
                     for (int x = 0; x < height; x++)
                         img[0, x] = -16777216;
 
                     minimap = IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }
+
                 Thread.Sleep(33);
             }
         }
@@ -126,7 +144,7 @@ namespace MinimapPlugin
 
         private static Texture2D IntsToTexture(GraphicsDevice gd, int[,] img, int width, int height)
         {
-            var ret = new Texture2D(gd, width, height);
+            Texture2D ret = new Texture2D(gd, width, height);
             int[] ints = new int[width * height];
             for (int y = 0; y < height; y++)
             {
@@ -144,36 +162,35 @@ namespace MinimapPlugin
             return ret;
         }
 
-        private void GameHooks_OnUpdate(GameTime obj)
+        private void DrawPlayers()
         {
-            if (!Game.IsActive)
-                return;
-
-            input.Update();
-
-            if (input.IsKeyUp(Keys.F6, true))
+            for (int i = 0; i < Main.player.Length; i++)
             {
-                if (rend == null)
-                    rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY) { SurfaceY = (int)Main.worldSurface };
-                else
-                    rend = null;
+                if (Main.player[i].active)
+                {
+                    int mex = (int)(Main.player[Main.myPlayer].position.X / 16);
+                    int mey = (int)(Main.player[Main.myPlayer].position.Y / 16);
+                    int targetx = (int)(Main.player[i].position.X / 16);
+                    int targety = (int)(Main.player[i].position.Y / 16);
+
+                    if (targetx < mex - 100)
+                        continue;
+                    if (targetx > mex + 100)
+                        continue;
+                    if (targety < mey - 100)
+                        continue;
+                    if (targety > mey + 100)
+                        continue;
+
+                    targetx = targetx - mex + 100;
+                    targety = targety - mey + 100;
+
+                    targetx -= Main.player[i].width / 2;
+                    targety -= Main.player[i].height;
+
+                    Game.spriteBatch.Draw(chest, new Vector2(Main.screenWidth - minimap.Width + targetx, Main.screenHeight - minimap.Height + targety), Color.White);
+                }
             }
-        }
-
-        public override void Initialize()
-        {
-            renderthread = new Thread(RenderMap);
-            renderthread.Start();
-            GameHooks.OnLoadContent += GameHooks_OnLoadContent;
-            GameHooks.OnUpdate += GameHooks_OnUpdate;
-            DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
-        }
-
-        public override void DeInitialize()
-        {
-            renderthread = null;
-            GameHooks.OnUpdate -= GameHooks_OnUpdate;
-            DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
         }
     }
 }

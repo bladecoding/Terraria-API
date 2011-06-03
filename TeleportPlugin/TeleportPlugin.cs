@@ -68,7 +68,23 @@ namespace TeleportPlugin
             {
                 input.Update();
 
-                if (input.IsKeyUp(Keys.F4, true))
+                if (input.IsKeyDown(Keys.F1))
+                {
+                    helper.TeleportToLastPlayer();
+                }
+                else if (input.IsKeyDown(Keys.F2))
+                {
+                    helper.TeleportToLastLocation();
+                }
+                else if (input.IsKeyDown(Keys.F3))
+                {
+                    helper.TeleportToHome();
+                }
+                else if (input.IsKeyDown(Keys.F4, true))
+                {
+                    showTexts = !showTexts;
+                }
+                else if (input.IsKeyUp(Keys.F5, true))
                 {
                     // TODO: TeleportForm need to use TeleportHelper also need redesign for show player list etc.
                     if (teleportForm == null)
@@ -78,22 +94,6 @@ namespace TeleportPlugin
 
                     teleportForm.Show();
                     teleportForm.BringToFront();
-                }
-                else if (input.IsKeyDown(Keys.F5))
-                {
-                    helper.TeleportToLastPlayer();
-                }
-                else if (input.IsKeyDown(Keys.F6))
-                {
-                    helper.TeleportToLastLocation();
-                }
-                else if (input.IsKeyDown(Keys.F7))
-                {
-                    helper.TeleportToHome();
-                }
-                else if (input.IsKeyDown(Keys.F8, true))
-                {
-                    showTexts = !showTexts;
                 }
             }
         }
@@ -260,19 +260,19 @@ namespace TeleportPlugin
             if (string.IsNullOrEmpty(page) || page == "1")
             {
                 Main.NewText("/tp [LocationName] (/teleport) - Teleports to location", 0, 255, 0);
-                Main.NewText("/tp (F6, /teleport) - Teleports to last location", 0, 255, 0);
+                Main.NewText("/tp (F2, /teleport) - Teleports to last location", 0, 255, 0);
                 Main.NewText("/settp [LocationName] (/setteleport) - Current location will be added with name", 0, 255, 0);
                 Main.NewText("/tplist (/teleportlist, /locationlist) - Lists saved location names", 0, 255, 0);
                 Main.NewText("/ptp [PlayerName] (/playerteleport, /partyteleport) - Teleports to player position", 0, 255, 0);
-                Main.NewText("/ptp (F5, /playerteleport, /partyteleport) - Teleports to last player position", 0, 255, 0);
+                Main.NewText("/ptp (F1, /playerteleport, /partyteleport) - Teleports to last player position", 0, 255, 0);
                 Main.NewText("Page 1 / 2", 0, 255, 0);
             }
             else if (page == "2")
             {
                 Main.NewText("/plist (/playerlist) - Shows online players names in server", 0, 255, 0);
-                Main.NewText("/home (F7) - Teleports to spawn point", 0, 255, 0);
+                Main.NewText("/home (F3) - Teleports to spawn point", 0, 255, 0);
                 Main.NewText("/sethome - Changes spawn point to your location", 0, 255, 0);
-                Main.NewText("/tpinfo (F8) - Shows position, depth, player list in left top corner of screen", 0, 255, 0);
+                Main.NewText("/tpinfo (F4) - Shows position, depth, player list in left top corner of screen", 0, 255, 0);
                 Main.NewText("/tphelp [PageNumber] - Shows this texts :)", 0, 255, 0);
                 Main.NewText("Page 2 / 2", 0, 255, 0);
             }

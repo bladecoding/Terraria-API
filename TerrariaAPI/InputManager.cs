@@ -31,18 +31,14 @@ namespace TerrariaAPI
             currentKeyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
-            if (OnMouse1Press != null)
+            if (OnMouse1Press != null && currentMouseState.LeftButton == ButtonState.Pressed)
             {
-                if (currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
-                    OnMouse1Press(GetMousePos(), true);
-                else if (currentMouseState.LeftButton == ButtonState.Pressed)
-                    OnMouse1Press(GetMousePos(), false);
+                OnMouse1Press(GetMousePos(), previousMouseState.LeftButton == ButtonState.Released);
             }
 
-            if (OnMouse1Release != null)
+            if (OnMouse1Release != null && currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed)
             {
-                if (currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed)
-                    OnMouse1Release(GetMousePos(), true);
+                OnMouse1Release(GetMousePos(), true);
             }
         }
 
@@ -50,28 +46,20 @@ namespace TerrariaAPI
         {
             if (once)
             {
-                if (currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key))
-                    return true;
-                return false;
+                return currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key);
             }
 
-            if (currentKeyboardState.IsKeyDown(key))
-                return true;
-            return false;
+            return currentKeyboardState.IsKeyDown(key);
         }
 
         public bool IsKeyUp(Keys key, bool once = false)
         {
             if (once)
             {
-                if (currentKeyboardState.IsKeyUp(key) && previousKeyboardState.IsKeyDown(key))
-                    return true;
-                return false;
+                return currentKeyboardState.IsKeyUp(key) && previousKeyboardState.IsKeyDown(key);
             }
 
-            if (currentKeyboardState.IsKeyUp(key))
-                return true;
-            return false;
+            return currentKeyboardState.IsKeyUp(key);
         }
 
         public Vector2 GetMousePos()
