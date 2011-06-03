@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using Terraria;
+﻿using Terraria;
 
 namespace MinimapPlugin
 {
@@ -13,88 +10,85 @@ namespace MinimapPlugin
         public int MaxY { get; set; }
         public int[] Colors { get; set; }
 
-        public WorldRenderer(Tile[,] tiles, int width, int height)
+        public WorldRenderer(Tile[,] tiles, int worldWidth, int worldHeight)
         {
             SurfaceY = -1;
             Tiles = tiles;
-            MaxX = width;
-            MaxY = height;
-
-            Random r = new Random();
-
-            Colors = new int[83];
-
-            Colors[0] = Color.FromArgb(175, 131, 101).ToArgb();
-            Colors[1] = Color.Gray.ToArgb();
-            Colors[2] = Color.DarkGreen.ToArgb();
-            Colors[4] = Color.OrangeRed.ToArgb();
-            Colors[5] = Color.RosyBrown.ToArgb();
-            Colors[22] = Color.Purple.ToArgb();
-            Colors[23] = Color.MediumPurple.ToArgb();
-            Colors[53] = Color.Yellow.ToArgb();
-            Colors[80] = Color.Blue.ToArgb();
-            Colors[81] = Color.Red.ToArgb();
-            Colors[82] = Color.FromArgb(1, 1, 1).ToArgb();
-
-            // Fill other colors randomly
-            for (int i = 0; i < Colors.Length; i++)
-            {
-                if (Colors[i] == 0)
-                {
-                    int c = 0;
-
-                    do
-                    {
-                        c = r.Next(int.MinValue, int.MaxValue) | 0xFF << 24;
-                    }
-                    while (Colors.Contains(c));
-
-                    Colors[i] = c;
-                }
-            }
+            MaxX = worldWidth;
+            MaxY = worldHeight;
+            Colors = MinimapHelper.GetMinimapColors();
         }
 
-        public int[,] GenerateMinimap(int tilex, int tiley, int width, int height)
+        public int[,] GenerateMinimap(int tilex, int tiley, int width, int height, float zoom = 1.0f)
         {
-            tilex -= width / 2;
-            tiley -= height / 2;
+            tilex -= (int)((width * zoom) / 2);
+            tiley -= (int)((height * zoom) / 2);
 
             int[,] ints = new int[width, height];
 
+            int posX, posY;
+
             for (int y = 0; y < height; y++)
             {
-                if (y + tiley < 0 || y + tiley >= MaxY)
+                posY = (int)(y * zoom) + tiley;
+
+                if (posY < 0 || posY >= MaxY)
                     continue;
 
                 for (int x = 0; x < width; x++)
                 {
-                    if (x + tilex < 0 || x + tilex > MaxX)
+                    posX = (int)(x * zoom) + tilex;
+
+                    if (posX < 0 || posX > MaxX)
                         continue;
 
-                    Tile tile = Tiles[x + tilex, y + tiley];
+                    Tile tile = Tiles[posX, posY];
 
                     if (tile != null)
                     {
-                        if (tile.wall > 0 || y + tiley > SurfaceY)
-                            ints[x, y] = 0xFF << 24 | 0x725138;
-
-                        if (tile.active)
-                            ints[x, y] = Colors[tile.type];
-
                         if (tile.liquid > 0)
                         {
                             if (tile.lava)
                             {
-                                ints[x, y] = Colors[81];
+                                ints[x, y] = TerrariaColors.LAVA;
                             }
                             else
                             {
-                                ints[x, y] = Colors[80];
+                                ints[x, y] = TerrariaColors.WATER;
                             }
+                        }
+                        else if (tile.active)
+                        {
+                            ints[x, y] = Colors[tile.type];
+                        }
+                        else if (posY > SurfaceY || tile.wall > 0)
+                        {
+                            ints[x, y] = TerrariaColors.WALL_STONE;
+                        }
+                        else
+                        {
+                            int transparency = (int)(0xFF * 0.20f);
+                            ints[x, y] = TerrariaColors.SKY + (transparency << 24);
                         }
                     }
                 }
             }
+
+            // Add border
+
+            /*int black = Color.Black.ToArgb();
+
+            for (int x = 0; x < width; x++)
+            {
+                ints[x, 0] = black;
+            }
+
+            int right = width - 1;
+
+            for (int x = 0; x < height; x++)
+            {
+                ints[right, x] = black;
+            }*/
 
             return ints;
         }

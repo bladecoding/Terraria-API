@@ -21,7 +21,7 @@ namespace MinimapPlugin
 
         public override Version Version
         {
-            get { return new Version(1, 0); }
+            get { return new Version(2, 0); }
         }
 
         public override Version APIVersion
@@ -31,7 +31,7 @@ namespace MinimapPlugin
 
         public override string Author
         {
-            get { return "High"; }
+            get { return "High / Jaex"; }
         }
 
         public override string Description
@@ -39,11 +39,11 @@ namespace MinimapPlugin
             get { return "Its a minimap, what do you think?"; }
         }
 
-        WorldRenderer rend = null;
-        InputManager input = new InputManager();
-        Texture2D minimap = null;
-        Texture2D chest;
-        Thread renderthread;
+        private WorldRenderer rend = null;
+        private InputManager input = new InputManager();
+        private Texture2D minimap = null;
+        private Texture2D chest;
+        private Thread renderthread;
 
         public MinimapPlugin(Main main)
             : base(main)
@@ -94,9 +94,10 @@ namespace MinimapPlugin
 
         private void DrawHooks_OnEndDraw(SpriteBatch arg1)
         {
-            if (rend != null && minimap != null)
+            if (Game.IsActive && rend != null && minimap != null && !Main.playerInventory)
             {
-                Game.spriteBatch.Draw(minimap, new Vector2(Main.screenWidth - minimap.Width - 1, Main.screenHeight - minimap.Height - 1), Color.White);
+                int offset = 20;
+                Game.spriteBatch.Draw(minimap, new Vector2(offset, Main.screenHeight - minimap.Height - offset), Color.White);
                 // DrawPlayers();
             }
         }
@@ -109,16 +110,10 @@ namespace MinimapPlugin
                 {
                     int curx = (int)(Main.player[Main.myPlayer].position.X / 16);
                     int cury = (int)(Main.player[Main.myPlayer].position.Y / 16);
-                    int width = 200;
+                    int width = 400;
                     int height = 200;
 
-                    int[,] img = rend.GenerateMinimap(curx, cury, width, height);
-
-                    for (int x = 0; x < width; x++)
-                        img[x, 0] = -16777216;
-
-                    for (int x = 0; x < height; x++)
-                        img[0, x] = -16777216;
+                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, 2.0f);
 
                     minimap = IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }
@@ -162,7 +157,7 @@ namespace MinimapPlugin
             return ret;
         }
 
-        private void DrawPlayers()
+        /*private void DrawPlayers()
         {
             for (int i = 0; i < Main.player.Length; i++)
             {
@@ -191,6 +186,6 @@ namespace MinimapPlugin
                     Game.spriteBatch.Draw(chest, new Vector2(Main.screenWidth - minimap.Width + targetx, Main.screenHeight - minimap.Height + targety), Color.White);
                 }
             }
-        }
+        }*/
     }
 }
