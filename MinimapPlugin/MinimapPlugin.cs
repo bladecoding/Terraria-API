@@ -52,15 +52,16 @@ namespace MinimapPlugin
         {
             settings = new MinimapSettings
             {
-                MinimapWidth = 400,
-                MinimapHeight = 200,
+                MinimapWidth = 200,
+                MinimapHeight = 150,
                 MinimapZoom = 1.0f,
                 PositionOffsetX = 0,
                 PositionOffsetY = 0,
                 MinimapPosition = MinimapPosition.LeftBottom,
-                MinimapPositionOffset = 20,
+                MinimapPositionOffset = 10,
                 MinimapTransparency = 1.0f,
-                ShowSky = true
+                ShowSky = true,
+                ShowBorder = true
             };
         }
 
@@ -148,7 +149,7 @@ namespace MinimapPlugin
                     int width = settings.MinimapWidth;
                     int height = settings.MinimapHeight;
 
-                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky);
+                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky, settings.ShowBorder);
 
                     minimap = IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }

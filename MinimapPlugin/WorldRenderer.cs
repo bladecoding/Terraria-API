@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System.Drawing;
+using Terraria;
 
 namespace MinimapPlugin
 {
@@ -19,7 +20,7 @@ namespace MinimapPlugin
             Colors = MinimapHelper.GetMinimapColors();
         }
 
-        public int[,] GenerateMinimap(int tilex, int tiley, int width, int height, float zoom = 1.0f, bool showSky = true)
+        public int[,] GenerateMinimap(int tilex, int tiley, int width, int height, float zoom = 1.0f, bool showSky = true, bool showBorder = true)
         {
             tilex -= (int)((width * zoom) / 2);
             tiley -= (int)((height * zoom) / 2);
@@ -66,21 +67,24 @@ namespace MinimapPlugin
                 }
             }
 
-            // Add border
-
-            /*int black = Color.Black.ToArgb();
-
-            for (int x = 0; x < width; x++)
+            if (showBorder)
             {
-                ints[x, 0] = black;
+                int borderColor = Color.White.ToArgb();
+                int right = width - 1;
+                int bottom = height - 1;
+
+                for (int x = 0; x < width; x++)
+                {
+                    ints[x, 0] = borderColor;
+                    ints[x, bottom] = borderColor;
+                }
+
+                for (int y = 0; y < height; y++)
+                {
+                    ints[0, y] = borderColor;
+                    ints[right, y] = borderColor;
+                }
             }
-
-            int right = width - 1;
-
-            for (int x = 0; x < height; x++)
-            {
-                ints[right, x] = black;
-            }*/
 
             return ints;
         }

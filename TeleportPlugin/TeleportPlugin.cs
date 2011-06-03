@@ -84,9 +84,8 @@ namespace TeleportPlugin
                 {
                     showTexts = !showTexts;
                 }
-                else if (input.IsKeyUp(Keys.F5, true))
+                /*else if (input.IsKeyUp(Keys.F5, true))
                 {
-                    // TODO: TeleportForm need to use TeleportHelper also need redesign for show player list etc.
                     if (teleportForm == null)
                     {
                         teleportForm = new TeleportForm();
@@ -94,7 +93,7 @@ namespace TeleportPlugin
 
                     teleportForm.Show();
                     teleportForm.BringToFront();
-                }
+                }*/
             }
         }
 
