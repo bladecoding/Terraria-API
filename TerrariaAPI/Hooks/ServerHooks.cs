@@ -29,6 +29,20 @@ namespace TerrariaAPI.Hooks
             }
         }
 
+        public delegate void CommandD(string cmd, HandledEventArgs e);
+        /// <summary>
+        /// On console command
+        /// </summary>
+        public static event CommandD OnCommand;
+
+        public static bool Command(string cmd)
+        {
+            var args = new HandledEventArgs();
+            if (OnCommand != null)
+                OnCommand(cmd, args);
+            return args.Handled;
+        }
+
         /// <summary>
         /// arg1 = WhoAmI
         /// </summary>
