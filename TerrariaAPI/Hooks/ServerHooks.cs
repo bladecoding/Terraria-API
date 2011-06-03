@@ -13,6 +13,9 @@ namespace TerrariaAPI.Hooks
 
         static void NetHooks_OnPreGetData(GetDataEventArgs e)
         {
+            if (Main.netMode != 2)
+                return;
+
             if (e.MsgID == 0x1)
             {
                 e.Handled = !Join(e.Msg.whoAmI);
