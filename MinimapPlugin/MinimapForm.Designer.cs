@@ -36,8 +36,10 @@
             this.pgSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pgSettings.Location = new System.Drawing.Point(0, 0);
             this.pgSettings.Name = "pgSettings";
+            this.pgSettings.PropertySort = System.Windows.Forms.PropertySort.NoSort;
             this.pgSettings.Size = new System.Drawing.Size(335, 309);
             this.pgSettings.TabIndex = 0;
+            this.pgSettings.ToolbarVisible = false;
             this.pgSettings.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.pgSettings_PropertyValueChanged);
             // 
             // MinimapForm
