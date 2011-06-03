@@ -44,10 +44,24 @@ namespace MinimapPlugin
         private Texture2D minimap = null;
         private Texture2D chest;
         private Thread renderthread;
+        private MinimapSettings settings;
+        private MinimapForm settingsForm;
 
         public MinimapPlugin(Main main)
             : base(main)
         {
+            settings = new MinimapSettings
+            {
+                MinimapWidth = 400,
+                MinimapHeight = 200,
+                MinimapZoom = 1.0f,
+                PositionOffsetX = 0,
+                PositionOffsetY = 0,
+                MinimapPosition = MinimapPosition.LeftBottom,
+                MinimapPositionOffset = 20,
+                MinimapTransparency = 1.0f,
+                ShowSky = true
+            };
         }
 
         public override void Initialize()
@@ -78,7 +92,7 @@ namespace MinimapPlugin
             {
                 input.Update();
 
-                if (input.IsKeyUp(Keys.F6, true))
+                if (input.IsKeyUp(Keys.F5, true))
                 {
                     if (rend == null)
                     {
@@ -89,6 +103,16 @@ namespace MinimapPlugin
                         rend = null;
                     }
                 }
+                else if (input.IsKeyUp(Keys.F6, true))
+                {
+                    if (settingsForm == null || settingsForm.IsDisposed)
+                    {
+                        settingsForm = new MinimapForm(settings);
+                    }
+
+                    settingsForm.Show();
+                    settingsForm.BringToFront();
+                }
             }
         }
 
@@ -96,8 +120,19 @@ namespace MinimapPlugin
         {
             if (Game.IsActive && rend != null && minimap != null && !Main.playerInventory)
             {
-                int offset = 20;
-                Game.spriteBatch.Draw(minimap, new Vector2(offset, Main.screenHeight - minimap.Height - offset), Color.White);
+                Vector2 position;
+
+                if (settings.MinimapPosition == MinimapPosition.RightBottom)
+                {
+                    position = new Vector2(Main.screenWidth - minimap.Width - settings.MinimapPositionOffset,
+                        Main.screenHeight - minimap.Height - settings.MinimapPositionOffset);
+                }
+                else
+                {
+                    position = new Vector2(settings.MinimapPositionOffset, Main.screenHeight - minimap.Height - settings.MinimapPositionOffset);
+                }
+
+                Game.spriteBatch.Draw(minimap, position, new Color(1, 1, 1, settings.MinimapTransparency));
                 // DrawPlayers();
             }
         }
@@ -108,12 +143,12 @@ namespace MinimapPlugin
             {
                 if (rend != null)
                 {
-                    int curx = (int)(Main.player[Main.myPlayer].position.X / 16);
-                    int cury = (int)(Main.player[Main.myPlayer].position.Y / 16);
-                    int width = 400;
-                    int height = 200;
+                    int curx = (int)(Main.player[Main.myPlayer].position.X / 16) + settings.PositionOffsetX;
+                    int cury = (int)(Main.player[Main.myPlayer].position.Y / 16) + settings.PositionOffsetY;
+                    int width = settings.MinimapWidth;
+                    int height = settings.MinimapHeight;
 
-                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, 2.0f);
+                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky);
 
                     minimap = IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }

@@ -2,6 +2,12 @@
 
 namespace MinimapPlugin
 {
+    public enum MinimapPosition
+    {
+        LeftBottom,
+        RightBottom
+    }
+
     public enum TileType
     {
         Dirt,

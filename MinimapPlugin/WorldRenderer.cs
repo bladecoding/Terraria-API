@@ -19,7 +19,7 @@ namespace MinimapPlugin
             Colors = MinimapHelper.GetMinimapColors();
         }
 
-        public int[,] GenerateMinimap(int tilex, int tiley, int width, int height, float zoom = 1.0f)
+        public int[,] GenerateMinimap(int tilex, int tiley, int width, int height, float zoom = 1.0f, bool showSky = true)
         {
             tilex -= (int)((width * zoom) / 2);
             tiley -= (int)((height * zoom) / 2);
@@ -48,14 +48,7 @@ namespace MinimapPlugin
                     {
                         if (tile.liquid > 0)
                         {
-                            if (tile.lava)
-                            {
-                                ints[x, y] = TerrariaColors.LAVA;
-                            }
-                            else
-                            {
-                                ints[x, y] = TerrariaColors.WATER;
-                            }
+                            ints[x, y] = tile.lava ? TerrariaColors.LAVA : TerrariaColors.WATER;
                         }
                         else if (tile.active)
                         {
@@ -65,10 +58,9 @@ namespace MinimapPlugin
                         {
                             ints[x, y] = TerrariaColors.WALL_STONE;
                         }
-                        else
+                        else if (showSky)
                         {
-                            int transparency = (int)(0xFF * 0.20f);
-                            ints[x, y] = TerrariaColors.SKY + (transparency << 24);
+                            ints[x, y] = TerrariaColors.SKY;
                         }
                     }
                 }
