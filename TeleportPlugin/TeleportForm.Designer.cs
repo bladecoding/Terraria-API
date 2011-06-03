@@ -28,93 +28,183 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lbLocations = new System.Windows.Forms.ListBox();
-            this.btnSaveLoc = new System.Windows.Forms.Button();
-            this.btnTeleport = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnEdit = new System.Windows.Forms.Button();
+            this.gbPlayers = new System.Windows.Forms.GroupBox();
+            this.lvPlayers = new System.Windows.Forms.ListView();
+            this.chPlayersName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnTeleportPlayer = new System.Windows.Forms.Button();
+            this.gbLocations = new System.Windows.Forms.GroupBox();
+            this.lvLocations = new System.Windows.Forms.ListView();
+            this.chLocationsName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnAddLocation = new System.Windows.Forms.Button();
+            this.btnTeleportLocation = new System.Windows.Forms.Button();
+            this.btnShowInfo = new System.Windows.Forms.Button();
+            this.btnTeleportHome = new System.Windows.Forms.Button();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.btnRemoveLocation = new System.Windows.Forms.Button();
+            this.gbPlayers.SuspendLayout();
+            this.gbLocations.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lbLocations
+            // gbPlayers
             // 
-            this.lbLocations.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbLocations.FormattingEnabled = true;
-            this.lbLocations.IntegralHeight = false;
-            this.lbLocations.Location = new System.Drawing.Point(8, 8);
-            this.lbLocations.Name = "lbLocations";
-            this.lbLocations.Size = new System.Drawing.Size(344, 96);
-            this.lbLocations.TabIndex = 0;
+            this.gbPlayers.Controls.Add(this.btnRefresh);
+            this.gbPlayers.Controls.Add(this.lvPlayers);
+            this.gbPlayers.Controls.Add(this.btnTeleportPlayer);
+            this.gbPlayers.Location = new System.Drawing.Point(296, 48);
+            this.gbPlayers.Name = "gbPlayers";
+            this.gbPlayers.Size = new System.Drawing.Size(192, 224);
+            this.gbPlayers.TabIndex = 0;
+            this.gbPlayers.TabStop = false;
+            this.gbPlayers.Text = "Players";
             // 
-            // btnSaveLoc
+            // lvPlayers
             // 
-            this.btnSaveLoc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSaveLoc.Location = new System.Drawing.Point(89, 112);
-            this.btnSaveLoc.Name = "btnSaveLoc";
-            this.btnSaveLoc.Size = new System.Drawing.Size(76, 23);
-            this.btnSaveLoc.TabIndex = 2;
-            this.btnSaveLoc.Text = "Save Loc";
-            this.btnSaveLoc.UseVisualStyleBackColor = true;
-            this.btnSaveLoc.Click += new System.EventHandler(this.btnSaveLoc_Click);
+            this.lvPlayers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chPlayersName});
+            this.lvPlayers.Location = new System.Drawing.Point(8, 16);
+            this.lvPlayers.Name = "lvPlayers";
+            this.lvPlayers.Size = new System.Drawing.Size(176, 168);
+            this.lvPlayers.TabIndex = 1;
+            this.lvPlayers.UseCompatibleStateImageBehavior = false;
+            this.lvPlayers.View = System.Windows.Forms.View.Details;
             // 
-            // btnTeleport
+            // chPlayersName
             // 
-            this.btnTeleport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnTeleport.Location = new System.Drawing.Point(8, 112);
-            this.btnTeleport.Name = "btnTeleport";
-            this.btnTeleport.Size = new System.Drawing.Size(75, 23);
-            this.btnTeleport.TabIndex = 3;
-            this.btnTeleport.Text = "Teleport";
-            this.btnTeleport.UseVisualStyleBackColor = true;
-            this.btnTeleport.Click += new System.EventHandler(this.btnTeleport_Click);
+            this.chPlayersName.Text = "Name";
+            this.chPlayersName.Width = 172;
             // 
-            // btnDelete
+            // btnTeleportPlayer
             // 
-            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDelete.Location = new System.Drawing.Point(280, 112);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 24);
-            this.btnDelete.TabIndex = 4;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            this.btnTeleportPlayer.Location = new System.Drawing.Point(8, 192);
+            this.btnTeleportPlayer.Name = "btnTeleportPlayer";
+            this.btnTeleportPlayer.Size = new System.Drawing.Size(88, 23);
+            this.btnTeleportPlayer.TabIndex = 0;
+            this.btnTeleportPlayer.Text = "Teleport";
+            this.btnTeleportPlayer.UseVisualStyleBackColor = true;
+            this.btnTeleportPlayer.Click += new System.EventHandler(this.btnTeleportPlayer_Click);
             // 
-            // btnEdit
+            // gbLocations
             // 
-            this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEdit.Location = new System.Drawing.Point(200, 112);
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(75, 23);
-            this.btnEdit.TabIndex = 5;
-            this.btnEdit.Text = "Edit";
-            this.btnEdit.UseVisualStyleBackColor = true;
-            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            this.gbLocations.Controls.Add(this.btnRemoveLocation);
+            this.gbLocations.Controls.Add(this.btnAddLocation);
+            this.gbLocations.Controls.Add(this.lvLocations);
+            this.gbLocations.Controls.Add(this.btnTeleportLocation);
+            this.gbLocations.Location = new System.Drawing.Point(8, 48);
+            this.gbLocations.Name = "gbLocations";
+            this.gbLocations.Size = new System.Drawing.Size(280, 224);
+            this.gbLocations.TabIndex = 1;
+            this.gbLocations.TabStop = false;
+            this.gbLocations.Text = "Locations";
+            // 
+            // lvLocations
+            // 
+            this.lvLocations.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chLocationsName});
+            this.lvLocations.Location = new System.Drawing.Point(8, 16);
+            this.lvLocations.Name = "lvLocations";
+            this.lvLocations.Size = new System.Drawing.Size(264, 168);
+            this.lvLocations.TabIndex = 2;
+            this.lvLocations.UseCompatibleStateImageBehavior = false;
+            this.lvLocations.View = System.Windows.Forms.View.Details;
+            // 
+            // chLocationsName
+            // 
+            this.chLocationsName.Text = "Name";
+            this.chLocationsName.Width = 260;
+            // 
+            // btnAddLocation
+            // 
+            this.btnAddLocation.Location = new System.Drawing.Point(96, 192);
+            this.btnAddLocation.Name = "btnAddLocation";
+            this.btnAddLocation.Size = new System.Drawing.Size(88, 23);
+            this.btnAddLocation.TabIndex = 1;
+            this.btnAddLocation.Text = "Add";
+            this.btnAddLocation.UseVisualStyleBackColor = true;
+            this.btnAddLocation.Click += new System.EventHandler(this.btnAddLocation_Click);
+            // 
+            // btnTeleportLocation
+            // 
+            this.btnTeleportLocation.Location = new System.Drawing.Point(8, 192);
+            this.btnTeleportLocation.Name = "btnTeleportLocation";
+            this.btnTeleportLocation.Size = new System.Drawing.Size(88, 23);
+            this.btnTeleportLocation.TabIndex = 0;
+            this.btnTeleportLocation.Text = "Teleport";
+            this.btnTeleportLocation.UseVisualStyleBackColor = true;
+            this.btnTeleportLocation.Click += new System.EventHandler(this.btnTeleportLocation_Click);
+            // 
+            // btnShowInfo
+            // 
+            this.btnShowInfo.Location = new System.Drawing.Point(8, 8);
+            this.btnShowInfo.Name = "btnShowInfo";
+            this.btnShowInfo.Size = new System.Drawing.Size(184, 23);
+            this.btnShowInfo.TabIndex = 2;
+            this.btnShowInfo.Text = "Show position/depth/players";
+            this.btnShowInfo.UseVisualStyleBackColor = true;
+            this.btnShowInfo.Click += new System.EventHandler(this.btnShowInfo_Click);
+            // 
+            // btnTeleportHome
+            // 
+            this.btnTeleportHome.Location = new System.Drawing.Point(200, 8);
+            this.btnTeleportHome.Name = "btnTeleportHome";
+            this.btnTeleportHome.Size = new System.Drawing.Size(120, 23);
+            this.btnTeleportHome.TabIndex = 3;
+            this.btnTeleportHome.Text = "Teleport to home";
+            this.btnTeleportHome.UseVisualStyleBackColor = true;
+            this.btnTeleportHome.Click += new System.EventHandler(this.btnTeleportHome_Click);
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Location = new System.Drawing.Point(96, 192);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(88, 23);
+            this.btnRefresh.TabIndex = 4;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // btnRemoveLocation
+            // 
+            this.btnRemoveLocation.Location = new System.Drawing.Point(184, 192);
+            this.btnRemoveLocation.Name = "btnRemoveLocation";
+            this.btnRemoveLocation.Size = new System.Drawing.Size(88, 23);
+            this.btnRemoveLocation.TabIndex = 3;
+            this.btnRemoveLocation.Text = "Remove";
+            this.btnRemoveLocation.UseVisualStyleBackColor = true;
+            this.btnRemoveLocation.Click += new System.EventHandler(this.btnRemoveLocation_Click);
             // 
             // TeleportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(362, 146);
-            this.Controls.Add(this.btnEdit);
-            this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnTeleport);
-            this.Controls.Add(this.btnSaveLoc);
-            this.Controls.Add(this.lbLocations);
+            this.ClientSize = new System.Drawing.Size(497, 279);
+            this.Controls.Add(this.btnTeleportHome);
+            this.Controls.Add(this.btnShowInfo);
+            this.Controls.Add(this.gbLocations);
+            this.Controls.Add(this.gbPlayers);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "TeleportForm";
-            this.Text = "Teleport";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TeleportForm_FormClosing);
-            this.Load += new System.EventHandler(this.TeleportForm_Load);
+            this.Text = "Terraria teleport plugin";
+            this.TopMost = true;
+            this.gbPlayers.ResumeLayout(false);
+            this.gbLocations.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListBox lbLocations;
-        private System.Windows.Forms.Button btnSaveLoc;
-        private System.Windows.Forms.Button btnTeleport;
-        private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Button btnEdit;
+        private System.Windows.Forms.GroupBox gbPlayers;
+        private System.Windows.Forms.Button btnTeleportPlayer;
+        private System.Windows.Forms.GroupBox gbLocations;
+        private System.Windows.Forms.Button btnTeleportLocation;
+        private System.Windows.Forms.Button btnAddLocation;
+        private System.Windows.Forms.Button btnShowInfo;
+        private System.Windows.Forms.Button btnTeleportHome;
+        private System.Windows.Forms.ListView lvPlayers;
+        private System.Windows.Forms.ListView lvLocations;
+        private System.Windows.Forms.ColumnHeader chPlayersName;
+        private System.Windows.Forms.ColumnHeader chLocationsName;
+        private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button btnRemoveLocation;
     }
 }

@@ -67,12 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatCommand.cs" />
-    <Compile Include="TeleportHelper.cs" />
-    <Compile Include="SaveLocForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SaveLocForm.Designer.cs">
-      <DependentUpon>SaveLocForm.cs</DependentUpon>
+    <Compile Include="MyListView.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="TeleportForm.cs">
       <SubType>Form</SubType>
@@ -80,17 +76,16 @@
     <Compile Include="TeleportForm.Designer.cs">
       <DependentUpon>TeleportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TeleportHelper.cs" />
     <Compile Include="TeleportLocation.cs" />
+    <Compile Include="TeleportLocationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TeleportLocationForm.Designer.cs">
+      <DependentUpon>TeleportLocationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TeleportPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="SaveLocForm.resx">
-      <DependentUpon>SaveLocForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TeleportForm.resx">
-      <DependentUpon>TeleportForm.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TerrariaAPI\TerrariaAPI.csproj">

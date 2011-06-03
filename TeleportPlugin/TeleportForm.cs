@@ -1,114 +1,115 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.Xna.Framework;
-using Terraria;
 
 namespace TeleportPlugin
 {
     public partial class TeleportForm : Form
     {
-        private const string SAVE_FOLDER = "Plugins/Teleport";
-        private const string SAVE_FILE_PATH = SAVE_FOLDER + "/Locations.txt";
+        private TeleportHelper helper;
 
-        public TeleportForm()
+        public TeleportForm(TeleportHelper teleportHelper)
         {
+            helper = teleportHelper;
             InitializeComponent();
+
+            UpdateAll();
         }
 
-        private void TeleportForm_Load(object sender, EventArgs e)
+        public void UpdateAll()
         {
-            if (!Directory.Exists(SAVE_FOLDER))
-                Directory.CreateDirectory(SAVE_FOLDER);
+            UpdateInfoText();
+            UpdateLocationList();
+            UpdatePlayerList();
+        }
 
-            if (!File.Exists(SAVE_FILE_PATH))
-                return;
-
-            string[] saveFile = File.ReadAllLines(SAVE_FILE_PATH);
-
-            Match locationMatch;
-            bool errorOccured = false;
-
-            foreach (string s in saveFile)
+        public void UpdateInfoText()
+        {
+            if (helper.ShowInfoText)
             {
-                locationMatch = Regex.Match(s, @"(\w+):\s(\d+\.?\d+)\s(\d+\.?\d+)");
-                if (locationMatch.Success)
-                    lbLocations.Items.Add(new TeleportLocation(locationMatch.Groups[1].Value,
-                                                            new Vector2(float.Parse(locationMatch.Groups[2].Value),
-                                                                        float.Parse(locationMatch.Groups[3].Value))));
-                else
+                btnShowInfo.Text = "Hide position/depth/players";
+            }
+            else
+            {
+                btnShowInfo.Text = "Show position/depth/players";
+            }
+        }
+
+        public void UpdateLocationList()
+        {
+            lvLocations.Items.Clear();
+
+            foreach (TeleportLocation location in helper.Locations)
+            {
+                ListViewItem lvi = new ListViewItem(location.Name);
+                lvi.Tag = location;
+                lvLocations.Items.Add(lvi);
+            }
+        }
+
+        public void UpdatePlayerList()
+        {
+            lvPlayers.Items.Clear();
+
+            foreach (string playerName in helper.GetPlayerList())
+            {
+                lvPlayers.Items.Add(playerName);
+            }
+        }
+
+        private void btnShowInfo_Click(object sender, EventArgs e)
+        {
+            helper.ShowInfoText = !helper.ShowInfoText;
+            UpdateInfoText();
+        }
+
+        private void btnTeleportHome_Click(object sender, EventArgs e)
+        {
+            helper.TeleportToHome();
+        }
+
+        private void btnTeleportLocation_Click(object sender, EventArgs e)
+        {
+            if (lvLocations.SelectedItems.Count > 0)
+            {
+                TeleportLocation location = lvLocations.SelectedItems[0].Tag as TeleportLocation;
+                helper.TeleportToLocation(location);
+            }
+        }
+
+        private void btnAddLocation_Click(object sender, EventArgs e)
+        {
+            using (TeleportLocationForm locationForm = new TeleportLocationForm())
+            {
+                if (locationForm.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(locationForm.LocationName))
                 {
-                    errorOccured = true;
-                }
-            }
-
-            if (errorOccured)
-                MessageBox.Show("Error loading saved locations, some previous saved locations will not be available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void TeleportForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            Visible = false;
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (var item in lbLocations.Items)
-            {
-                var castItem = (TeleportLocation)item;
-                sb.Append(castItem.Name);
-                sb.Append(": ");
-                sb.Append(castItem.Position.X);
-                sb.Append(" ");
-                sb.Append(castItem.Position.Y);
-                sb.Append(Environment.NewLine);
-            }
-
-            File.WriteAllText(SAVE_FILE_PATH, sb.ToString());
-        }
-
-        private void btnTeleport_Click(object sender, EventArgs e)
-        {
-            if (lbLocations.SelectedIndex >= 0)
-            {
-                TeleportLocation selectedLoc = (TeleportLocation)lbLocations.SelectedItem;
-                Main.player[Main.myPlayer].position = selectedLoc.Position;
-            }
-        }
-
-        private void btnSaveLoc_Click(object sender, EventArgs e)
-        {
-            SaveLocForm saveLocForm = new SaveLocForm();
-            saveLocForm.ShowDialog();
-            if (saveLocForm.TelLoc != null)
-            {
-                lbLocations.Items.Add(saveLocForm.TelLoc);
-            }
-        }
-
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-            if (lbLocations.SelectedIndex >= 0)
-            {
-                SaveLocForm saveLocForm = new SaveLocForm((TeleportLocation)lbLocations.SelectedItem);
-                saveLocForm.ShowDialog();
-                if (saveLocForm.TelLoc != null)
-                {
-                    int index = lbLocations.SelectedIndex;
-                    lbLocations.Items.RemoveAt(index);
-                    lbLocations.Items.Insert(index, saveLocForm.TelLoc);
+                    helper.AddCurrentLocation(locationForm.LocationName);
+                    UpdateLocationList();
                 }
             }
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
+        private void btnRemoveLocation_Click(object sender, EventArgs e)
         {
-            if (lbLocations.SelectedIndex >= 0)
+            if (lvLocations.SelectedItems.Count > 0)
             {
-                lbLocations.Items.RemoveAt(lbLocations.SelectedIndex);
+                TeleportLocation location = lvLocations.SelectedItems[0].Tag as TeleportLocation;
+                lvLocations.Items.Remove(lvLocations.SelectedItems[0]);
+                helper.Locations.Remove(location);
             }
+        }
+
+        private void btnTeleportPlayer_Click(object sender, EventArgs e)
+        {
+            if (lvPlayers.SelectedItems.Count > 0)
+            {
+                string name = lvPlayers.SelectedItems[0].Text;
+                helper.TeleportToPlayer(name);
+            }
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            UpdatePlayerList();
         }
     }
 }

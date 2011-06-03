@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TeleportPlugin
 {
+    /// <summary>
+    /// F1 = Teleport to last player
+    /// F2 = Teleport to last location
+    /// F3 = Open teleport form
+    /// F4 = Show/Hide position, depth, players
+    /// </summary>
     public class TeleportPlugin : TerrariaPlugin
     {
         public override string Name
@@ -18,12 +25,12 @@ namespace TeleportPlugin
 
         public override Version Version
         {
-            get { return new Version(2, 0); }
+            get { return new Version(2, 1); }
         }
 
         public override string Author
         {
-            get { return "Jaex / Fox-Face"; }
+            get { return "Jaex"; }
         }
 
         public override string Description
@@ -41,7 +48,6 @@ namespace TeleportPlugin
         private InputManager input = new InputManager();
         private TeleportHelper helper = new TeleportHelper();
         private TeleportForm teleportForm;
-        private bool showTexts;
 
         public TeleportPlugin(Main game)
             : base(game)
@@ -50,6 +56,7 @@ namespace TeleportPlugin
 
         public override void Initialize()
         {
+            Application.EnableVisualStyles();
             GameHooks.OnUpdate += GameHooks_OnUpdate;
             NetHooks.OnPreSendData += NetHooks_OnPreSendData;
             DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
@@ -76,24 +83,21 @@ namespace TeleportPlugin
                 {
                     helper.TeleportToLastLocation();
                 }
-                else if (input.IsKeyDown(Keys.F3))
+                else if (input.IsKeyDown(Keys.F3, true))
                 {
-                    helper.TeleportToHome();
-                }
-                else if (input.IsKeyDown(Keys.F4, true))
-                {
-                    showTexts = !showTexts;
-                }
-                /*else if (input.IsKeyUp(Keys.F5, true))
-                {
-                    if (teleportForm == null)
+                    if (teleportForm == null || teleportForm.IsDisposed)
                     {
-                        teleportForm = new TeleportForm();
+                        teleportForm = new TeleportForm(helper);
                     }
 
                     teleportForm.Show();
                     teleportForm.BringToFront();
-                }*/
+                }
+                else if (input.IsKeyDown(Keys.F4, true))
+                {
+                    helper.ShowInfoText = !helper.ShowInfoText;
+                    UpdateForm();
+                }
             }
         }
 
@@ -132,6 +136,7 @@ namespace TeleportPlugin
                             if (!string.IsNullOrEmpty(msg.Parameter))
                             {
                                 helper.AddCurrentLocation(msg.Parameter);
+                                UpdateForm();
                             }
 
                             return true;
@@ -171,7 +176,8 @@ namespace TeleportPlugin
 
                             return true;
                         case "tpinfo":
-                            showTexts = !showTexts;
+                            helper.ShowInfoText = !helper.ShowInfoText;
+                            UpdateForm();
 
                             return true;
                         case "tphelp":
@@ -187,7 +193,7 @@ namespace TeleportPlugin
 
         private void DrawHooks_OnEndDraw(SpriteBatch obj)
         {
-            if (Game.IsActive && showTexts && !Main.playerInventory)
+            if (Game.IsActive && helper.ShowInfoText && !Main.playerInventory)
             {
                 int depth = helper.GetDepth();
 
@@ -251,6 +257,14 @@ namespace TeleportPlugin
 
                 Vector2 newPosition = new Vector2((float)(22 + x), (float)(74 + 22 * lineOffset + y));
                 Game.spriteBatch.DrawString(Main.fontMouseText, text, newPosition, color);
+            }
+        }
+
+        private void UpdateForm()
+        {
+            if (teleportForm != null && !teleportForm.IsDisposed)
+            {
+                teleportForm.UpdateAll();
             }
         }
 

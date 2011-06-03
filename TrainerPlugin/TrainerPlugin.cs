@@ -7,6 +7,9 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TrainerPlugin
 {
+    /// <summary>
+    /// F7 = Show trainer form
+    /// </summary>
     public class TrainerPlugin : TerrariaPlugin
     {
         public override string Name
@@ -35,8 +38,7 @@ namespace TrainerPlugin
         }
 
         private InputManager input = new InputManager();
-        TrainerForm trainerform = new TrainerForm();
-        bool f7down = false;
+        private TrainerForm trainerform = new TrainerForm();
 
         public TrainerPlugin(Main game)
             : base(game)
@@ -51,30 +53,30 @@ namespace TrainerPlugin
 
         private void TerrariaHooks_OnUpdate(Microsoft.Xna.Framework.GameTime obj)
         {
-            if (!Game.IsActive)
-                return;
-
-            input.Update();
-
-            if (input.IsKeyUp(Keys.F7, true))
+            if (Game.IsActive)
             {
-                trainerform.Visible = !trainerform.Visible;
-            }
+                input.Update();
 
-            if (trainerform.InfAmmo)
-            {
-                for (int i = 0; i < Main.player[Main.myPlayer].inventory.Length; i++)
+                if (input.IsKeyUp(Keys.F7, true))
                 {
-                    if (Main.player[Main.myPlayer].inventory[i].ammo > 0)
-                        Main.player[Main.myPlayer].inventory[i].stack = 250;
+                    trainerform.Visible = !trainerform.Visible;
                 }
+
+                if (trainerform.InfAmmo)
+                {
+                    for (int i = 0; i < Main.player[Main.myPlayer].inventory.Length; i++)
+                    {
+                        if (Main.player[Main.myPlayer].inventory[i].ammo > 0)
+                            Main.player[Main.myPlayer].inventory[i].stack = 250;
+                    }
+                }
+
+                if (trainerform.InfBreath)
+                    Main.player[Main.myPlayer].breath = Main.player[Main.myPlayer].breathMax;
+
+                if (trainerform.InfMana)
+                    Main.player[Main.myPlayer].statMana = Main.player[Main.myPlayer].statManaMax;
             }
-
-            if (trainerform.InfBreath)
-                Main.player[Main.myPlayer].breath = Main.player[Main.myPlayer].breathMax;
-
-            if (trainerform.InfMana)
-                Main.player[Main.myPlayer].statMana = Main.player[Main.myPlayer].statManaMax;
         }
 
         public override void Initialize()

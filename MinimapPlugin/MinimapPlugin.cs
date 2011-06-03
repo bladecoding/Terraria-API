@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
 using Color = Microsoft.Xna.Framework.Color;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace MinimapPlugin
 {
+    /// <summary>
+    /// F5 = Show/Hide minimap
+    /// F6 = Show minimap form
+    /// </summary>
     public class MinimapPlugin : TerrariaPlugin
     {
         public override string Name
@@ -57,7 +62,7 @@ namespace MinimapPlugin
                 MinimapZoom = 1.0f,
                 PositionOffsetX = 0,
                 PositionOffsetY = 0,
-                MinimapPosition = MinimapPosition.LeftBottom,
+                MinimapPosition = MinimapPosition.RightBottom,
                 MinimapPositionOffset = 10,
                 MinimapTransparency = 1.0f,
                 ShowSky = true,
@@ -67,6 +72,7 @@ namespace MinimapPlugin
 
         public override void Initialize()
         {
+            Application.EnableVisualStyles();
             renderthread = new Thread(RenderMap);
             renderthread.Start();
             GameHooks.OnLoadContent += GameHooks_OnLoadContent;

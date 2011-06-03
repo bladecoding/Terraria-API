@@ -5,11 +5,12 @@ using Terraria;
 
 namespace TeleportPlugin
 {
-    internal class TeleportHelper
+    public class TeleportHelper
     {
         public List<TeleportLocation> Locations { get; set; }
         public TeleportLocation LastLocation { get; set; }
         public string LastPlayerName { get; set; }
+        public bool ShowInfoText { get; set; }
 
         public TeleportHelper()
         {
