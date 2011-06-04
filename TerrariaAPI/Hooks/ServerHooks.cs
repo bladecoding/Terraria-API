@@ -16,13 +16,13 @@ namespace TerrariaAPI.Hooks
             if (Main.netMode != 2)
                 return;
 
-            if (e.MsgID == 0x1)
+            if (e.MsgID == MsgTypes.Connect)
             {
                 e.Handled = !Join(e.Msg.whoAmI);
                 if (e.Handled)
                     Netplay.serverSock[e.Msg.whoAmI].kill = true;
             }
-            else if (e.MsgID == 0x19)
+            else if (e.MsgID == MsgTypes.ChatMessage)
             {
                 string str = Encoding.ASCII.GetString(e.Msg.readBuffer, e.Index + 0x4, e.Length - 0x5);
                 e.Handled = Chat(e.Msg.whoAmI, str);

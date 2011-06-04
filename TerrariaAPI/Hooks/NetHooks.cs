@@ -1,24 +1,35 @@
-﻿using Terraria;
+﻿using System;
+using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
     public class SendDataEventArgs : HandledEventArgs
     {
         public int msgType { get; set; }
+
         public int remoteClient { get; set; }
+
         public int ignoreClient { get; set; }
+
         public string text { get; set; }
+
         public int number { get; set; }
+
         public float number2 { get; set; }
+
         public float number3 { get; set; }
+
         public float number4 { get; set; }
     }
 
     public class GetDataEventArgs : HandledEventArgs
     {
         public byte MsgID { get; set; }
+
         public messageBuffer Msg { get; set; }
+
         public int Index { get; set; }
+
         public int Length { get; set; }
     }
 
@@ -66,7 +77,9 @@ namespace TerrariaAPI.Hooks
         }
 
         public delegate void GetDataD(GetDataEventArgs e);
+        [Obsolete("Use OnGetData, will be removed next api version")]
         public static event GetDataD OnPreGetData;
+        public static event GetDataD OnGetData;
 
         public static bool GetData(ref byte msgid, messageBuffer msg, ref int idx, ref int length)
         {
@@ -80,6 +93,8 @@ namespace TerrariaAPI.Hooks
 
             if (OnPreGetData != null)
                 OnPreGetData(args);
+            if (OnGetData != null)
+                OnGetData(args);
 
             msgid = args.MsgID;
             idx = args.Index;
