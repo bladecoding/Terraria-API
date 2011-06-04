@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             this.gbPlayers = new System.Windows.Forms.GroupBox();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.lvPlayers = new System.Windows.Forms.ListView();
             this.chPlayersName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnTeleportPlayer = new System.Windows.Forms.Button();
             this.gbLocations = new System.Windows.Forms.GroupBox();
+            this.btnRemoveLocation = new System.Windows.Forms.Button();
+            this.btnAddLocation = new System.Windows.Forms.Button();
             this.lvLocations = new System.Windows.Forms.ListView();
             this.chLocationsName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnAddLocation = new System.Windows.Forms.Button();
             this.btnTeleportLocation = new System.Windows.Forms.Button();
             this.btnShowInfo = new System.Windows.Forms.Button();
             this.btnTeleportHome = new System.Windows.Forms.Button();
-            this.btnRefresh = new System.Windows.Forms.Button();
-            this.btnRemoveLocation = new System.Windows.Forms.Button();
             this.gbPlayers.SuspendLayout();
             this.gbLocations.SuspendLayout();
             this.SuspendLayout();
@@ -57,10 +57,21 @@
             this.gbPlayers.TabStop = false;
             this.gbPlayers.Text = "Players";
             // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Location = new System.Drawing.Point(96, 192);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(88, 23);
+            this.btnRefresh.TabIndex = 4;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
             // lvPlayers
             // 
             this.lvPlayers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chPlayersName});
+            this.lvPlayers.FullRowSelect = true;
             this.lvPlayers.Location = new System.Drawing.Point(8, 16);
             this.lvPlayers.Name = "lvPlayers";
             this.lvPlayers.Size = new System.Drawing.Size(176, 168);
@@ -96,10 +107,31 @@
             this.gbLocations.TabStop = false;
             this.gbLocations.Text = "Locations";
             // 
+            // btnRemoveLocation
+            // 
+            this.btnRemoveLocation.Location = new System.Drawing.Point(184, 192);
+            this.btnRemoveLocation.Name = "btnRemoveLocation";
+            this.btnRemoveLocation.Size = new System.Drawing.Size(88, 23);
+            this.btnRemoveLocation.TabIndex = 3;
+            this.btnRemoveLocation.Text = "Remove";
+            this.btnRemoveLocation.UseVisualStyleBackColor = true;
+            this.btnRemoveLocation.Click += new System.EventHandler(this.btnRemoveLocation_Click);
+            // 
+            // btnAddLocation
+            // 
+            this.btnAddLocation.Location = new System.Drawing.Point(96, 192);
+            this.btnAddLocation.Name = "btnAddLocation";
+            this.btnAddLocation.Size = new System.Drawing.Size(88, 23);
+            this.btnAddLocation.TabIndex = 1;
+            this.btnAddLocation.Text = "Add";
+            this.btnAddLocation.UseVisualStyleBackColor = true;
+            this.btnAddLocation.Click += new System.EventHandler(this.btnAddLocation_Click);
+            // 
             // lvLocations
             // 
             this.lvLocations.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chLocationsName});
+            this.lvLocations.FullRowSelect = true;
             this.lvLocations.Location = new System.Drawing.Point(8, 16);
             this.lvLocations.Name = "lvLocations";
             this.lvLocations.Size = new System.Drawing.Size(264, 168);
@@ -111,16 +143,6 @@
             // 
             this.chLocationsName.Text = "Name";
             this.chLocationsName.Width = 260;
-            // 
-            // btnAddLocation
-            // 
-            this.btnAddLocation.Location = new System.Drawing.Point(96, 192);
-            this.btnAddLocation.Name = "btnAddLocation";
-            this.btnAddLocation.Size = new System.Drawing.Size(88, 23);
-            this.btnAddLocation.TabIndex = 1;
-            this.btnAddLocation.Text = "Add";
-            this.btnAddLocation.UseVisualStyleBackColor = true;
-            this.btnAddLocation.Click += new System.EventHandler(this.btnAddLocation_Click);
             // 
             // btnTeleportLocation
             // 
@@ -151,26 +173,6 @@
             this.btnTeleportHome.Text = "Teleport to home";
             this.btnTeleportHome.UseVisualStyleBackColor = true;
             this.btnTeleportHome.Click += new System.EventHandler(this.btnTeleportHome_Click);
-            // 
-            // btnRefresh
-            // 
-            this.btnRefresh.Location = new System.Drawing.Point(96, 192);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(88, 23);
-            this.btnRefresh.TabIndex = 4;
-            this.btnRefresh.Text = "Refresh";
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
-            // 
-            // btnRemoveLocation
-            // 
-            this.btnRemoveLocation.Location = new System.Drawing.Point(184, 192);
-            this.btnRemoveLocation.Name = "btnRemoveLocation";
-            this.btnRemoveLocation.Size = new System.Drawing.Size(88, 23);
-            this.btnRemoveLocation.TabIndex = 3;
-            this.btnRemoveLocation.Text = "Remove";
-            this.btnRemoveLocation.UseVisualStyleBackColor = true;
-            this.btnRemoveLocation.Click += new System.EventHandler(this.btnRemoveLocation_Click);
             // 
             // TeleportForm
             // 
