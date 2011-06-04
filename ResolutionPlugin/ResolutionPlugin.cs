@@ -3,13 +3,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.Xna.Framework.Content;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
 
 namespace ResolutionPlugin
 {
+    /// <summary>
+    /// Commands: fs, fullscreen, auto, w, width, x, h, height, y, skip, skipintro, fps
+    /// </summary>
     public class ResolutionPlugin : TerrariaPlugin
     {
         public override string Name
@@ -37,11 +39,19 @@ namespace ResolutionPlugin
             get { return "Lets you set Terraria's resolution"; }
         }
 
-        bool enabled = false;
-
         public ResolutionPlugin(Main game)
             : base(game)
         {
+        }
+
+        public override void Initialize()
+        {
+            GameHooks.OnPreInitialize += GameHooks_OnPreInitialize;
+        }
+
+        public override void DeInitialize()
+        {
+            GameHooks.OnPreInitialize -= GameHooks_OnPreInitialize;
         }
 
         private void GameHooks_OnPreInitialize()
@@ -58,7 +68,6 @@ namespace ResolutionPlugin
                 Size screenSize = SystemInformation.VirtualScreen.Size;
                 Main.screenWidth = screenSize.Width;
                 Main.screenHeight = screenSize.Height;
-                enabled = true;
             }
             else
             {
@@ -71,7 +80,6 @@ namespace ResolutionPlugin
                 {
                     Main.screenWidth = width;
                     Main.screenHeight = height;
-                    enabled = true;
                 }
             }
 
@@ -79,31 +87,16 @@ namespace ResolutionPlugin
             {
                 Main.showSplash = false;
             }
-        }
 
-        private void GameHooks_OnLoadContent(ContentManager obj)
-        {
-            if (enabled)
+            if (CheckCommand(cmd, "fps"))
             {
-                Main.backgroundHeight[0] = Main.screenHeight + 200;
+                Main.showFrameRate = true;
             }
         }
 
         private bool CheckCommand(string text, params string[] command)
         {
             return command.Any(x => text.IndexOf("-" + x, StringComparison.InvariantCultureIgnoreCase) >= 0);
-        }
-
-        public override void Initialize()
-        {
-            GameHooks.OnPreInitialize += GameHooks_OnPreInitialize;
-            GameHooks.OnLoadContent += GameHooks_OnLoadContent;
-        }
-
-        public override void DeInitialize()
-        {
-            GameHooks.OnPreInitialize -= GameHooks_OnPreInitialize;
-            GameHooks.OnLoadContent -= GameHooks_OnLoadContent;
         }
     }
 }
