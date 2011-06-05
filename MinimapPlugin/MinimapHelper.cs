@@ -1,4 +1,7 @@
-﻿namespace MinimapPlugin
+﻿using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace MinimapPlugin
 {
     public static class MinimapHelper
     {
@@ -89,6 +92,41 @@
             colors[80] = TerrariaColors.UNKNOWN;
 
             return colors;
+        }
+
+        public static Texture2D BitmapToTexture(GraphicsDevice gd, Bitmap img)
+        {
+            int width = img.Width;
+            int height = img.Height;
+            int[,] ints = new int[width, height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    ints[x, y] = img.GetPixel(x, y).ToArgb();
+                }
+            }
+            return IntsToTexture(gd, ints, width, height);
+        }
+
+        public static Texture2D IntsToTexture(GraphicsDevice gd, int[,] img, int width, int height)
+        {
+            Texture2D ret = new Texture2D(gd, width, height);
+            int[] ints = new int[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int c = img[x, y];
+                    int a = c >> 24;
+                    int b = c >> 16 & 0xFF;
+                    int g = c >> 8 & 0xFF;
+                    int r = c & 0xFF;
+                    ints[(y * width) + x] = (a << 24) | (r << 16) | (g << 8) | b;
+                }
+            }
+            ret.SetData(ints);
+            return ret;
         }
     }
 }

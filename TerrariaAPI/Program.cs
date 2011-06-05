@@ -16,15 +16,17 @@ namespace TerrariaAPI
     {
         public static readonly Version ApiVersion = new Version(1, 1, 1, 1);
 #if SERVER
-        static readonly string PluginsPath = "serverplugins";
+        public const string PluginsPath = "ServerPlugins";
 #else
-        static readonly string PluginsPath = "plugins";
+        public const string PluginsPath = "Plugins";
 #endif
 
-        static List<PluginContainer> Plugins = new List<PluginContainer>();
-        static List<string> FailedPlugins = new List<string>();
-        static Assembly[] Assemblies;
-        static Main Game;
+        public const string PluginSettingsPath = PluginsPath + "\\Settings";
+
+        private static List<PluginContainer> Plugins = new List<PluginContainer>();
+        private static List<string> FailedPlugins = new List<string>();
+        private static Assembly[] Assemblies;
+        private static Main Game;
 
         public static void Initialize(Main main)
         {
@@ -35,7 +37,7 @@ namespace TerrariaAPI
                 Directory.CreateDirectory(PluginsPath);
             }
 
-            //Not loaded for some reason :s
+            // Not loaded for some reason :s
             Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
             Assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
@@ -120,7 +122,16 @@ namespace TerrariaAPI
             NetHooks.OnPreSendData += NetHooks_OnPreSendData;
         }
 
-        static Assembly Compile(string name, string data, bool addfail = true)
+        public static void DeInitialize()
+        {
+            foreach (var p in Plugins)
+                p.DeInitialize();
+
+            foreach (var p in Plugins)
+                p.Dispose();
+        }
+
+        private static Assembly Compile(string name, string data, bool addfail = true)
         {
             var prov = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
             var cp = new CompilerParameters();
@@ -271,14 +282,6 @@ namespace TerrariaAPI
                 vector7.Y *= 0.5f;
                 sb.DrawString(Main.fontMouseText, text, new Vector2(position.X + offsetx, position.Y + offsety), color9);
             }
-        }
-
-        public static void DeInitialize()
-        {
-            foreach (var p in Plugins)
-                p.DeInitialize();
-            foreach (var p in Plugins)
-                p.Dispose();
         }
     }
 }

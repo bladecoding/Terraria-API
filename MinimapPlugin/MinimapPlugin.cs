@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
@@ -15,7 +14,7 @@ namespace MinimapPlugin
 {
     /// <summary>
     /// F5 = Show/Hide minimap
-    /// F6 = Show minimap form
+    /// F6 = Show minimap settings form
     /// </summary>
     public class MinimapPlugin : TerrariaPlugin
     {
@@ -44,10 +43,12 @@ namespace MinimapPlugin
             get { return "Its a minimap, what do you think?"; }
         }
 
-        private WorldRenderer rend = null;
-        private InputManager input = new InputManager();
-        private Texture2D minimap = null;
-        private Texture2D chest;
+        public const string SettingsFilename = "MinimapSettings.xml";
+
+        private WorldRenderer rend;
+        private InputManager input;
+        private Texture2D minimap;
+        // private Texture2D chest;
         private Thread renderthread;
         private MinimapSettings settings;
         private MinimapForm settingsForm;
@@ -55,37 +56,32 @@ namespace MinimapPlugin
         public MinimapPlugin(Main main)
             : base(main)
         {
-            settings = new MinimapSettings
-            {
-                MinimapWidth = 200,
-                MinimapHeight = 150,
-                MinimapZoom = 1.0f,
-                PositionOffsetX = 0,
-                PositionOffsetY = 0,
-                MinimapPosition = MinimapPosition.RightBottom,
-                MinimapPositionOffset = 10,
-                MinimapTransparency = 1.0f,
-                ShowSky = true,
-                ShowBorder = true
-            };
+            input = new InputManager();
         }
 
         public override void Initialize()
         {
             Application.EnableVisualStyles();
-            renderthread = new Thread(RenderMap);
-            renderthread.Start();
-            GameHooks.OnLoadContent += GameHooks_OnLoadContent;
+            // GameHooks.OnLoadContent += GameHooks_OnLoadContent;
             GameHooks.OnUpdate += GameHooks_OnUpdate;
             DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
+            renderthread = new Thread(RenderMap);
+            renderthread.Start();
+
+            ThreadPool.QueueUserWorkItem(state => settings = TerrariaAPI.SettingsHelper.Load<MinimapSettings>(SettingsFilename));
         }
 
         public override void DeInitialize()
         {
             renderthread = null;
-            GameHooks.OnLoadContent -= GameHooks_OnLoadContent;
+            // GameHooks.OnLoadContent -= GameHooks_OnLoadContent;
             GameHooks.OnUpdate -= GameHooks_OnUpdate;
             DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
+
+            if (settings != null)
+            {
+                TerrariaAPI.SettingsHelper.Save(settings, SettingsFilename);
+            }
         }
 
         private void GameHooks_OnLoadContent(ContentManager obj)
@@ -95,7 +91,7 @@ namespace MinimapPlugin
 
         private void GameHooks_OnUpdate(GameTime obj)
         {
-            if (Game.IsActive)
+            if (Game.IsActive && settings != null)
             {
                 input.Update();
 
@@ -103,7 +99,7 @@ namespace MinimapPlugin
                 {
                     if (rend == null)
                     {
-                        rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY) { SurfaceY = (int)Main.worldSurface };
+                        rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY);
                     }
                     else
                     {
@@ -125,7 +121,7 @@ namespace MinimapPlugin
 
         private void DrawHooks_OnEndDraw(SpriteBatch arg1)
         {
-            if (Game.IsActive && rend != null && minimap != null && !Main.playerInventory)
+            if (Game.IsActive && settings != null && rend != null && minimap != null && !Main.playerInventory)
             {
                 Vector2 position;
 
@@ -148,55 +144,21 @@ namespace MinimapPlugin
         {
             while (renderthread != null)
             {
-                if (rend != null)
+                if (settings != null && rend != null)
                 {
                     int curx = (int)(Main.player[Main.myPlayer].position.X / 16) + settings.PositionOffsetX;
                     int cury = (int)(Main.player[Main.myPlayer].position.Y / 16) + settings.PositionOffsetY;
                     int width = settings.MinimapWidth;
                     int height = settings.MinimapHeight;
 
-                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky, settings.ShowBorder);
+                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, (int)Main.worldSurface, settings.MinimapZoom,
+                        settings.ShowSky, settings.ShowBorder, settings.ShowCrosshair);
 
-                    minimap = IntsToTexture(Game.GraphicsDevice, img, width, height);
+                    minimap = MinimapHelper.IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }
 
-                Thread.Sleep(33);
+                Thread.Sleep(100);
             }
-        }
-
-        private static Texture2D BitmapToTexture(GraphicsDevice gd, Bitmap img)
-        {
-            int width = img.Width;
-            int height = img.Height;
-            int[,] ints = new int[width, height];
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    ints[x, y] = img.GetPixel(x, y).ToArgb();
-                }
-            }
-            return IntsToTexture(gd, ints, width, height);
-        }
-
-        private static Texture2D IntsToTexture(GraphicsDevice gd, int[,] img, int width, int height)
-        {
-            Texture2D ret = new Texture2D(gd, width, height);
-            int[] ints = new int[width * height];
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    int c = img[x, y];
-                    int a = c >> 24;
-                    int b = c >> 16 & 0xFF;
-                    int g = c >> 8 & 0xFF;
-                    int r = c & 0xFF;
-                    ints[(y * width) + x] = (a << 24) | (r << 16) | (g << 8) | b;
-                }
-            }
-            ret.SetData(ints);
-            return ret;
         }
 
         /*private void DrawPlayers()

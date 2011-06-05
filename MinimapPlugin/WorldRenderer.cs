@@ -5,25 +5,24 @@ namespace MinimapPlugin
 {
     public class WorldRenderer
     {
-        public Tile[,] Tiles { get; set; }
-        public int SurfaceY { get; set; }
-        public int MaxX { get; set; }
-        public int MaxY { get; set; }
-        public int[] Colors { get; set; }
+        public Tile[,] Tiles { get; private set; }
+        public int MaxX { get; private set; }
+        public int MaxY { get; private set; }
+        public int[] Colors { get; private set; }
 
         public WorldRenderer(Tile[,] tiles, int worldWidth, int worldHeight)
         {
-            SurfaceY = -1;
             Tiles = tiles;
             MaxX = worldWidth;
             MaxY = worldHeight;
             Colors = MinimapHelper.GetMinimapColors();
         }
 
-        public int[,] GenerateMinimap(int tilex, int tiley, int width, int height, float zoom = 1.0f, bool showSky = true, bool showBorder = true)
+        public int[,] GenerateMinimap(int tileX, int tileY, int width, int height, float surfaceY, float zoom = 1.0f, bool showSky = true,
+            bool showBorder = true, bool showCrosshair = true)
         {
-            tilex -= (int)((width * zoom) / 2);
-            tiley -= (int)((height * zoom) / 2);
+            int left = tileX - (int)((width * zoom) / 2);
+            int top = tileY - (int)((height * zoom) / 2);
 
             int[,] ints = new int[width, height];
 
@@ -31,14 +30,14 @@ namespace MinimapPlugin
 
             for (int y = 0; y < height; y++)
             {
-                posY = (int)(y * zoom) + tiley;
+                posY = top + (int)(y * zoom);
 
                 if (posY < 0 || posY >= MaxY)
                     continue;
 
                 for (int x = 0; x < width; x++)
                 {
-                    posX = (int)(x * zoom) + tilex;
+                    posX = left + (int)(x * zoom);
 
                     if (posX < 0 || posX > MaxX)
                         continue;
@@ -55,7 +54,7 @@ namespace MinimapPlugin
                         {
                             ints[x, y] = Colors[tile.type];
                         }
-                        else if (posY > SurfaceY || tile.wall > 0)
+                        else if (posY >= surfaceY || tile.wall > 0)
                         {
                             ints[x, y] = TerrariaColors.WALL_STONE;
                         }
@@ -67,9 +66,10 @@ namespace MinimapPlugin
                 }
             }
 
+            int borderColor = Color.White.ToArgb();
+
             if (showBorder)
             {
-                int borderColor = Color.White.ToArgb();
                 int right = width - 1;
                 int bottom = height - 1;
 
@@ -83,6 +83,22 @@ namespace MinimapPlugin
                 {
                     ints[0, y] = borderColor;
                     ints[right, y] = borderColor;
+                }
+            }
+
+            if (showCrosshair)
+            {
+                int middleX = width / 2;
+                int middleY = height / 2;
+
+                for (int x = 0; x < width; x++)
+                {
+                    ints[x, middleY] = borderColor;
+                }
+
+                for (int y = 0; y < height; y++)
+                {
+                    ints[middleX, y] = borderColor;
                 }
             }
 
