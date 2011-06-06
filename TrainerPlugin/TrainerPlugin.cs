@@ -158,9 +158,34 @@ namespace TrainerPlugin
                 me.rocketBoots = true;
             }
 
+            if (settings.UseFlipper)
+            {
+                me.accFlipper = true;
+            }
+
+            if (settings.FireWalk)
+            {
+                me.fireWalk = true;
+            }
+
+            if (settings.SpawnMax)
+            {
+                me.spawnMax = true;
+            }
+
+            if (settings.InstantRespawn)
+            {
+                me.respawnTimer = 0;
+            }
+
             if (settings.NoPotionCooldown)
             {
                 me.potionDelay = 0;
+            }
+
+            if (settings.NoManaCost)
+            {
+                me.manaCost = 0;
             }
 
             Main.lightTiles = settings.LightTiles;

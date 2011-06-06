@@ -37,7 +37,7 @@
             this.pgTrainer.Location = new System.Drawing.Point(0, 0);
             this.pgTrainer.Name = "pgTrainer";
             this.pgTrainer.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-            this.pgTrainer.Size = new System.Drawing.Size(308, 366);
+            this.pgTrainer.Size = new System.Drawing.Size(308, 468);
             this.pgTrainer.TabIndex = 0;
             this.pgTrainer.ToolbarVisible = false;
             this.pgTrainer.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.pgTrainer_PropertyValueChanged);
@@ -46,10 +46,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(308, 366);
+            this.ClientSize = new System.Drawing.Size(308, 468);
             this.Controls.Add(this.pgTrainer);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
             this.Name = "TrainerForm";
+            this.ShowIcon = false;
             this.Text = "Terraria Trainer";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrainerForm_FormClosing);
