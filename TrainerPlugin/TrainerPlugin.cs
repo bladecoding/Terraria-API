@@ -81,11 +81,20 @@ namespace TrainerPlugin
 
                 Main.godMode = settings.GodMode;
 
+                if (settings.InfiniteHealth)
+                {
+                    me.statLife = me.statLifeMax;
+                }
+
                 if (settings.InfiniteMana)
+                {
                     me.statMana = me.statManaMax;
+                }
 
                 if (settings.InfiniteBreath)
+                {
                     me.breath = me.breathMax;
+                }
 
                 if (settings.InfiniteAmmo)
                 {
@@ -96,6 +105,33 @@ namespace TrainerPlugin
                             item.stack = item.maxStack;
                         }
                     }
+                }
+
+                if (settings.NoFallDamage)
+                {
+                    me.noFallDmg = true;
+                }
+
+                /*  @High: Need hook for UpdatePlayer line 516 otherwise these can't work :P
+
+                if (settings.NoKnockback)
+                {
+                    me.noKnockback = true;
+                }
+
+                if (settings.DoubleJump)
+                {
+                    me.doubleJump = true;
+                }
+
+                if (settings.RocketBoots)
+                {
+                    me.rocketBoots = true;
+                }*/
+
+                if (settings.InfiniteJump)
+                {
+                    me.jumpAgain = true;
                 }
 
                 Main.lightTiles = settings.LightTiles;
@@ -115,7 +151,7 @@ namespace TrainerPlugin
                 }
 
                 Main.debugMode = settings.DebugMode;
-                Main.grabSun = settings.GrabSub;
+                Main.grabSun = settings.GrabSun;
                 Main.stopSpawns = settings.StopSpawns;
                 Main.dumbAI = settings.DumbAI;
             }
