@@ -26,6 +26,8 @@ namespace TrainerPlugin
         //public bool RocketBoots { get; set; }
         [DefaultValue(false), Description("You can jump more than two times with double jump. 'Cloud in a bottle' item is required.")]
         public bool InfiniteJump { get; set; }
+        [DefaultValue(false), Description("Disables potion cooldown for be able to use potion instantly again.")]
+        public bool NoPotionCooldown { get; set; }
         [DefaultValue(false), Description("All tiles will be visible but also disables lighting.")]
         public bool LightTiles { get; set; }
         [DefaultValue(false), Description("Your character will emit light. Like orb of light.")]

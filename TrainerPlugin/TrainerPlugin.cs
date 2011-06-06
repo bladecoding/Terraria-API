@@ -40,14 +40,16 @@ namespace TrainerPlugin
 
         private InputManager input;
         private TrainerForm trainerform;
-        private TrainerSettings settings;
+        private TrainerSettings trainerSettings;
+        private TrainerSettings defaultSettings;
 
         public TrainerPlugin(Main game)
             : base(game)
         {
             input = new InputManager();
-            settings = new TrainerSettings();
-            trainerform = new TrainerForm(settings);
+            trainerSettings = new TrainerSettings();
+            defaultSettings = new TrainerSettings();
+            trainerform = new TrainerForm(trainerSettings);
         }
 
         public override void Dispose()
@@ -68,7 +70,7 @@ namespace TrainerPlugin
 
         private void TerrariaHooks_OnUpdate(GameTime obj)
         {
-            if (Game.IsActive && settings != null && settings.EnableTrainer)
+            if (Game.IsActive && trainerSettings != null)
             {
                 input.Update();
 
@@ -77,84 +79,101 @@ namespace TrainerPlugin
                     trainerform.Visible = !trainerform.Visible;
                 }
 
-                Player me = Main.player[Main.myPlayer];
-
-                Main.godMode = settings.GodMode;
-
-                if (settings.InfiniteHealth)
+                if (trainerSettings.EnableTrainer)
                 {
-                    me.statLife = me.statLifeMax;
+                    ApplySettings(trainerSettings);
                 }
-
-                if (settings.InfiniteMana)
+                else
                 {
-                    me.statMana = me.statManaMax;
+                    ApplySettings(defaultSettings);
                 }
+            }
+        }
 
-                if (settings.InfiniteBreath)
-                {
-                    me.breath = me.breathMax;
-                }
+        private void ApplySettings(TrainerSettings settings)
+        {
+            Player me = Main.player[Main.myPlayer];
 
-                if (settings.InfiniteAmmo)
+            Main.godMode = settings.GodMode;
+
+            if (settings.InfiniteHealth)
+            {
+                me.statLife = me.statLifeMax;
+            }
+
+            if (settings.InfiniteMana)
+            {
+                me.statMana = me.statManaMax;
+            }
+
+            if (settings.InfiniteBreath)
+            {
+                me.breath = me.breathMax;
+            }
+
+            if (settings.InfiniteAmmo)
+            {
+                foreach (Item item in me.inventory)
                 {
-                    foreach (Item item in me.inventory)
+                    if (item.ammo > 0)
                     {
-                        if (item.ammo > 0)
-                        {
-                            item.stack = item.maxStack;
-                        }
+                        item.stack = item.maxStack;
                     }
                 }
-
-                if (settings.NoFallDamage)
-                {
-                    me.noFallDmg = true;
-                }
-
-                /*  @High: Need hook for UpdatePlayer line 516 otherwise these can't work :P
-
-                if (settings.NoKnockback)
-                {
-                    me.noKnockback = true;
-                }
-
-                if (settings.DoubleJump)
-                {
-                    me.doubleJump = true;
-                }
-
-                if (settings.RocketBoots)
-                {
-                    me.rocketBoots = true;
-                }*/
-
-                if (settings.InfiniteJump)
-                {
-                    me.jumpAgain = true;
-                }
-
-                Main.lightTiles = settings.LightTiles;
-
-                if (settings.LightYourCharacter)
-                {
-                    int x = (int)(me.position.X / 16);
-                    int y = (int)(me.position.Y / 16);
-                    Lighting.addLight(x, y, 1f);
-                }
-
-                if (settings.LightCursor)
-                {
-                    int x = (int)((Main.mouseState.X + Main.screenPosition.X) / 16f);
-                    int y = (int)((Main.mouseState.Y + Main.screenPosition.Y) / 16f);
-                    Lighting.addLight(x, y, 1f);
-                }
-
-                Main.debugMode = settings.DebugMode;
-                Main.grabSun = settings.GrabSun;
-                Main.stopSpawns = settings.StopSpawns;
-                Main.dumbAI = settings.DumbAI;
             }
+
+            if (settings.NoFallDamage)
+            {
+                me.noFallDmg = true;
+            }
+
+            /*  @High: Need hook for UpdatePlayer line 516 otherwise these can't work :P
+
+            if (settings.NoKnockback)
+            {
+                me.noKnockback = true;
+            }
+
+            if (settings.DoubleJump)
+            {
+                me.doubleJump = true;
+            }
+
+            if (settings.RocketBoots)
+            {
+                me.rocketBoots = true;
+            }*/
+
+            if (settings.InfiniteJump)
+            {
+                me.jumpAgain = true;
+            }
+
+            if (settings.NoPotionCooldown)
+            {
+                me.potionDelay = 0;
+            }
+
+            Main.lightTiles = settings.LightTiles;
+
+            if (settings.LightYourCharacter)
+            {
+                int x = (int)(me.position.X / 16);
+                int y = (int)(me.position.Y / 16);
+                Lighting.addLight(x, y, 1f);
+            }
+
+            if (settings.LightCursor)
+            {
+                int x = (int)((Main.mouseState.X + Main.screenPosition.X) / 16f);
+                int y = (int)((Main.mouseState.Y + Main.screenPosition.Y) / 16f);
+                Lighting.addLight(x, y, 1f);
+            }
+
+            Main.debugMode = settings.DebugMode;
+            Main.grabSun = settings.GrabSun;
+            Main.stopSpawns = settings.StopSpawns;
+            Main.dumbAI = settings.DumbAI;
         }
     }
 }
