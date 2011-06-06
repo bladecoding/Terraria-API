@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Terraria;
 using TerrariaAPI;
@@ -60,11 +59,13 @@ namespace TrainerPlugin
         public override void Initialize()
         {
             GameHooks.Update += TerrariaHooks_Update;
+            PlayerHooks.UpdatePhysics += PlayerHooks_UpdatePhysics;
         }
 
         public override void DeInitialize()
         {
             GameHooks.Update -= TerrariaHooks_Update;
+            PlayerHooks.UpdatePhysics -= PlayerHooks_UpdatePhysics;
         }
 
         private void TerrariaHooks_Update(GameTime obj)
@@ -77,7 +78,13 @@ namespace TrainerPlugin
                 {
                     trainerform.Visible = !trainerform.Visible;
                 }
+            }
+        }
 
+        private void PlayerHooks_UpdatePhysics(Player obj)
+        {
+            if (Game.IsActive && trainerSettings != null)
+            {
                 if (trainerSettings.EnableTrainer)
                 {
                     ApplySettings(trainerSettings);
@@ -126,11 +133,14 @@ namespace TrainerPlugin
                 me.noFallDmg = true;
             }
 
-            /*  @High: Need hook for UpdatePlayer line 516 otherwise these can't work :P
-
             if (settings.NoKnockback)
             {
                 me.noKnockback = true;
+            }
+
+            if (settings.JumpBoost)
+            {
+                me.jumpBoost = true;
             }
 
             if (settings.DoubleJump)
@@ -138,14 +148,14 @@ namespace TrainerPlugin
                 me.doubleJump = true;
             }
 
-            if (settings.RocketBoots)
-            {
-                me.rocketBoots = true;
-            }*/
-
             if (settings.InfiniteJump)
             {
                 me.jumpAgain = true;
+            }
+
+            if (settings.RocketBoots)
+            {
+                me.rocketBoots = true;
             }
 
             if (settings.NoPotionCooldown)

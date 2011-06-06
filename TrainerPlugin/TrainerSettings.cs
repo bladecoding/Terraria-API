@@ -18,14 +18,16 @@ namespace TrainerPlugin
         public bool InfiniteAmmo { get; set; }
         [DefaultValue(false), Description("You won't take fall damage.")]
         public bool NoFallDamage { get; set; }
-        //[DefaultValue(false), Description("NPCs can't push you when they hit you.")]
-        //public bool NoKnockback { get; set; }
-        //[DefaultValue(false), Description("You can double jump.")]
-        //public bool DoubleJump { get; set; }
-        //[DefaultValue(false), Description("You can fly with mana like rocket boots.")]
-        //public bool RocketBoots { get; set; }
-        [DefaultValue(false), Description("You can jump more than two times with double jump. 'Cloud in a bottle' item is required.")]
+        [DefaultValue(false), Description("NPCs can't push you when they hit you.")]
+        public bool NoKnockback { get; set; }
+        [DefaultValue(false), Description("Jump height and jump speed increase.")]
+        public bool JumpBoost { get; set; }
+        [DefaultValue(false), Description("You can double jump.")]
+        public bool DoubleJump { get; set; }
+        [DefaultValue(false), Description("You can jump more than two times with double jump. Double jump is required. You can't use rocket boots when this active.")]
         public bool InfiniteJump { get; set; }
+        [DefaultValue(false), Description("You can fly with mana.")]
+        public bool RocketBoots { get; set; }
         [DefaultValue(false), Description("Disables potion cooldown for be able to use potion instantly again.")]
         public bool NoPotionCooldown { get; set; }
         [DefaultValue(false), Description("All tiles will be visible but also disables lighting.")]
