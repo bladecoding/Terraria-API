@@ -25,7 +25,7 @@ namespace TrainerPlugin
 
         public override Version APIVersion
         {
-            get { return new Version(1, 1); }
+            get { return new Version(1, 2); }
         }
 
         public override string Author
@@ -59,16 +59,15 @@ namespace TrainerPlugin
 
         public override void Initialize()
         {
-            Application.EnableVisualStyles();
-            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
+            GameHooks.Update += TerrariaHooks_Update;
         }
 
         public override void DeInitialize()
         {
-            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
+            GameHooks.Update -= TerrariaHooks_Update;
         }
 
-        private void TerrariaHooks_OnUpdate(GameTime obj)
+        private void TerrariaHooks_Update(GameTime obj)
         {
             if (Game.IsActive && trainerSettings != null)
             {

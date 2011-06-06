@@ -8,24 +8,24 @@ namespace TerrariaAPI.Hooks
     {
         static ServerHooks()
         {
-            NetHooks.OnPreGetData += NetHooks_OnPreGetData;
+            NetHooks.GetData += NetHooks_GetData;
         }
 
-        static void NetHooks_OnPreGetData(GetDataEventArgs e)
+        static void NetHooks_GetData(GetDataEventArgs e)
         {
             if (Main.netMode != 2)
                 return;
 
             if (e.MsgID == MsgTypes.Connect)
             {
-                e.Handled = !Join(e.Msg.whoAmI);
+                e.Handled = OnJoin(e.Msg.whoAmI);
                 if (e.Handled)
                     Netplay.serverSock[e.Msg.whoAmI].kill = true;
             }
             else if (e.MsgID == MsgTypes.ChatMessage)
             {
                 string str = Encoding.ASCII.GetString(e.Msg.readBuffer, e.Index + 0x4, e.Length - 0x5);
-                e.Handled = Chat(e.Msg.whoAmI, str);
+                e.Handled = OnChat(e.Msg, e.Msg.whoAmI, str);
             }
         }
 
@@ -33,50 +33,56 @@ namespace TerrariaAPI.Hooks
         /// <summary>
         /// On console command
         /// </summary>
-        public static event CommandD OnCommand;
+        public static event CommandD Command;
 
-        public static bool Command(string cmd)
+        public static bool OnCommand(string cmd)
         {
+            if (Command == null)
+                return false;
+
             var args = new HandledEventArgs();
-            if (OnCommand != null)
-                OnCommand(cmd, args);
+            Command(cmd, args);
             return args.Handled;
         }
 
         /// <summary>
         /// arg1 = WhoAmI
         /// </summary>
-        public static event Action<int, AllowEventArgs> OnJoin;
+        public static event Action<int, HandledEventArgs> Join;
 
-        public static bool Join(int whoami)
+        public static bool OnJoin(int whoami)
         {
-            var args = new AllowEventArgs();
-            if (OnJoin != null)
-                OnJoin(whoami, args);
-            return args.Allow;
+            if (Join == null)
+                return false;
+
+            var args = new HandledEventArgs();
+            Join(whoami, args);
+            return args.Handled;
         }
 
         /// <summary>
         /// arg1 = WhoAmI
         /// </summary>
-        public static event Action<int> OnLeave;
+        public static event Action<int> Leave;
 
-        public static void Leave(int whoami)
+        public static void OnLeave(int whoami)
         {
-            if (OnLeave != null)
-                OnLeave(whoami);
+            if (Leave != null)
+                Leave(whoami);
         }
 
         /// <summary>
-        /// arg1 = WhoAmI, arg2 = Message
+        /// arg1 = Msg, arg2 = WhoAmI, arg3 = Text
         /// </summary>
-        public static event Action<int, string, HandledEventArgs> OnChat;
+        public static event Action<messageBuffer, int, string, HandledEventArgs> Chat;
 
-        public static bool Chat(int whoami, string msg)
+        public static bool OnChat(messageBuffer msg, int whoami, string text)
         {
+            if (Chat == null)
+                return false;
+
             var args = new HandledEventArgs();
-            if (OnChat != null)
-                OnChat(whoami, msg, args);
+            Chat(msg, whoami, text, args);
             return args.Handled;
         }
     }

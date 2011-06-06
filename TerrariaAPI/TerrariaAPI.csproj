@@ -14,7 +14,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>$(TERRARIA_BIN)</OutputPath>
@@ -36,7 +36,7 @@
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugServer|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'DebugServer'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>$(TERRARIA_BIN)</OutputPath>
     <DefineConstants>TRACE;DEBUG;SERVER</DefineConstants>
@@ -65,11 +65,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Terraria" Condition="'$(Configuration)|$(Platform)' != 'DebugServer|AnyCPU'">
+    <Reference Include="Terraria" Condition="'$(Configuration)' == 'Debug'">
       <HintPath>..\Terraria\Terraria.exe</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TerrariaServer" Condition="'$(Configuration)|$(Platform)' == 'DebugServer|AnyCPU'">
+    <Reference Include="TerrariaServer" Condition="'$(Configuration)' == 'DebugServer'">
       <HintPath>..\TerrariaServer\TerrariaServer.exe</HintPath>
       <Private>False</Private>
     </Reference>
