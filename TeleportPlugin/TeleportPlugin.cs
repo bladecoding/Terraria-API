@@ -212,27 +212,10 @@ namespace TeleportPlugin
         {
             if (Game.IsActive && helper != null && helper.ShowInfoText && !Main.playerInventory)
             {
-                int depth = helper.GetDepth();
+                string text = string.Format("Position: X {0}, Y {1}\r\nDepth: {2}\r\nTime: {3}",
+                    (int)helper.Me.position.X, (int)helper.Me.position.Y, helper.GetDepthText(), helper.GetTimeText());
 
-                string depthText;
-
-                if (depth > 0)
-                {
-                    depthText = depth + " feet below";
-                }
-                else if (depth < 0)
-                {
-                    depth *= -1;
-                    depthText = depth + " feet above";
-                }
-                else
-                {
-                    depthText = "Level";
-                }
-
-                string text = string.Format("Position: X {0}, Y {1}\r\nDepth: {2}", (int)helper.Me.position.X, (int)helper.Me.position.Y, depthText);
-
-                if (Main.netMode != 0)
+                if (Main.netMode == 1)
                 {
                     List<string> players = helper.GetPlayerList();
                     string playerList = string.Join(", ", players);
