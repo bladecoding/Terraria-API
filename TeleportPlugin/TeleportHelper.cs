@@ -188,6 +188,13 @@ namespace TeleportPlugin
             TeleportToPosition(x, y);
         }
 
+        public void TeleportToCursor()
+        {
+            float x = Main.mouseState.X + Main.screenPosition.X;
+            float y = Main.mouseState.Y + Main.screenPosition.Y;
+            TeleportToPosition(x, y);
+        }
+
         public void SetHome()
         {
             SetHome(Me.position);

@@ -14,7 +14,7 @@ namespace TeleportPlugin
     /// <summary>
     /// F1 = Teleport to last player
     /// F2 = Teleport to last location
-    /// F3 = Show/Hide position, depth, players
+    /// F3 = Teleport to cursor position
     /// F4 = Open teleport form
     /// </summary>
     public class TeleportPlugin : TerrariaPlugin
@@ -98,8 +98,7 @@ namespace TeleportPlugin
                 }
                 else if (input.IsKeyDown(Keys.F3, true))
                 {
-                    helper.ShowInfoText = !helper.ShowInfoText;
-                    UpdateForm();
+                    helper.TeleportToCursor();
                 }
                 else if (input.IsKeyDown(Keys.F4, true))
                 {
