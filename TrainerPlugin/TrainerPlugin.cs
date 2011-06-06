@@ -25,7 +25,7 @@ namespace TrainerPlugin
 
         public override Version APIVersion
         {
-            get { return new Version(1, 1); }
+            get { return new Version(1, 2); }
         }
 
         public override string Author

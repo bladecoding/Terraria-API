@@ -30,7 +30,7 @@ namespace MinimapPlugin
 
         public override Version APIVersion
         {
-            get { return new Version(1, 1); }
+            get { return new Version(1, 2); }
         }
 
         public override string Author
@@ -68,8 +68,6 @@ namespace MinimapPlugin
 
         public override void Initialize()
         {
-            Application.EnableVisualStyles();
-
             // GameHooks.OnLoadContent += GameHooks_OnLoadContent;
             GameHooks.Update += GameHooks_Update;
             GameHooks.WorldConnect += GameHooks_WorldConnect;

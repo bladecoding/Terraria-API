@@ -41,12 +41,10 @@ namespace TeleportPlugin
 
         public override Version APIVersion
         {
-            get { return new Version(1, 1); }
+            get { return new Version(1, 2); }
         }
 
         public const string SettingsFilename = "TeleportSettings.xml";
-
-        private const int ChatText = 0x19;
 
         private InputManager input = new InputManager();
         private TeleportHelper helper;
@@ -59,8 +57,6 @@ namespace TeleportPlugin
 
         public override void Initialize()
         {
-            Application.EnableVisualStyles();
-
             GameHooks.Update += GameHooks_Update;
             GameHooks.WorldConnect += GameHooks_WorldConnect;
             ClientHooks.Chat += ClientHooks_Chat;
