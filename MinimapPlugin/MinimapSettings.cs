@@ -4,6 +4,8 @@ namespace MinimapPlugin
 {
     public class MinimapSettings
     {
+        [DefaultValue(true)]
+        public bool ShowMinimap { get; set; }
         [DefaultValue(200)]
         public int MinimapWidth { get; set; }
         [DefaultValue(150)]
@@ -29,6 +31,7 @@ namespace MinimapPlugin
 
         public MinimapSettings()
         {
+            ShowMinimap = true;
             MinimapWidth = 200;
             MinimapHeight = 150;
             MinimapZoom = 1.0f;

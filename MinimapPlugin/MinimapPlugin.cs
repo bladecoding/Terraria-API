@@ -45,25 +45,35 @@ namespace MinimapPlugin
 
         public const string SettingsFilename = "MinimapSettings.xml";
 
+        private InputManager input = new InputManager();
         private WorldRenderer rend;
-        private InputManager input;
         private Texture2D minimap;
         // private Texture2D chest;
         private Thread renderthread;
         private MinimapSettings settings;
         private MinimapForm settingsForm;
 
+        private bool IsDrawingAllowed
+        {
+            get
+            {
+                return Game.IsActive && settings != null && settings.ShowMinimap && rend != null;
+            }
+        }
+
         public MinimapPlugin(Main main)
             : base(main)
         {
-            input = new InputManager();
         }
 
         public override void Initialize()
         {
             Application.EnableVisualStyles();
+
             // GameHooks.OnLoadContent += GameHooks_OnLoadContent;
             GameHooks.OnUpdate += GameHooks_OnUpdate;
+            GameHooks.WorldConnect += GameHooks_WorldConnect;
+            GameHooks.WorldDisconnect += GameHooks_WorldDisconnect;
             DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
             renderthread = new Thread(RenderMap);
             renderthread.Start();
@@ -76,6 +86,8 @@ namespace MinimapPlugin
             renderthread = null;
             // GameHooks.OnLoadContent -= GameHooks_OnLoadContent;
             GameHooks.OnUpdate -= GameHooks_OnUpdate;
+            GameHooks.WorldConnect -= GameHooks_WorldConnect;
+            GameHooks.WorldDisconnect -= GameHooks_WorldDisconnect;
             DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
 
             if (settings != null)
@@ -95,18 +107,11 @@ namespace MinimapPlugin
             {
                 input.Update();
 
-                if (input.IsKeyUp(Keys.F5, true))
+                if (input.IsKeyDown(Keys.F5, true))
                 {
-                    if (rend == null)
-                    {
-                        rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY);
-                    }
-                    else
-                    {
-                        rend = null;
-                    }
+                    settings.ShowMinimap = !settings.ShowMinimap;
                 }
-                else if (input.IsKeyUp(Keys.F6, true))
+                else if (input.IsKeyDown(Keys.F6, true))
                 {
                     if (settingsForm == null || settingsForm.IsDisposed)
                     {
@@ -119,9 +124,19 @@ namespace MinimapPlugin
             }
         }
 
+        private void GameHooks_WorldConnect()
+        {
+            rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY, Main.worldSurface);
+        }
+
+        private void GameHooks_WorldDisconnect()
+        {
+            rend = null;
+        }
+
         private void DrawHooks_OnEndDraw(SpriteBatch arg1)
         {
-            if (Game.IsActive && settings != null && rend != null && minimap != null && !Main.playerInventory)
+            if (IsDrawingAllowed && minimap != null && !Main.playerInventory)
             {
                 Vector2 position;
 
@@ -144,15 +159,14 @@ namespace MinimapPlugin
         {
             while (renderthread != null)
             {
-                if (settings != null && rend != null)
+                if (IsDrawingAllowed)
                 {
                     int curx = (int)(Main.player[Main.myPlayer].position.X / 16) + settings.PositionOffsetX;
                     int cury = (int)(Main.player[Main.myPlayer].position.Y / 16) + settings.PositionOffsetY;
                     int width = settings.MinimapWidth;
                     int height = settings.MinimapHeight;
 
-                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, (int)Main.worldSurface, settings.MinimapZoom,
-                        settings.ShowSky, settings.ShowBorder, settings.ShowCrosshair);
+                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky, settings.ShowBorder, settings.ShowCrosshair);
 
                     minimap = MinimapHelper.IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }

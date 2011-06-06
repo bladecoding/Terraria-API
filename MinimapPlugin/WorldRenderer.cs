@@ -8,17 +8,19 @@ namespace MinimapPlugin
         public Tile[,] Tiles { get; private set; }
         public int MaxX { get; private set; }
         public int MaxY { get; private set; }
+        public int SurfaceY { get; private set; }
         public int[] Colors { get; private set; }
 
-        public WorldRenderer(Tile[,] tiles, int worldWidth, int worldHeight)
+        public WorldRenderer(Tile[,] tiles, int worldWidth, int worldHeight, double worldSurface)
         {
             Tiles = tiles;
             MaxX = worldWidth;
             MaxY = worldHeight;
+            SurfaceY = (int)worldSurface;
             Colors = MinimapHelper.GetMinimapColors();
         }
 
-        public int[,] GenerateMinimap(int tileX, int tileY, int width, int height, float surfaceY, float zoom = 1.0f, bool showSky = true,
+        public int[,] GenerateMinimap(int tileX, int tileY, int width, int height, float zoom = 1.0f, bool showSky = true,
             bool showBorder = true, bool showCrosshair = true)
         {
             int left = tileX - (int)((width * zoom) / 2);
@@ -54,7 +56,7 @@ namespace MinimapPlugin
                         {
                             ints[x, y] = Colors[tile.type];
                         }
-                        else if (posY >= surfaceY || tile.wall > 0)
+                        else if (posY >= SurfaceY || tile.wall > 0)
                         {
                             ints[x, y] = TerrariaColors.WALL_STONE;
                         }

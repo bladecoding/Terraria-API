@@ -57,7 +57,7 @@ namespace TrainerPlugin
             {
                 input.Update();
 
-                if (input.IsKeyUp(Keys.F7, true))
+                if (input.IsKeyDown(Keys.F7, true))
                 {
                     trainerform.Visible = !trainerform.Visible;
                 }

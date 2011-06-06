@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Microsoft.Xna.Framework;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
@@ -32,36 +33,12 @@ namespace TexturePlugin
             get { return "Allows you to reload textures from png files"; }
         }
 
-        TextureForm textureform;
-        bool f8down = false;
+        private TextureForm textureform;
+        private InputManager input = new InputManager();
 
         public TexturePlugin(Main game)
             : base(game)
         {
-        }
-
-        public override void Dispose()
-        {
-            if (textureform != null)
-                textureform.Dispose();
-            base.Dispose();
-        }
-
-        private void TerrariaHooks_OnUpdate(Microsoft.Xna.Framework.GameTime obj)
-        {
-            if (!Game.IsActive)
-                return;
-            if (Main.keyState.IsKeyDown(Keys.F8))
-            {
-                f8down = true;
-            }
-            else if (Main.keyState.IsKeyUp(Keys.F8) && f8down)
-            {
-                f8down = false;
-                if (textureform == null)
-                    textureform = new TextureForm(Game.GraphicsDevice);
-                textureform.Show();
-            }
         }
 
         public override void Initialize()
@@ -73,6 +50,31 @@ namespace TexturePlugin
         public override void DeInitialize()
         {
             GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
+        }
+
+        public override void Dispose()
+        {
+            if (textureform != null)
+                textureform.Dispose();
+
+            base.Dispose();
+        }
+
+        private void TerrariaHooks_OnUpdate(GameTime obj)
+        {
+            if (Game.IsActive)
+            {
+                if (input.IsKeyDown(Keys.F8, true))
+                {
+                    if (textureform == null || textureform.IsDisposed)
+                    {
+                        textureform = new TextureForm(Game.GraphicsDevice);
+                    }
+
+                    textureform.Show();
+                    textureform.BringToFront();
+                }
+            }
         }
     }
 }

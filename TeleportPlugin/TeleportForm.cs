@@ -38,7 +38,7 @@ namespace TeleportPlugin
         {
             lvLocations.Items.Clear();
 
-            foreach (TeleportLocation location in helper.Locations)
+            foreach (TeleportLocation location in helper.GetCurrentWorldLocations())
             {
                 ListViewItem lvi = new ListViewItem(location.Name);
                 lvi.Tag = location;

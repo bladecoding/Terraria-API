@@ -22,6 +22,24 @@ namespace TeleportPlugin
             get { return Main.player[Main.myPlayer]; }
         }
 
+        public List<TeleportLocation> GetCurrentWorldLocations()
+        {
+            List<TeleportLocation> locations = new List<TeleportLocation>();
+
+            if (!string.IsNullOrEmpty(Main.worldName))
+            {
+                foreach (TeleportLocation location in Locations)
+                {
+                    if (location.WorldName == Main.worldName && location.WorldID == Main.worldID)
+                    {
+                        locations.Add(location);
+                    }
+                }
+            }
+
+            return locations;
+        }
+
         public TeleportLocation AddCurrentLocation(string locationName)
         {
             TeleportLocation location = null;
@@ -47,10 +65,9 @@ namespace TeleportPlugin
         {
             if (!string.IsNullOrEmpty(locationName))
             {
-                foreach (TeleportLocation location in Locations)
+                foreach (TeleportLocation location in GetCurrentWorldLocations())
                 {
-                    if (location.WorldName == Main.worldName && location.WorldID == Main.worldID &&
-                        location.Name.Equals(locationName, StringComparison.InvariantCultureIgnoreCase))
+                    if (location.Name.Equals(locationName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return location;
                     }

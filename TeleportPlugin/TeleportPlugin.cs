@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,8 +14,8 @@ namespace TeleportPlugin
     /// <summary>
     /// F1 = Teleport to last player
     /// F2 = Teleport to last location
-    /// F3 = Open teleport form
-    /// F4 = Show/Hide position, depth, players
+    /// F3 = Show/Hide position, depth, players
+    /// F4 = Open teleport form
     /// </summary>
     public class TeleportPlugin : TerrariaPlugin
     {
@@ -43,10 +44,12 @@ namespace TeleportPlugin
             get { return new Version(1, 1); }
         }
 
+        public const string SettingsFilename = "TeleportSettings.xml";
+
         private const int ChatText = 0x19;
 
         private InputManager input = new InputManager();
-        private TeleportHelper helper = new TeleportHelper();
+        private TeleportHelper helper;
         private TeleportForm teleportForm;
 
         public TeleportPlugin(Main game)
@@ -57,21 +60,31 @@ namespace TeleportPlugin
         public override void Initialize()
         {
             Application.EnableVisualStyles();
+
             GameHooks.OnUpdate += GameHooks_OnUpdate;
-            NetHooks.OnPreSendData += NetHooks_OnPreSendData;
+            GameHooks.WorldConnect += GameHooks_WorldConnect;
+            ClientHooks.OnChat += ClientHooks_OnChat;
             DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
+
+            ThreadPool.QueueUserWorkItem(state => helper = TerrariaAPI.SettingsHelper.Load<TeleportHelper>(SettingsFilename));
         }
 
         public override void DeInitialize()
         {
             GameHooks.OnUpdate -= GameHooks_OnUpdate;
-            NetHooks.OnPreSendData -= NetHooks_OnPreSendData;
+            GameHooks.WorldConnect -= GameHooks_WorldConnect;
+            ClientHooks.OnChat -= ClientHooks_OnChat;
             DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
+
+            if (helper != null)
+            {
+                TerrariaAPI.SettingsHelper.Save(helper, SettingsFilename);
+            }
         }
 
         public void GameHooks_OnUpdate(GameTime gameTime)
         {
-            if (Game.IsActive)
+            if (Game.IsActive && helper != null)
             {
                 input.Update();
 
@@ -85,115 +98,120 @@ namespace TeleportPlugin
                 }
                 else if (input.IsKeyDown(Keys.F3, true))
                 {
+                    helper.ShowInfoText = !helper.ShowInfoText;
+                    UpdateForm();
+                }
+                else if (input.IsKeyDown(Keys.F4, true))
+                {
                     if (teleportForm == null || teleportForm.IsDisposed)
                     {
                         teleportForm = new TeleportForm(helper);
                     }
 
+                    UpdateForm();
                     teleportForm.Show();
                     teleportForm.BringToFront();
                 }
-                else if (input.IsKeyDown(Keys.F4, true))
-                {
-                    helper.ShowInfoText = !helper.ShowInfoText;
-                    UpdateForm();
-                }
             }
         }
 
-        private void NetHooks_OnPreSendData(SendDataEventArgs e)
+        private void GameHooks_WorldConnect()
         {
-            if (Main.netMode == 1 && e.msgType == ChatText)
-            {
-                e.Handled = OnMessageSend(e.number, e.text);
-            }
+            UpdateForm();
         }
 
-        private bool OnMessageSend(int playerIndex, string text)
+        private void ClientHooks_OnChat(ref string msg, HandledEventArgs e)
         {
-            if (playerIndex == Main.myPlayer)
+            if (helper != null)
             {
-                ChatCommand msg = ChatCommand.Parse(text);
+                ChatCommand chat = ChatCommand.Parse(msg);
 
-                if (msg != null)
+                if (chat != null)
                 {
-                    switch (msg.Command.ToLowerInvariant())
+                    switch (chat.Command.ToLowerInvariant())
                     {
                         case "tp":
                         case "teleport":
-                            if (!string.IsNullOrEmpty(msg.Parameter))
+                            if (!string.IsNullOrEmpty(chat.Parameter))
                             {
-                                helper.TeleportToLocation(msg.Parameter);
+                                helper.TeleportToLocation(chat.Parameter);
                             }
                             else
                             {
                                 helper.TeleportToLastLocation();
                             }
 
-                            return true;
+                            e.Handled = true;
+                            break;
                         case "settp":
                         case "setteleport":
-                            if (!string.IsNullOrEmpty(msg.Parameter))
+                            if (!string.IsNullOrEmpty(chat.Parameter))
                             {
-                                helper.AddCurrentLocation(msg.Parameter);
+                                helper.AddCurrentLocation(chat.Parameter);
                                 UpdateForm();
                             }
 
-                            return true;
+                            e.Handled = true;
+                            break;
                         case "tplist":
                         case "teleportlist":
                         case "locationlist":
-                            string locationList = string.Join(", ", helper.Locations);
+                            string locationList = string.Join(", ", helper.GetCurrentWorldLocations());
                             Main.NewText("Locations: " + locationList, 0, 255, 0);
 
-                            return true;
+                            e.Handled = true;
+                            break;
                         case "ptp":
                         case "playerteleport":
                         case "partyteleport":
-                            if (!string.IsNullOrEmpty(msg.Parameter))
+                            if (!string.IsNullOrEmpty(chat.Parameter))
                             {
-                                helper.TeleportToPlayer(msg.Parameter);
+                                helper.TeleportToPlayer(chat.Parameter);
                             }
                             else
                             {
                                 helper.TeleportToLastPlayer();
                             }
 
-                            return true;
+                            e.Handled = true;
+                            break;
                         case "plist":
                         case "playerlist":
                             List<string> players = helper.GetPlayerList();
                             string playerList = string.Join(", ", players);
                             Main.NewText("Players: " + playerList, 0, 255, 0);
 
-                            return true;
+                            e.Handled = true;
+                            break;
                         case "home":
                             helper.TeleportToHome();
 
-                            return true;
+                            e.Handled = true;
+                            break;
                         case "sethome":
                             // TODO: Sethome not working correctly yet
 
-                            return true;
+                            e.Handled = true;
+                            break;
                         case "tpinfo":
                             helper.ShowInfoText = !helper.ShowInfoText;
                             UpdateForm();
 
-                            return true;
+                            e.Handled = true;
+                            break;
                         case "tphelp":
-                            ShowHelp(msg.Parameter);
+                            ShowHelp(chat.Parameter);
 
-                            return true;
+                            e.Handled = true;
+                            break;
                     }
                 }
             }
-
-            return false;
         }
 
         private void DrawHooks_OnEndDraw(SpriteBatch obj)
         {
-            if (Game.IsActive && helper.ShowInfoText && !Main.playerInventory)
+            if (Game.IsActive && helper != null && helper.ShowInfoText && !Main.playerInventory)
             {
                 int depth = helper.GetDepth();
 
