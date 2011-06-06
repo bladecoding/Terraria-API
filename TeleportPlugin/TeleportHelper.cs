@@ -228,5 +228,67 @@ namespace TeleportPlugin
         {
             return (int)((double)((Me.position.Y + (float)Me.height) * 2f / 16f) - Main.worldSurface * 2.0);
         }
+
+        public string GetDepthText()
+        {
+            int depth = GetDepth();
+
+            string depthText;
+
+            if (depth > 0)
+            {
+                depthText = depth + " feet below";
+            }
+            else if (depth < 0)
+            {
+                depth *= -1;
+                depthText = depth + " feet above";
+            }
+            else
+            {
+                depthText = "Level";
+            }
+
+            return depthText;
+        }
+
+        public string GetTimeText()
+        {
+            string timeText = "AM";
+
+            double time = Main.time;
+
+            if (!Main.dayTime)
+            {
+                time += 54000.0;
+            }
+
+            time = time / 86400.0 * 24.0;
+            time = time - 7.5 - 12.0;
+
+            if (time < 0.0)
+            {
+                time += 24.0;
+            }
+
+            if (time >= 12.0)
+            {
+                timeText = "PM";
+            }
+
+            int hour = (int)time;
+            int minute = (int)((time - hour) * 60.0);
+
+            if (hour > 12)
+            {
+                hour -= 12;
+            }
+            else if (hour == 0)
+            {
+                hour = 12;
+            }
+
+            return string.Format("{0}:{1:d2} {2}", hour, minute, timeText);
+        }
     }
 }
