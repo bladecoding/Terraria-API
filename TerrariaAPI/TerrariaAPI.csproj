@@ -84,6 +84,7 @@
     <Compile Include="Hooks\ItemHooks.cs" />
     <Compile Include="Hooks\NetHooks.cs" />
     <Compile Include="Hooks\NpcHooks.cs" />
+    <Compile Include="Hooks\PlayerHooks.cs" />
     <Compile Include="Hooks\ServerHooks.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="MsgTypes.cs" />
