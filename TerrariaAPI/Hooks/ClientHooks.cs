@@ -27,7 +27,7 @@ namespace TerrariaAPI.Hooks
 
         public static bool OnChat(ref string msg)
         {
-            if (Chat != null)
+            if (Chat == null)
                 return false;
             HandledEventArgs args = new HandledEventArgs();
             Chat(ref msg, args);
