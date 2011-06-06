@@ -71,10 +71,10 @@ namespace MinimapPlugin
             Application.EnableVisualStyles();
 
             // GameHooks.OnLoadContent += GameHooks_OnLoadContent;
-            GameHooks.OnUpdate += GameHooks_OnUpdate;
+            GameHooks.Update += GameHooks_Update;
             GameHooks.WorldConnect += GameHooks_WorldConnect;
             GameHooks.WorldDisconnect += GameHooks_WorldDisconnect;
-            DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
+            DrawHooks.EndDraw += DrawHooks_EndDraw;
             renderthread = new Thread(RenderMap);
             renderthread.Start();
 
@@ -85,10 +85,10 @@ namespace MinimapPlugin
         {
             renderthread = null;
             // GameHooks.OnLoadContent -= GameHooks_OnLoadContent;
-            GameHooks.OnUpdate -= GameHooks_OnUpdate;
+            GameHooks.Update -= GameHooks_Update;
             GameHooks.WorldConnect -= GameHooks_WorldConnect;
             GameHooks.WorldDisconnect -= GameHooks_WorldDisconnect;
-            DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
+            DrawHooks.EndDraw -= DrawHooks_EndDraw;
 
             if (settings != null)
             {
@@ -101,7 +101,7 @@ namespace MinimapPlugin
             // chest = BitmapToTexture(Game.GraphicsDevice, Properties.Resources.chest);
         }
 
-        private void GameHooks_OnUpdate(GameTime obj)
+        private void GameHooks_Update(GameTime obj)
         {
             if (Game.IsActive && settings != null)
             {
@@ -134,7 +134,7 @@ namespace MinimapPlugin
             rend = null;
         }
 
-        private void DrawHooks_OnEndDraw(SpriteBatch arg1)
+        private void DrawHooks_EndDraw(SpriteBatch arg1)
         {
             if (IsDrawingAllowed && minimap != null && !Main.playerInventory)
             {

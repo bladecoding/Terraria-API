@@ -4,42 +4,48 @@ namespace TerrariaAPI.Hooks
 {
     public static class NpcHooks
     {
-        public static event SetDefaultsD<NPC, int> OnSetDefaultsInt;
-        public static event SetDefaultsD<NPC, string> OnSetDefaultsString;
+        public static event SetDefaultsD<NPC, int> SetDefaultsInt;
+        public static event SetDefaultsD<NPC, string> SetDefaultsString;
 
-        public static void SetDefaultsInt(ref int npctype, NPC npc)
+        public static void OnSetDefaultsInt(ref int npctype, NPC npc)
         {
+            if (SetDefaultsInt == null)
+                return;
+
             var args = new SetDefaultsEventArgs<NPC, int>()
             {
                 Object = npc,
                 Info = npctype,
             };
 
-            if (OnSetDefaultsInt != null)
-                OnSetDefaultsInt(args);
+            SetDefaultsInt(args);
 
             npctype = args.Info;
         }
 
-        public static void SetDefaultsString(ref string npcname, NPC npc)
+        public static void OnSetDefaultsString(ref string npcname, NPC npc)
         {
+            if (SetDefaultsString == null)
+                return;
             var args = new SetDefaultsEventArgs<NPC, string>()
             {
                 Object = npc,
                 Info = npcname,
             };
 
-            if (OnSetDefaultsString != null)
-                OnSetDefaultsString(args);
+            SetDefaultsString(args);
 
             npcname = args.Info;
         }
 
         public delegate void StrikeNpcD(NpcStrikeEventArgs e);
-        public static event StrikeNpcD OnStrikeNpc;
+        public static event StrikeNpcD StrikeNpc;
 
-        public static bool StrikeNpc(NPC npc, ref int damage, ref float knockback, ref int hitdirection, ref double retdamage)
+        public static bool OnStrikeNpc(NPC npc, ref int damage, ref float knockback, ref int hitdirection, ref double retdamage)
         {
+            if (StrikeNpc == null)
+                return false;
+
             var args = new NpcStrikeEventArgs()
             {
                 Npc = npc,
@@ -49,8 +55,7 @@ namespace TerrariaAPI.Hooks
                 ReturnDamage = 0,
             };
 
-            if (OnStrikeNpc != null)
-                OnStrikeNpc(args);
+            StrikeNpc(args);
 
             retdamage = args.ReturnDamage;
             damage = args.Damage;
@@ -64,9 +69,13 @@ namespace TerrariaAPI.Hooks
     public class NpcStrikeEventArgs : HandledEventArgs
     {
         public NPC Npc { get; set; }
+
         public int Damage { get; set; }
+
         public float KnockBack { get; set; }
+
         public int HitDirection { get; set; }
+
         public double ReturnDamage { get; set; }
     }
 }

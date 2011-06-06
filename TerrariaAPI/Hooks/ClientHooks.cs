@@ -6,30 +6,31 @@ namespace TerrariaAPI.Hooks
     {
         static ClientHooks()
         {
-            NetHooks.OnPreSendData += NetHooks_OnPreSendData;
+            NetHooks.SendData += NetHooks_SendData;
         }
 
-        private static void NetHooks_OnPreSendData(SendDataEventArgs e)
+        private static void NetHooks_SendData(SendDataEventArgs e)
         {
             if (Main.netMode != 2)
             {
                 if (e.msgType == MsgTypes.ChatMessage)
                 {
                     string msg = e.text;
-                    e.Handled = Chat(ref msg);
+                    e.Handled = OnChat(ref msg);
                     e.text = msg;
                 }
             }
         }
 
         public delegate void OnChatD(ref string msg, HandledEventArgs e);
-        public static event OnChatD OnChat;
+        public static event OnChatD Chat;
 
-        public static bool Chat(ref string msg)
+        public static bool OnChat(ref string msg)
         {
+            if (Chat != null)
+                return false;
             HandledEventArgs args = new HandledEventArgs();
-            if (OnChat != null)
-                OnChat(ref msg, args);
+            Chat(ref msg, args);
             return args.Handled;
         }
     }

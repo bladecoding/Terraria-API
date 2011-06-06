@@ -9,49 +9,52 @@ namespace TerrariaAPI.Hooks
         /// <summary>
         /// Called right before SpriteBatch.End
         /// </summary>
-        public static event Action<SpriteBatch> OnEndDraw;
+        public static event Action<SpriteBatch> EndDraw;
 
-        public static void EndDraw(SpriteBatch batch)
+        public static void OnEndDraw(SpriteBatch batch)
         {
-            if (OnEndDraw != null)
-                OnEndDraw(batch);
+            if (EndDraw != null)
+                EndDraw(batch);
         }
 
         /// <summary>
         /// Called right before DrawMenu
         /// </summary>
-        public static event Action<SpriteBatch, HandledEventArgs> OnDrawMenu;
+        public static event Action<SpriteBatch, HandledEventArgs> DrawMenu;
 
-        public static bool DrawMenu(SpriteBatch batch)
+        public static bool OnDrawMenu(SpriteBatch batch)
         {
+            if (DrawMenu == null)
+                return false;
+
             var args = new HandledEventArgs();
-            if (OnDrawMenu != null)
-                OnDrawMenu(batch, args);
+            DrawMenu(batch, args);
             return args.Handled;
         }
 
         /// <summary>
         /// Called right after DrawMenu
         /// </summary>
-        public static event Action<SpriteBatch> OnEndDrawMenu;
+        public static event Action<SpriteBatch> EndDrawMenu;
 
-        public static void EndDrawMenu(SpriteBatch batch)
+        public static void OnEndDrawMenu(SpriteBatch batch)
         {
-            if (OnEndDrawMenu != null)
-                OnEndDrawMenu(batch);
+            if (EndDrawMenu != null)
+                EndDrawMenu(batch);
         }
 
         /// <summary>
         /// arg2 = background
         /// Called right before DrawWater
         /// </summary>
-        public static event Action<SpriteBatch, bool, HandledEventArgs> OnDrawWater;
+        public static event Action<SpriteBatch, bool, HandledEventArgs> DrawWater;
 
-        public static bool DrawWater(SpriteBatch batch, bool bg)
+        public static bool OnDrawWater(SpriteBatch batch, bool bg)
         {
+            if (DrawWater == null)
+                return false;
             var args = new HandledEventArgs();
-            if (OnDrawWater != null)
-                OnDrawWater(batch, bg, args);
+            DrawWater(batch, bg, args);
             return args.Handled;
         }
 
@@ -59,13 +62,14 @@ namespace TerrariaAPI.Hooks
         /// arg2 = solid
         /// Called right before DrawTiles
         /// </summary>
-        public static event Action<SpriteBatch, bool, HandledEventArgs> OnDrawTiles;
+        public static event Action<SpriteBatch, bool, HandledEventArgs> DrawTiles;
 
-        public static bool DrawTiles(SpriteBatch batch, bool solid)
+        public static bool OnDrawTiles(SpriteBatch batch, bool solid)
         {
+            if (DrawTiles == null)
+                return false;
             var args = new HandledEventArgs();
-            if (OnDrawTiles != null)
-                OnDrawTiles(batch, solid, args);
+            DrawTiles(batch, solid, args);
             return args.Handled;
         }
 
@@ -73,26 +77,29 @@ namespace TerrariaAPI.Hooks
         /// arg2 = behindtiles
         /// Called right before DrawNpcs
         /// </summary>
-        public static event Action<SpriteBatch, bool, HandledEventArgs> OnDrawNpcs;
+        public static event Action<SpriteBatch, bool, HandledEventArgs> DrawNpcs;
 
-        public static bool DrawNpcs(SpriteBatch batch, bool behindtiles)
+        public static bool OnDrawNpcs(SpriteBatch batch, bool behindtiles)
         {
+            if (DrawNpcs == null)
+                return false;
             var args = new HandledEventArgs();
-            if (OnDrawNpcs != null)
-                OnDrawNpcs(batch, behindtiles, args);
+
+            DrawNpcs(batch, behindtiles, args);
             return args.Handled;
         }
 
         /// <summary>
         /// Called right before DrawGore
         /// </summary>
-        public static event Action<SpriteBatch, HandledEventArgs> OnDrawGore;
+        public static event Action<SpriteBatch, HandledEventArgs> DrawGore;
 
-        public static bool DrawGore(SpriteBatch batch)
+        public static bool OnDrawGore(SpriteBatch batch)
         {
+            if (DrawGore == null)
+                return false;
             var args = new HandledEventArgs();
-            if (OnDrawGore != null)
-                OnDrawGore(batch, args);
+            DrawGore(batch, args);
             return args.Handled;
         }
 
@@ -100,31 +107,29 @@ namespace TerrariaAPI.Hooks
         /// arg2 = player
         /// Called right before DrawNpcs
         /// </summary>
-        public static event Action<SpriteBatch, Player, HandledEventArgs> OnDrawPlayer;
+        public static event Action<SpriteBatch, Player, HandledEventArgs> DrawPlayer;
 
-        public static bool DrawPlayer(SpriteBatch batch, Player player)
+        public static bool OnDrawPlayer(SpriteBatch batch, Player player)
         {
+            if (DrawPlayer == null)
+                return false;
             var args = new HandledEventArgs();
-            if (OnDrawPlayer != null)
-                OnDrawPlayer(batch, player, args);
+            DrawPlayer(batch, player, args);
             return args.Handled;
         }
 
         /// <summary>
         /// Called right before DrawInterface
         /// </summary>
-        public static event Action<SpriteBatch, HandledEventArgs> OnDrawInterface;
+        public static event Action<SpriteBatch, HandledEventArgs> DrawInterface;
 
-        public static bool DrawInterface(SpriteBatch batch)
+        public static bool OnDrawInterface(SpriteBatch batch)
         {
+            if (DrawInterface == null)
+                return false;
             var args = new HandledEventArgs();
-            if (OnDrawInterface != null)
-                OnDrawInterface(batch, args);
+            DrawInterface(batch, args);
             return args.Handled;
         }
-    }
-
-    public class DrawMenuEventArgs : EventArgs
-    {
     }
 }

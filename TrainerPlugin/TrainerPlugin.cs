@@ -59,16 +59,15 @@ namespace TrainerPlugin
 
         public override void Initialize()
         {
-            Application.EnableVisualStyles();
-            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
+            GameHooks.Update += TerrariaHooks_Update;
         }
 
         public override void DeInitialize()
         {
-            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
+            GameHooks.Update -= TerrariaHooks_Update;
         }
 
-        private void TerrariaHooks_OnUpdate(GameTime obj)
+        private void TerrariaHooks_Update(GameTime obj)
         {
             if (Game.IsActive && trainerSettings != null)
             {

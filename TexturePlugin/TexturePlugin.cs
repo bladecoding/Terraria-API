@@ -19,10 +19,12 @@ namespace TexturePlugin
         {
             get { return new Version(1, 0); }
         }
+
         public override Version APIVersion
         {
             get { return new Version(1, 1); }
         }
+
         public override string Author
         {
             get { return "High"; }
@@ -43,13 +45,12 @@ namespace TexturePlugin
 
         public override void Initialize()
         {
-            Application.EnableVisualStyles();
-            GameHooks.OnUpdate += TerrariaHooks_OnUpdate;
+            GameHooks.Update += TerrariaHooks_Update;
         }
 
         public override void DeInitialize()
         {
-            GameHooks.OnUpdate -= TerrariaHooks_OnUpdate;
+            GameHooks.Update -= TerrariaHooks_Update;
         }
 
         public override void Dispose()
@@ -60,7 +61,7 @@ namespace TexturePlugin
             base.Dispose();
         }
 
-        private void TerrariaHooks_OnUpdate(GameTime obj)
+        private void TerrariaHooks_Update(GameTime obj)
         {
             if (Game.IsActive)
             {

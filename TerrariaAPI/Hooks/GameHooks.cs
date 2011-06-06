@@ -13,42 +13,52 @@ namespace TerrariaAPI.Hooks
 
         static GameHooks()
         {
-            GameHooks.OnUpdate += GameHooks_OnUpdate;
+            GameHooks.Update += GameHooks_Update;
         }
 
-        public static event Action<GameTime> OnUpdate;
+        public static event Action<GameTime> Update;
+        public static event Action<GameTime> PostUpdate;
 
-        public static void Update(GameTime time)
+        public static void OnUpdate(bool pre, GameTime time)
         {
-            if (OnUpdate != null)
-                OnUpdate(time);
+            if (pre)
+            {
+                if (Update != null)
+                    Update(time);
+            }
+            else
+            {
+                if (PostUpdate != null)
+                    PostUpdate(time);
+            }
         }
 
-        public static event Action<ContentManager> OnLoadContent;
+        public static event Action<ContentManager> LoadContent;
 
-        public static void LoadContent(ContentManager manager)
+        public static void OnLoadContent(ContentManager manager)
         {
-            if (OnLoadContent != null)
-                OnLoadContent(manager);
+            if (LoadContent != null)
+                LoadContent(manager);
         }
 
-        public static event Action OnPreInitialize;
+        public static event Action Initialize;
+        public static event Action PostInitialize;
 
-        public static void PreInitialize()
+        public static void OnInitialize(bool pre)
         {
-            if (OnPreInitialize != null)
-                OnPreInitialize();
+            if (pre)
+            {
+                if (Initialize != null)
+                    Initialize();
+            }
+            else
+            {
+                if (PostInitialize != null)
+                    PostInitialize();
+            }
         }
 
-        public static event Action OnPostInitialize;
-
-        public static void PostInitialize()
-        {
-            if (OnPostInitialize != null)
-                OnPostInitialize();
-        }
-
-        private static void GameHooks_OnUpdate(GameTime obj)
+        private static void GameHooks_Update(GameTime obj)
         {
             // Ugly workaround but it works
             if (oldGameMenu != Main.gameMenu)

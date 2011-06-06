@@ -14,7 +14,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 1, 1, 1);
+        public static readonly Version ApiVersion = new Version(1, 2, 0, 0);
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
 #else
@@ -31,6 +31,8 @@ namespace TerrariaAPI
         public static void Initialize(Main main)
         {
             Game = main;
+
+            Application.EnableVisualStyles();
 
             if (!Directory.Exists(PluginsPath))
             {
@@ -118,8 +120,8 @@ namespace TerrariaAPI
                 MessageBox.Show("Outdated plugins found. Check ErrorLog.txt for details.",
                                 "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            DrawHooks.OnEndDrawMenu += DrawHooks_OnEndDrawMenu;
-            NetHooks.OnPreSendData += NetHooks_OnPreSendData;
+            DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
+            NetHooks.SendData += NetHooks_SendData;
         }
 
         public static void DeInitialize()
@@ -163,7 +165,7 @@ namespace TerrariaAPI
             return r.CompiledAssembly;
         }
 
-        private static void NetHooks_OnPreSendData(SendDataEventArgs e)
+        private static void NetHooks_SendData(SendDataEventArgs e)
         {
             if (Main.netMode != 1)
                 return;
@@ -222,7 +224,7 @@ namespace TerrariaAPI
             }
         }
 
-        private static void DrawHooks_OnEndDrawMenu(SpriteBatch obj)
+        private static void DrawHooks_EndDrawMenu(SpriteBatch obj)
         {
             DrawFancyText(obj, string.Format("TerrariaAPI v{0}", ApiVersion), new Vector2(10, 6), Color.White);
 

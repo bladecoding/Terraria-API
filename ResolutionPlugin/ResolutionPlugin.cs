@@ -46,12 +46,12 @@ namespace ResolutionPlugin
 
         public override void Initialize()
         {
-            GameHooks.OnPreInitialize += GameHooks_OnPreInitialize;
+            GameHooks.Initialize += GameHooks_OnPreInitialize;
         }
 
         public override void DeInitialize()
         {
-            GameHooks.OnPreInitialize -= GameHooks_OnPreInitialize;
+            GameHooks.Initialize -= GameHooks_OnPreInitialize;
         }
 
         private void GameHooks_OnPreInitialize()

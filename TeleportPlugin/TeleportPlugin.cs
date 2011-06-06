@@ -61,20 +61,20 @@ namespace TeleportPlugin
         {
             Application.EnableVisualStyles();
 
-            GameHooks.OnUpdate += GameHooks_OnUpdate;
+            GameHooks.Update += GameHooks_Update;
             GameHooks.WorldConnect += GameHooks_WorldConnect;
-            ClientHooks.OnChat += ClientHooks_OnChat;
-            DrawHooks.OnEndDraw += DrawHooks_OnEndDraw;
+            ClientHooks.Chat += ClientHooks_Chat;
+            DrawHooks.EndDraw += DrawHooks_EndDraw;
 
             ThreadPool.QueueUserWorkItem(state => helper = TerrariaAPI.SettingsHelper.Load<TeleportHelper>(SettingsFilename));
         }
 
         public override void DeInitialize()
         {
-            GameHooks.OnUpdate -= GameHooks_OnUpdate;
+            GameHooks.Update -= GameHooks_Update;
             GameHooks.WorldConnect -= GameHooks_WorldConnect;
-            ClientHooks.OnChat -= ClientHooks_OnChat;
-            DrawHooks.OnEndDraw -= DrawHooks_OnEndDraw;
+            ClientHooks.Chat -= ClientHooks_Chat;
+            DrawHooks.EndDraw -= DrawHooks_EndDraw;
 
             if (helper != null)
             {
@@ -82,7 +82,7 @@ namespace TeleportPlugin
             }
         }
 
-        public void GameHooks_OnUpdate(GameTime gameTime)
+        public void GameHooks_Update(GameTime gameTime)
         {
             if (Game.IsActive && helper != null)
             {
@@ -119,7 +119,7 @@ namespace TeleportPlugin
             UpdateForm();
         }
 
-        private void ClientHooks_OnChat(ref string msg, HandledEventArgs e)
+        private void ClientHooks_Chat(ref string msg, HandledEventArgs e)
         {
             if (helper != null)
             {
@@ -208,7 +208,7 @@ namespace TeleportPlugin
             }
         }
 
-        private void DrawHooks_OnEndDraw(SpriteBatch obj)
+        private void DrawHooks_EndDraw(SpriteBatch obj)
         {
             if (Game.IsActive && helper != null && helper.ShowInfoText && !Main.playerInventory)
             {

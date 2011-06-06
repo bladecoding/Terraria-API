@@ -36,11 +36,13 @@ namespace TerrariaAPI.Hooks
     public static class NetHooks
     {
         public delegate void SendDataD(SendDataEventArgs e);
-        public static event SendDataD OnPreSendData;
-        public static event SendDataD OnPostSendData;
+        public static event SendDataD SendData;
 
-        public static bool SendData(bool pre, ref int msgType, ref int remoteClient, ref int ignoreClient, ref string text, ref int number, ref float number2, ref float number3, ref float number4)
+        public static bool OnSendData(ref int msgType, ref int remoteClient, ref int ignoreClient, ref string text, ref int number, ref float number2, ref float number3, ref float number4)
         {
+            if (SendData == null)
+                return false;
+
             var args = new SendDataEventArgs()
             {
                 msgType = msgType,
@@ -53,16 +55,7 @@ namespace TerrariaAPI.Hooks
                 number4 = number4,
             };
 
-            if (pre)
-            {
-                if (OnPreSendData != null)
-                    OnPreSendData(args);
-            }
-            else
-            {
-                if (OnPostSendData != null)
-                    OnPostSendData(args);
-            }
+            SendData(args);
 
             msgType = args.msgType;
             remoteClient = args.remoteClient;
@@ -77,12 +70,13 @@ namespace TerrariaAPI.Hooks
         }
 
         public delegate void GetDataD(GetDataEventArgs e);
-        [Obsolete("Use OnGetData, will be removed next api version")]
-        public static event GetDataD OnPreGetData;
-        public static event GetDataD OnGetData;
+        public static event GetDataD GetData;
 
-        public static bool GetData(ref byte msgid, messageBuffer msg, ref int idx, ref int length)
+        public static bool OnGetData(ref byte msgid, messageBuffer msg, ref int idx, ref int length)
         {
+            if (GetData == null)
+                return false;
+
             var args = new GetDataEventArgs()
             {
                 MsgID = msgid,
@@ -91,10 +85,7 @@ namespace TerrariaAPI.Hooks
                 Length = length
             };
 
-            if (OnPreGetData != null)
-                OnPreGetData(args);
-            if (OnGetData != null)
-                OnGetData(args);
+            GetData(args);
 
             msgid = args.MsgID;
             idx = args.Index;
@@ -104,13 +95,15 @@ namespace TerrariaAPI.Hooks
         }
 
         public delegate void GreetPlayerD(int who, HandledEventArgs e);
-        public static event GreetPlayerD OnGreetPlayer;
+        public static event GreetPlayerD GreetPlayer;
 
-        public static bool GreetPlayer(int who)
+        public static bool OnGreetPlayer(int who)
         {
+            if (GreetPlayer == null)
+                return false;
+
             var args = new HandledEventArgs();
-            if (OnGreetPlayer != null)
-                OnGreetPlayer(who, args);
+            GreetPlayer(who, args);
             return args.Handled;
         }
     }
