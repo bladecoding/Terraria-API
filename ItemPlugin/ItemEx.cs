@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using System.ComponentModel;
+using Microsoft.Xna.Framework;
+using Terraria;
 
 namespace ItemPlugin
 {
@@ -28,6 +30,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Byte WetCount
         {
             get
@@ -40,6 +43,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean LavaWet
         {
             get
@@ -52,6 +56,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(typeof(Vector2), "0, 0")]
         public Microsoft.Xna.Framework.Vector2 Position
         {
             get
@@ -64,6 +69,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(typeof(Vector2), "0, 0")]
         public Microsoft.Xna.Framework.Vector2 Velocity
         {
             get
@@ -76,6 +82,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Width
         {
             get
@@ -88,6 +95,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Height
         {
             get
@@ -100,6 +108,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(true)]
         public System.Boolean Active
         {
             get
@@ -112,6 +121,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 NoGrabDelay
         {
             get
@@ -124,6 +134,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean BeingGrabbed
         {
             get
@@ -136,6 +147,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 SpawnTime
         {
             get
@@ -148,6 +160,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean WornArmor
         {
             get
@@ -160,6 +173,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(-1)]
         public System.Int32 OwnIgnore
         {
             get
@@ -172,6 +186,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 OwnTime
         {
             get
@@ -184,6 +199,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 KeepTime
         {
             get
@@ -196,6 +212,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Type
         {
             get
@@ -208,6 +225,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue("")]
         public System.String Name
         {
             get
@@ -220,6 +238,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 HoldStyle
         {
             get
@@ -232,6 +251,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 UseStyle
         {
             get
@@ -244,6 +264,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean Channel
         {
             get
@@ -256,6 +277,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean Accessory
         {
             get
@@ -268,6 +290,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(100)]
         public System.Int32 UseAnimation
         {
             get
@@ -280,6 +303,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(100)]
         public System.Int32 UseTime
         {
             get
@@ -292,6 +316,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(1)]
         public System.Int32 Stack
         {
             get
@@ -304,6 +329,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(1)]
         public System.Int32 MaxStack
         {
             get
@@ -316,6 +342,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Pick
         {
             get
@@ -328,6 +355,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Axe
         {
             get
@@ -340,6 +368,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Hammer
         {
             get
@@ -352,6 +381,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 TileBoost
         {
             get
@@ -364,6 +394,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(-1)]
         public System.Int32 CreateTile
         {
             get
@@ -376,6 +407,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(-1)]
         public System.Int32 CreateWall
         {
             get
@@ -388,6 +420,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(-1)]
         public System.Int32 Damage
         {
             get
@@ -400,6 +433,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Single KnockBack
         {
             get
@@ -412,6 +446,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 HealLife
         {
             get
@@ -424,6 +459,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 HealMana
         {
             get
@@ -436,6 +472,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean Potion
         {
             get
@@ -448,6 +485,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean Consumable
         {
             get
@@ -460,6 +498,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean AutoReuse
         {
             get
@@ -472,6 +511,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean UseTurn
         {
             get
@@ -484,6 +524,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(typeof(Color), "0 , 0, 0, 0")]
         public Microsoft.Xna.Framework.Color Color
         {
             get
@@ -496,6 +537,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Alpha
         {
             get
@@ -508,6 +550,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(1)]
         public System.Single Scale
         {
             get
@@ -520,6 +563,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 UseSound
         {
             get
@@ -532,6 +576,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Defense
         {
             get
@@ -544,6 +589,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(-1)]
         public System.Int32 HeadSlot
         {
             get
@@ -556,6 +602,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(-1)]
         public System.Int32 BodySlot
         {
             get
@@ -568,6 +615,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(-1)]
         public System.Int32 LegSlot
         {
             get
@@ -580,6 +628,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue("")]
         public System.String ToolTip
         {
             get
@@ -592,6 +641,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Owner
         {
             get
@@ -604,6 +654,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Rare
         {
             get
@@ -616,6 +667,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Shoot
         {
             get
@@ -628,6 +680,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Single ShootSpeed
         {
             get
@@ -640,6 +693,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Ammo
         {
             get
@@ -652,6 +706,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 UseAmmo
         {
             get
@@ -664,6 +719,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 LifeRegen
         {
             get
@@ -676,6 +732,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 ManaRegen
         {
             get
@@ -688,6 +745,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Mana
         {
             get
@@ -700,6 +758,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean NoUseGraphic
         {
             get
@@ -712,6 +771,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean NoMelee
         {
             get
@@ -724,6 +784,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Release
         {
             get
@@ -736,6 +797,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(0)]
         public System.Int32 Value
         {
             get
@@ -748,6 +810,7 @@ namespace ItemPlugin
             }
         }
 
+        [DefaultValue(false)]
         public System.Boolean Buy
         {
             get
