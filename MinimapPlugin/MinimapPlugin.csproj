@@ -68,9 +68,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitmapDataEx.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="MinimapForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -39,7 +39,7 @@
             this.cbItemsList.FormattingEnabled = true;
             this.cbItemsList.Location = new System.Drawing.Point(8, 8);
             this.cbItemsList.Name = "cbItemsList";
-            this.cbItemsList.Size = new System.Drawing.Size(240, 21);
+            this.cbItemsList.Size = new System.Drawing.Size(232, 21);
             this.cbItemsList.TabIndex = 0;
             this.cbItemsList.SelectedIndexChanged += new System.EventHandler(this.cbItemsList_SelectedIndexChanged);
             // 
@@ -59,9 +59,9 @@
             // btnGive
             // 
             this.btnGive.Enabled = false;
-            this.btnGive.Location = new System.Drawing.Point(256, 7);
+            this.btnGive.Location = new System.Drawing.Point(248, 7);
             this.btnGive.Name = "btnGive";
-            this.btnGive.Size = new System.Drawing.Size(64, 23);
+            this.btnGive.Size = new System.Drawing.Size(72, 23);
             this.btnGive.TabIndex = 1;
             this.btnGive.Text = "Give";
             this.btnGive.UseVisualStyleBackColor = true;

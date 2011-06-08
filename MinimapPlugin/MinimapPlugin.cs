@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -164,7 +163,7 @@ namespace MinimapPlugin
                     int width = settings.MinimapWidth;
                     int height = settings.MinimapHeight;
 
-                    int[,] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky, settings.ShowBorder, settings.ShowCrosshair);
+                    int[] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky, settings.ShowBorder, settings.ShowCrosshair);
 
                     minimap = MinimapHelper.IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }

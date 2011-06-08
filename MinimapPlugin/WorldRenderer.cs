@@ -20,15 +20,15 @@ namespace MinimapPlugin
             Colors = MinimapHelper.GetMinimapColors();
         }
 
-        public int[,] GenerateMinimap(int tileX, int tileY, int width, int height, float zoom = 1.0f, bool showSky = true,
+        public int[] GenerateMinimap(int tileX, int tileY, int width, int height, float zoom = 1.0f, bool showSky = true,
             bool showBorder = true, bool showCrosshair = true)
         {
             int left = tileX - (int)((width * zoom) / 2);
             int top = tileY - (int)((height * zoom) / 2);
 
-            int[,] ints = new int[width, height];
+            int[] ints = new int[width * height];
 
-            int posX, posY;
+            int posX, posY, index;
 
             for (int y = 0; y < height; y++)
             {
@@ -46,29 +46,31 @@ namespace MinimapPlugin
 
                     Tile tile = Tiles[posX, posY];
 
+                    index = x + (y * width);
+
                     if (tile != null)
                     {
                         if (tile.liquid > 0)
                         {
-                            ints[x, y] = tile.lava ? TerrariaColors.LAVA : TerrariaColors.WATER;
+                            ints[index] = tile.lava ? TerrariaColors.LAVA : TerrariaColors.WATER;
                         }
                         else if (tile.active)
                         {
-                            ints[x, y] = Colors[tile.type];
+                            ints[index] = Colors[tile.type];
                         }
                         else if (posY >= SurfaceY || tile.wall > 0)
                         {
-                            ints[x, y] = TerrariaColors.WALL_STONE;
+                            ints[index] = TerrariaColors.WALL_STONE;
                         }
                         else if (showSky)
                         {
-                            ints[x, y] = TerrariaColors.SKY;
+                            ints[index] = TerrariaColors.SKY;
                         }
                     }
                 }
             }
 
-            int borderColor = Color.White.ToArgb();
+            int borderColor = Color.White.ToAbgr();
 
             if (showBorder)
             {
@@ -77,53 +79,42 @@ namespace MinimapPlugin
 
                 for (int x = 0; x < width; x++)
                 {
-                    ints[x, 0] = borderColor;
-                    ints[x, bottom] = borderColor;
+                    index = x + (0 * width);
+                    ints[index] = borderColor;
+
+                    index = x + (bottom * width);
+                    ints[index] = borderColor;
                 }
 
                 for (int y = 0; y < height; y++)
                 {
-                    ints[0, y] = borderColor;
-                    ints[right, y] = borderColor;
+                    index = 0 + (y * width);
+                    ints[index] = borderColor;
+
+                    index = right + (y * width);
+                    ints[index] = borderColor;
                 }
             }
 
             if (showCrosshair)
             {
-                int middleX = width / 2;
-                int middleY = height / 2;
+                int middleX = (width - 1) / 2;
+                int middleY = (height - 1) / 2;
 
                 for (int x = 0; x < width; x++)
                 {
-                    ints[x, middleY] = borderColor;
+                    index = x + (middleY * width);
+                    ints[index] = borderColor;
                 }
 
                 for (int y = 0; y < height; y++)
                 {
-                    ints[middleX, y] = borderColor;
+                    index = middleX + (y * width);
+                    ints[index] = borderColor;
                 }
             }
 
             return ints;
         }
-
-        /*public Bitmap FromWalls()
-        {
-            var img = new Bitmap(TheWorld.MaxTilesX, TheWorld.MaxTilesY);
-            var bd = img.LockBits(new Rectangle(Point.Empty, img.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-
-            for (int y = 0; y < TheWorld.MaxTilesY; y++)
-            {
-                for (int x = 0; x < TheWorld.MaxTilesX; x++)
-                {
-                    var tile = TheWorld.Tiles[x, y];
-                    if (tile.Wall > 0)
-                        bd.SetPixelInt(x, y, Colors[tile.Wall]);
-                }
-            }
-
-            img.UnlockBits(bd);
-            return img;
-        }*/
     }
 }

@@ -18,6 +18,7 @@ namespace ItemPlugin
             return i.item;
         }
 
+        [DefaultValue(false)]
         public System.Boolean Wet
         {
             get
@@ -30,7 +31,7 @@ namespace ItemPlugin
             }
         }
 
-        [DefaultValue(0)]
+        [DefaultValue((byte)0)]
         public System.Byte WetCount
         {
             get
@@ -433,7 +434,7 @@ namespace ItemPlugin
             }
         }
 
-        [DefaultValue(0)]
+        [DefaultValue(0f)]
         public System.Single KnockBack
         {
             get
@@ -550,7 +551,7 @@ namespace ItemPlugin
             }
         }
 
-        [DefaultValue(1)]
+        [DefaultValue(1f)]
         public System.Single Scale
         {
             get
@@ -680,7 +681,7 @@ namespace ItemPlugin
             }
         }
 
-        [DefaultValue(0)]
+        [DefaultValue(0f)]
         public System.Single ShootSpeed
         {
             get
