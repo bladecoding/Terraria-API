@@ -18,6 +18,17 @@ namespace TerrariaAPI.Hooks
         }
 
         /// <summary>
+        /// Called right after SpriteBatch.End
+        /// </summary>
+        public static event Action<SpriteBatch> DrawEnd;
+
+        public static void OnDrawEnd(SpriteBatch batch)
+        {
+            if (DrawEnd != null)
+                DrawEnd(batch);
+        }
+
+        /// <summary>
         /// Called right before DrawMenu
         /// </summary>
         public static event Action<SpriteBatch, HandledEventArgs> DrawMenu;
