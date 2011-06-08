@@ -165,7 +165,7 @@ namespace MinimapPlugin
 
                     int[] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky, settings.ShowBorder, settings.ShowCrosshair);
 
-                    minimap = MinimapHelper.IntsToTexture(Game.GraphicsDevice, img, width, height);
+                    minimap = DrawingHelper.IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }
 
                 Thread.Sleep(100);

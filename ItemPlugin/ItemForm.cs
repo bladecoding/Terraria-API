@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Terraria;
+using TerrariaAPI;
 
 namespace ItemPlugin
 {
@@ -39,17 +41,19 @@ namespace ItemPlugin
             {
                 ItemType item = cbItemsList.Items[cbItemsList.SelectedIndex] as ItemType;
                 pgItem.SelectedObject = item.CreateItem();
+                Image img = DrawingHelper.TextureToImage(Main.itemTexture[item.ID]);
+                btnGive.Image = DrawingHelper.ResizeImage(img, 20, 20);
                 btnGive.Enabled = true;
             }
         }
 
         private void btnGive_Click(object sender, EventArgs e)
         {
-            Item item = pgItem.SelectedObject as Item;
+            ItemEx item = pgItem.SelectedObject as ItemEx;
 
             if (item != null)
             {
-                Main.player[Main.myPlayer].GetItem(Main.myPlayer, item);
+                Main.player[Main.myPlayer].GetItem(Main.myPlayer, item.Item);
             }
         }
 

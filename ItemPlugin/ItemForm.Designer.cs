@@ -35,11 +35,13 @@
             // 
             // cbItemsList
             // 
+            this.cbItemsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbItemsList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbItemsList.FormattingEnabled = true;
             this.cbItemsList.Location = new System.Drawing.Point(8, 8);
             this.cbItemsList.Name = "cbItemsList";
-            this.cbItemsList.Size = new System.Drawing.Size(232, 21);
+            this.cbItemsList.Size = new System.Drawing.Size(312, 21);
             this.cbItemsList.TabIndex = 0;
             this.cbItemsList.SelectedIndexChanged += new System.EventHandler(this.cbItemsList_SelectedIndexChanged);
             // 
@@ -49,21 +51,25 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pgItem.HelpVisible = false;
-            this.pgItem.Location = new System.Drawing.Point(8, 40);
+            this.pgItem.Location = new System.Drawing.Point(8, 32);
             this.pgItem.Name = "pgItem";
             this.pgItem.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
-            this.pgItem.Size = new System.Drawing.Size(312, 288);
+            this.pgItem.Size = new System.Drawing.Size(312, 296);
             this.pgItem.TabIndex = 2;
             this.pgItem.ToolbarVisible = false;
             // 
             // btnGive
             // 
+            this.btnGive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGive.Enabled = false;
-            this.btnGive.Location = new System.Drawing.Point(248, 7);
+            this.btnGive.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnGive.Location = new System.Drawing.Point(248, 332);
             this.btnGive.Name = "btnGive";
-            this.btnGive.Size = new System.Drawing.Size(72, 23);
+            this.btnGive.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.btnGive.Size = new System.Drawing.Size(72, 33);
             this.btnGive.TabIndex = 1;
             this.btnGive.Text = "Give";
+            this.btnGive.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnGive.UseVisualStyleBackColor = true;
             this.btnGive.Click += new System.EventHandler(this.btnGive_Click);
             // 
@@ -71,13 +77,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(330, 336);
-            this.Controls.Add(this.pgItem);
+            this.ClientSize = new System.Drawing.Size(328, 372);
             this.Controls.Add(this.btnGive);
+            this.Controls.Add(this.pgItem);
             this.Controls.Add(this.cbItemsList);
             this.Name = "ItemForm";
             this.ShowIcon = false;
-            this.Text = "ItemForm";
+            this.Text = "Terraria item editor";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ItemForm_FormClosing);
             this.ResumeLayout(false);

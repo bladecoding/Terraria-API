@@ -6,16 +6,11 @@ namespace ItemPlugin
 {
     public class ItemEx
     {
-        private Item item;
+        public Item Item { get; private set; }
 
         public ItemEx(Item i)
         {
-            item = i;
-        }
-
-        public static explicit operator Item(ItemEx i)
-        {
-            return i.item;
+            Item = i;
         }
 
         [DefaultValue(false)]
@@ -23,11 +18,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.wet;
+                return Item.wet;
             }
             set
             {
-                item.wet = value;
+                Item.wet = value;
             }
         }
 
@@ -36,11 +31,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.wetCount;
+                return Item.wetCount;
             }
             set
             {
-                item.wetCount = value;
+                Item.wetCount = value;
             }
         }
 
@@ -49,11 +44,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.lavaWet;
+                return Item.lavaWet;
             }
             set
             {
-                item.lavaWet = value;
+                Item.lavaWet = value;
             }
         }
 
@@ -62,11 +57,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.position;
+                return Item.position;
             }
             set
             {
-                item.position = value;
+                Item.position = value;
             }
         }
 
@@ -75,11 +70,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.velocity;
+                return Item.velocity;
             }
             set
             {
-                item.velocity = value;
+                Item.velocity = value;
             }
         }
 
@@ -88,11 +83,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.width;
+                return Item.width;
             }
             set
             {
-                item.width = value;
+                Item.width = value;
             }
         }
 
@@ -101,11 +96,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.height;
+                return Item.height;
             }
             set
             {
-                item.height = value;
+                Item.height = value;
             }
         }
 
@@ -114,11 +109,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.active;
+                return Item.active;
             }
             set
             {
-                item.active = value;
+                Item.active = value;
             }
         }
 
@@ -127,11 +122,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.noGrabDelay;
+                return Item.noGrabDelay;
             }
             set
             {
-                item.noGrabDelay = value;
+                Item.noGrabDelay = value;
             }
         }
 
@@ -140,11 +135,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.beingGrabbed;
+                return Item.beingGrabbed;
             }
             set
             {
-                item.beingGrabbed = value;
+                Item.beingGrabbed = value;
             }
         }
 
@@ -153,11 +148,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.spawnTime;
+                return Item.spawnTime;
             }
             set
             {
-                item.spawnTime = value;
+                Item.spawnTime = value;
             }
         }
 
@@ -166,11 +161,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.wornArmor;
+                return Item.wornArmor;
             }
             set
             {
-                item.wornArmor = value;
+                Item.wornArmor = value;
             }
         }
 
@@ -179,11 +174,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.ownIgnore;
+                return Item.ownIgnore;
             }
             set
             {
-                item.ownIgnore = value;
+                Item.ownIgnore = value;
             }
         }
 
@@ -192,11 +187,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.ownTime;
+                return Item.ownTime;
             }
             set
             {
-                item.ownTime = value;
+                Item.ownTime = value;
             }
         }
 
@@ -205,11 +200,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.keepTime;
+                return Item.keepTime;
             }
             set
             {
-                item.keepTime = value;
+                Item.keepTime = value;
             }
         }
 
@@ -218,11 +213,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.type;
+                return Item.type;
             }
             set
             {
-                item.type = value;
+                Item.type = value;
             }
         }
 
@@ -231,11 +226,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.name;
+                return Item.name;
             }
             set
             {
-                item.name = value;
+                Item.name = value;
             }
         }
 
@@ -244,11 +239,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.holdStyle;
+                return Item.holdStyle;
             }
             set
             {
-                item.holdStyle = value;
+                Item.holdStyle = value;
             }
         }
 
@@ -257,11 +252,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.useStyle;
+                return Item.useStyle;
             }
             set
             {
-                item.useStyle = value;
+                Item.useStyle = value;
             }
         }
 
@@ -270,11 +265,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.channel;
+                return Item.channel;
             }
             set
             {
-                item.channel = value;
+                Item.channel = value;
             }
         }
 
@@ -283,11 +278,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.accessory;
+                return Item.accessory;
             }
             set
             {
-                item.accessory = value;
+                Item.accessory = value;
             }
         }
 
@@ -296,11 +291,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.useAnimation;
+                return Item.useAnimation;
             }
             set
             {
-                item.useAnimation = value;
+                Item.useAnimation = value;
             }
         }
 
@@ -309,11 +304,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.useTime;
+                return Item.useTime;
             }
             set
             {
-                item.useTime = value;
+                Item.useTime = value;
             }
         }
 
@@ -322,11 +317,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.stack;
+                return Item.stack;
             }
             set
             {
-                item.stack = value;
+                Item.stack = value;
             }
         }
 
@@ -335,11 +330,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.maxStack;
+                return Item.maxStack;
             }
             set
             {
-                item.maxStack = value;
+                Item.maxStack = value;
             }
         }
 
@@ -348,11 +343,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.pick;
+                return Item.pick;
             }
             set
             {
-                item.pick = value;
+                Item.pick = value;
             }
         }
 
@@ -361,11 +356,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.axe;
+                return Item.axe;
             }
             set
             {
-                item.axe = value;
+                Item.axe = value;
             }
         }
 
@@ -374,11 +369,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.hammer;
+                return Item.hammer;
             }
             set
             {
-                item.hammer = value;
+                Item.hammer = value;
             }
         }
 
@@ -387,11 +382,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.tileBoost;
+                return Item.tileBoost;
             }
             set
             {
-                item.tileBoost = value;
+                Item.tileBoost = value;
             }
         }
 
@@ -400,11 +395,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.createTile;
+                return Item.createTile;
             }
             set
             {
-                item.createTile = value;
+                Item.createTile = value;
             }
         }
 
@@ -413,11 +408,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.createWall;
+                return Item.createWall;
             }
             set
             {
-                item.createWall = value;
+                Item.createWall = value;
             }
         }
 
@@ -426,11 +421,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.damage;
+                return Item.damage;
             }
             set
             {
-                item.damage = value;
+                Item.damage = value;
             }
         }
 
@@ -439,11 +434,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.knockBack;
+                return Item.knockBack;
             }
             set
             {
-                item.knockBack = value;
+                Item.knockBack = value;
             }
         }
 
@@ -452,11 +447,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.healLife;
+                return Item.healLife;
             }
             set
             {
-                item.healLife = value;
+                Item.healLife = value;
             }
         }
 
@@ -465,11 +460,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.healMana;
+                return Item.healMana;
             }
             set
             {
-                item.healMana = value;
+                Item.healMana = value;
             }
         }
 
@@ -478,11 +473,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.potion;
+                return Item.potion;
             }
             set
             {
-                item.potion = value;
+                Item.potion = value;
             }
         }
 
@@ -491,11 +486,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.consumable;
+                return Item.consumable;
             }
             set
             {
-                item.consumable = value;
+                Item.consumable = value;
             }
         }
 
@@ -504,11 +499,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.autoReuse;
+                return Item.autoReuse;
             }
             set
             {
-                item.autoReuse = value;
+                Item.autoReuse = value;
             }
         }
 
@@ -517,11 +512,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.useTurn;
+                return Item.useTurn;
             }
             set
             {
-                item.useTurn = value;
+                Item.useTurn = value;
             }
         }
 
@@ -530,11 +525,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.color;
+                return Item.color;
             }
             set
             {
-                item.color = value;
+                Item.color = value;
             }
         }
 
@@ -543,11 +538,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.alpha;
+                return Item.alpha;
             }
             set
             {
-                item.alpha = value;
+                Item.alpha = value;
             }
         }
 
@@ -556,11 +551,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.scale;
+                return Item.scale;
             }
             set
             {
-                item.scale = value;
+                Item.scale = value;
             }
         }
 
@@ -569,11 +564,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.useSound;
+                return Item.useSound;
             }
             set
             {
-                item.useSound = value;
+                Item.useSound = value;
             }
         }
 
@@ -582,11 +577,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.defense;
+                return Item.defense;
             }
             set
             {
-                item.defense = value;
+                Item.defense = value;
             }
         }
 
@@ -595,11 +590,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.headSlot;
+                return Item.headSlot;
             }
             set
             {
-                item.headSlot = value;
+                Item.headSlot = value;
             }
         }
 
@@ -608,11 +603,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.bodySlot;
+                return Item.bodySlot;
             }
             set
             {
-                item.bodySlot = value;
+                Item.bodySlot = value;
             }
         }
 
@@ -621,11 +616,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.legSlot;
+                return Item.legSlot;
             }
             set
             {
-                item.legSlot = value;
+                Item.legSlot = value;
             }
         }
 
@@ -634,11 +629,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.toolTip;
+                return Item.toolTip;
             }
             set
             {
-                item.toolTip = value;
+                Item.toolTip = value;
             }
         }
 
@@ -647,11 +642,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.owner;
+                return Item.owner;
             }
             set
             {
-                item.owner = value;
+                Item.owner = value;
             }
         }
 
@@ -660,11 +655,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.rare;
+                return Item.rare;
             }
             set
             {
-                item.rare = value;
+                Item.rare = value;
             }
         }
 
@@ -673,11 +668,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.shoot;
+                return Item.shoot;
             }
             set
             {
-                item.shoot = value;
+                Item.shoot = value;
             }
         }
 
@@ -686,11 +681,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.shootSpeed;
+                return Item.shootSpeed;
             }
             set
             {
-                item.shootSpeed = value;
+                Item.shootSpeed = value;
             }
         }
 
@@ -699,11 +694,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.ammo;
+                return Item.ammo;
             }
             set
             {
-                item.ammo = value;
+                Item.ammo = value;
             }
         }
 
@@ -712,11 +707,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.useAmmo;
+                return Item.useAmmo;
             }
             set
             {
-                item.useAmmo = value;
+                Item.useAmmo = value;
             }
         }
 
@@ -725,11 +720,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.lifeRegen;
+                return Item.lifeRegen;
             }
             set
             {
-                item.lifeRegen = value;
+                Item.lifeRegen = value;
             }
         }
 
@@ -738,11 +733,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.manaRegen;
+                return Item.manaRegen;
             }
             set
             {
-                item.manaRegen = value;
+                Item.manaRegen = value;
             }
         }
 
@@ -751,11 +746,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.mana;
+                return Item.mana;
             }
             set
             {
-                item.mana = value;
+                Item.mana = value;
             }
         }
 
@@ -764,11 +759,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.noUseGraphic;
+                return Item.noUseGraphic;
             }
             set
             {
-                item.noUseGraphic = value;
+                Item.noUseGraphic = value;
             }
         }
 
@@ -777,11 +772,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.noMelee;
+                return Item.noMelee;
             }
             set
             {
-                item.noMelee = value;
+                Item.noMelee = value;
             }
         }
 
@@ -790,11 +785,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.release;
+                return Item.release;
             }
             set
             {
-                item.release = value;
+                Item.release = value;
             }
         }
 
@@ -803,11 +798,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.value;
+                return Item.value;
             }
             set
             {
-                item.value = value;
+                Item.value = value;
             }
         }
 
@@ -816,11 +811,11 @@ namespace ItemPlugin
         {
             get
             {
-                return item.buy;
+                return Item.buy;
             }
             set
             {
-                item.buy = value;
+                Item.buy = value;
             }
         }
     }

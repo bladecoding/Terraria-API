@@ -1,37 +1,7 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace MinimapPlugin
+﻿namespace MinimapPlugin
 {
     public static class MinimapHelper
     {
-        public static Texture2D BitmapToTexture(GraphicsDevice gd, Image img)
-        {
-            int bufferSize = img.Height * img.Width * 4;
-
-            using (MemoryStream ms = new MemoryStream(bufferSize))
-            {
-                img.Save(ms, ImageFormat.Png);
-                return Texture2D.FromStream(gd, ms);
-            }
-        }
-
-        public static Texture2D IntsToTexture(GraphicsDevice gd, int[] img, int width, int height)
-        {
-            Texture2D texture = new Texture2D(gd, width, height);
-            texture.SetData(img);
-            return texture;
-        }
-
-        public static Image TextureToImage(Graphics gd, Texture2D texture)
-        {
-            MemoryStream ms = new MemoryStream();
-            texture.SaveAsPng(ms, texture.Width, texture.Height);
-            return Image.FromStream(ms);
-        }
-
         public static int[] GetMinimapColors()
         {
             int[] colors = new int[81];
