@@ -42,6 +42,11 @@ namespace TrainerPlugin
         private TrainerSettings trainerSettings;
         private TrainerSettings defaultSettings;
 
+        private Player me
+        {
+            get { return Main.player[Main.myPlayer]; }
+        }
+
         public TrainerPlugin(Main game)
             : base(game)
         {
@@ -98,8 +103,6 @@ namespace TrainerPlugin
 
         private void ApplySettings(TrainerSettings settings)
         {
-            Player me = Main.player[Main.myPlayer];
-
             Main.godMode = settings.GodMode;
 
             if (settings.InfiniteHealth)
@@ -123,7 +126,7 @@ namespace TrainerPlugin
                 {
                     if (item.ammo > 0)
                     {
-                        item.stack = item.maxStack;
+                        item.stack = item.maxStack - 1;
                     }
                 }
             }

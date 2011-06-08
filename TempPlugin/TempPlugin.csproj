@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TempPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TerrariaAPI\TerrariaAPI.csproj">

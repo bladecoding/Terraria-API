@@ -36,7 +36,7 @@ namespace TrainerPlugin
         public bool SpawnMax { get; set; }
         [DefaultValue(false), Description("When you die you will respawn instantly.")]
         public bool InstantRespawn { get; set; }
-        [DefaultValue(false), Description("Disables potion cooldown for be able to use potion instantly again.")]
+        [DefaultValue(false), Description("Disables potion cooldown.")]
         public bool NoPotionCooldown { get; set; }
         [DefaultValue(false), Description("Items won't use mana.")]
         public bool NoManaCost { get; set; }
@@ -48,7 +48,7 @@ namespace TrainerPlugin
         public bool LightCursor { get; set; }
         [DefaultValue(false), Description("Use arrow keys to navigate screen position, also your cursor position will emit light.")]
         public bool DebugMode { get; set; }
-        [DefaultValue(false), Description("You can grab sun and move it.")]
+        [DefaultValue(false), Description("You can grab the sun and move it.")]
         public bool GrabSun { get; set; }
         [DefaultValue(false), Description("Stops npc spawns.")]
         public bool StopSpawns { get; set; }
