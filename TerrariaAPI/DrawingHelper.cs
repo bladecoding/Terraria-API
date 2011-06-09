@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -45,6 +46,17 @@ namespace TerrariaAPI
             Texture2D texture = new Texture2D(gd, 1, 1);
             texture.SetData<Color>(new Color[1] { color });
             return texture;
+        }
+
+        private static Vector2[] shadowOffset = { new Vector2(-1, -1), new Vector2(1, -1), new Vector2(1, 1), new Vector2(-1, 1) };
+
+        public static void DrawTextWithShadow(SpriteBatch sb, string text, Vector2 position, SpriteFont font, Color color, Color shadowColor)
+        {
+            sb.DrawString(font, text, position + shadowOffset[0], shadowColor);
+            sb.DrawString(font, text, position + shadowOffset[1], shadowColor);
+            sb.DrawString(font, text, position + shadowOffset[2], shadowColor);
+            sb.DrawString(font, text, position + shadowOffset[3], shadowColor);
+            sb.DrawString(font, text, position, color);
         }
 
         public static Bitmap ResizeImage(Image img, int width, int height)

@@ -11,18 +11,18 @@ namespace TerrariaAPI.Hooks
             NetHooks.GetData += NetHooks_GetData;
         }
 
-        static void NetHooks_GetData(GetDataEventArgs e)
+        private static void NetHooks_GetData(GetDataEventArgs e)
         {
             if (Main.netMode != 2)
                 return;
 
-            if (e.MsgID == MsgTypes.Connect)
+            if (e.MsgID == (int)PacketTypes.ConnectRequest)
             {
                 e.Handled = OnJoin(e.Msg.whoAmI);
                 if (e.Handled)
                     Netplay.serverSock[e.Msg.whoAmI].kill = true;
             }
-            else if (e.MsgID == MsgTypes.ChatMessage)
+            else if (e.MsgID == (int)PacketTypes.ChatText)
             {
                 string str = Encoding.ASCII.GetString(e.Msg.readBuffer, e.Index + 0x4, e.Length - 0x5);
                 e.Handled = OnChat(e.Msg, e.Msg.whoAmI, str);

@@ -10,21 +10,14 @@ namespace TerrariaAPI
 {
     public class XNAConsole : DrawableGameComponent
     {
-        private enum ConsoleState
-        {
-            Closed,
-            Closing,
-            Open,
-            Opening
-        }
+        private enum ConsoleState { Closed, Closing, Open, Opening }
 
-        private const double AnimationTime = 0.3;
-        private const int LinesDisplayed = 20;
+        public double AnimationTime { get; set; }
+        public int MaxLineCount { get; set; }
 
         private StringWriter stringWriter;
         private StringBuilder outputBuffer;
         private int lineWidth, consoleXSize, consoleYSize;
-        private GraphicsDevice device;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
         private Texture2D background;
@@ -32,19 +25,13 @@ namespace TerrariaAPI
         private double stateStartTime;
         private InputManager input;
 
-        public XNAConsole(Game game, SpriteFont font)
+        public XNAConsole(Game game)
             : base(game)
         {
             Visible = false;
-            device = game.GraphicsDevice;
-            spriteBatch = new SpriteBatch(device);
-            this.font = font;
 
-            background = DrawingHelper.CreateOnePixelTexture(device, new Color(0, 0, 0, 125));
-
-            consoleXSize = Game.Window.ClientBounds.Right - Game.Window.ClientBounds.Left - 20;
-            consoleYSize = font.LineSpacing * LinesDisplayed + 20;
-            lineWidth = (int)((consoleXSize - 20) / font.MeasureString("a").X) - 2;
+            AnimationTime = 0.3f;
+            MaxLineCount = 20;
 
             consoleState = ConsoleState.Closed;
             stateStartTime = 0;
@@ -53,6 +40,20 @@ namespace TerrariaAPI
             outputBuffer = new StringBuilder(1024);
             stringWriter = new StringWriter(outputBuffer);
             Console.SetOut(stringWriter);
+        }
+
+        public void LoadFont(SpriteFont font)
+        {
+            this.font = font;
+            consoleXSize = Game.Window.ClientBounds.Right - Game.Window.ClientBounds.Left - 20;
+            consoleYSize = font.LineSpacing * MaxLineCount + 20;
+            lineWidth = (int)((consoleXSize - 20) / font.MeasureString("a").X) - 2;
+        }
+
+        protected override void LoadContent()
+        {
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            background = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, new Color(0, 0, 0, 125));
         }
 
         public override void Update(GameTime gameTime)
@@ -114,12 +115,10 @@ namespace TerrariaAPI
 
         public override void Draw(GameTime gameTime)
         {
-            base.DrawOrder = 1000;
-
             double now = gameTime.TotalGameTime.TotalSeconds;
 
             consoleXSize = this.Game.Window.ClientBounds.Right - this.Game.Window.ClientBounds.Left - 20;
-            consoleYSize = this.font.LineSpacing * LinesDisplayed + 20;
+            consoleYSize = this.font.LineSpacing * MaxLineCount + 20;
 
             int consoleXOffset = 10;
             int consoleYOffset = 0;
@@ -141,9 +140,10 @@ namespace TerrariaAPI
 
             List<string> lines = ParseOutputBuffer(outputBuffer.ToString());
 
-            for (int i = 0; i < lines.Count && i <= LinesDisplayed; i++)
+            for (int i = 0; i < lines.Count && i <= MaxLineCount; i++)
             {
-                spriteBatch.DrawString(font, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleYSize - 10 - font.LineSpacing * i), Color.White);
+                DrawingHelper.DrawTextWithShadow(spriteBatch, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleYSize - 10 - font.LineSpacing * i),
+                    font, Color.White, Color.Black);
             }
 
             spriteBatch.End();

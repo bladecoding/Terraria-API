@@ -65,9 +65,8 @@ namespace TerrariaAPI
                 {
                     if (e is TargetInvocationException)
                         e = ((TargetInvocationException)e).InnerException;
-                    File.AppendAllText("ErrorLog.txt",
-                                       "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message +
-                                       Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+                    File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message +
+                        Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
                     FailedPlugins.Add(f.Name);
                     error = true;
                 }
@@ -84,8 +83,7 @@ namespace TerrariaAPI
                         {
                             if (t.BaseType == typeof(TerrariaPlugin))
                             {
-                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game),
-                                                                false));
+                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game), false));
                             }
                         }
                     }
@@ -94,18 +92,15 @@ namespace TerrariaAPI
                 {
                     if (e is TargetInvocationException)
                         e = ((TargetInvocationException)e).InnerException;
-                    File.AppendAllText("ErrorLog.txt",
-                                       "Exception while trying to load: " + f.Name + Environment.NewLine +
-                                       e.Message + Environment.NewLine + "Stack trace: " +
-                                       Environment.NewLine + e.StackTrace +
-                                       Environment.NewLine + Environment.NewLine);
+                    File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine +
+                        e.Message + Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace + Environment.NewLine + Environment.NewLine);
                     FailedPlugins.Add(f.Name);
                     error = true;
                 }
             }
             if (error)
                 MessageBox.Show("There were errors while loading the mods, check the error logs for more details",
-                                "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             error = false;
             foreach (var p in Plugins)
@@ -120,9 +115,12 @@ namespace TerrariaAPI
                     p.Initialize();
                 }
             }
+
             if (error)
-                MessageBox.Show("Outdated plugins found. Check ErrorLog.txt for details.",
-                                "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Outdated plugins found. Check ErrorLog.txt for details.", "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            XNAConsole = new XNAConsole(Game);
+            Game.Components.Add(XNAConsole);
 
             DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
             NetHooks.SendData += NetHooks_SendData;
@@ -131,16 +129,8 @@ namespace TerrariaAPI
 
         private static void GameHooks_LoadContent(ContentManager obj)
         {
-            try
-            {
-                XNAConsole = new XNAConsole(Game, Main.fontMouseText);
-                Game.Components.Add(XNAConsole);
-                Console.WriteLine("Testing...");
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
+            XNAConsole.LoadFont(Main.fontMouseText);
+            Console.WriteLine("Testing...");
         }
 
         public static void DeInitialize()
@@ -245,63 +235,27 @@ namespace TerrariaAPI
 
         private static void DrawHooks_EndDrawMenu(SpriteBatch obj)
         {
-            DrawFancyText(obj, string.Format("TerrariaAPI v{0}", ApiVersion), new Vector2(10, 6), Color.White);
+            DrawingHelper.DrawTextWithShadow(obj, string.Format("TerrariaAPI v{0}", ApiVersion), new Vector2(10, 6), Main.fontMouseText, Color.White, Color.Black);
 
             int pos = 1;
+
             foreach (var p in Plugins)
             {
                 if (pos > 34)
                     break;
+
                 string str = string.Format("{0} v{1} ({2})", p.Plugin.Name, p.Plugin.Version, p.Plugin.Author);
-                DrawFancyText(obj, str, new Vector2(10, 6 + (24 * pos)), p.Initialized ? Color.White : Color.Yellow);
+                DrawingHelper.DrawTextWithShadow(obj, str, new Vector2(10, 6 + (24 * pos)), Main.fontMouseText, p.Initialized ? Color.White : Color.Yellow, Color.Black);
                 pos++;
             }
+
             foreach (var f in FailedPlugins)
             {
                 if (pos > 34)
                     break;
-                DrawFancyText(obj, f, new Vector2(10, 6 + (24 * pos)), Color.Red);
+
+                DrawingHelper.DrawTextWithShadow(obj, f, new Vector2(10, 6 + (24 * pos)), Main.fontMouseText, Color.Red, Color.Black);
                 pos++;
-            }
-        }
-
-        private static void DrawFancyText(SpriteBatch sb, string text, Vector2 position, Color color)
-        {
-            for (int n = 0x0; n < 0x5; n++)
-            {
-                Color color9 = Color.Black;
-                if (n == 0x4)
-                {
-                    color9 = color;
-                    color9.R = (byte)((0xff + color9.R) / 0x2);
-                    color9.G = (byte)((0xff + color9.G) / 0x2);
-                    color9.B = (byte)((0xff + color9.B) / 0x2);
-                }
-                color9.A = (byte)(color9.A * 0.3f);
-                float offsetx = 0x0;
-                float offsety = 0x0;
-                switch (n)
-                {
-                    case 0x0:
-                        offsetx = -2;
-                        break;
-
-                    case 0x1:
-                        offsetx = 0x2;
-                        break;
-
-                    case 0x2:
-                        offsety = -2;
-                        break;
-
-                    case 0x3:
-                        offsety = 0x2;
-                        break;
-                }
-                Vector2 vector7 = Main.fontMouseText.MeasureString(text);
-                vector7.X *= 0.5f;
-                vector7.Y *= 0.5f;
-                sb.DrawString(Main.fontMouseText, text, new Vector2(position.X + offsetx, position.Y + offsety), color9);
             }
         }
     }

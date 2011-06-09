@@ -11,14 +11,11 @@ namespace TerrariaAPI.Hooks
 
         private static void NetHooks_SendData(SendDataEventArgs e)
         {
-            if (Main.netMode != 2)
+            if (Main.netMode != 2 && e.msgType == (int)PacketTypes.ChatText)
             {
-                if (e.msgType == MsgTypes.ChatMessage)
-                {
-                    string msg = e.text;
-                    e.Handled = OnChat(ref msg);
-                    e.text = msg;
-                }
+                string msg = e.text;
+                e.Handled = OnChat(ref msg);
+                e.text = msg;
             }
         }
 

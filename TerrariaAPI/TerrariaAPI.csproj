@@ -70,7 +70,7 @@
       <HintPath>..\Terraria\Terraria.exe</HintPath>
       <Private>False</Private>
     </Reference>
-	<Reference Include="Terraria" Condition="'$(Configuration)' == 'Release'">
+    <Reference Include="Terraria" Condition="'$(Configuration)' == 'Release'">
       <HintPath>..\Terraria\Terraria.exe</HintPath>
       <Private>False</Private>
     </Reference>
@@ -93,7 +93,7 @@
     <Compile Include="Hooks\PlayerHooks.cs" />
     <Compile Include="Hooks\ServerHooks.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="MsgTypes.cs" />
+    <Compile Include="PacketTypes.cs" />
     <Compile Include="PluginContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
