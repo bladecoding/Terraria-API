@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.CSharp;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using TerrariaAPI.Hooks;
@@ -15,6 +16,7 @@ namespace TerrariaAPI
     public static class Program
     {
         public static readonly Version ApiVersion = new Version(1, 2, 0, 0);
+
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
 #else
@@ -22,6 +24,8 @@ namespace TerrariaAPI
 #endif
 
         public const string PluginSettingsPath = PluginsPath + "\\Settings";
+
+        public static XNAConsole XNAConsole { get; private set; }
 
         private static List<PluginContainer> Plugins = new List<PluginContainer>();
         private static List<string> FailedPlugins = new List<string>();
@@ -122,6 +126,21 @@ namespace TerrariaAPI
 
             DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
             NetHooks.SendData += NetHooks_SendData;
+            GameHooks.LoadContent += new Action<ContentManager>(GameHooks_LoadContent);
+        }
+
+        private static void GameHooks_LoadContent(ContentManager obj)
+        {
+            try
+            {
+                XNAConsole = new XNAConsole(Game, Main.fontMouseText);
+                Game.Components.Add(XNAConsole);
+                Console.WriteLine("Testing...");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
         public static void DeInitialize()

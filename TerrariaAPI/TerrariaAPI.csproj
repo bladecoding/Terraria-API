@@ -97,6 +97,9 @@
     <Compile Include="StreamExt.cs" />
     <Compile Include="TerrariaPlugin.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="XNAConsole.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

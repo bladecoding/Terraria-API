@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace TerrariaAPI
 {
@@ -37,6 +38,13 @@ namespace TerrariaAPI
             MemoryStream ms = new MemoryStream();
             texture.SaveAsPng(ms, width, height);
             return Image.FromStream(ms);
+        }
+
+        public static Texture2D CreateOnePixelTexture(GraphicsDevice gd, Color color)
+        {
+            Texture2D texture = new Texture2D(gd, 1, 1);
+            texture.SetData<Color>(new Color[1] { color });
+            return texture;
         }
 
         public static Bitmap ResizeImage(Image img, int width, int height)
