@@ -70,6 +70,10 @@
       <HintPath>..\Terraria\Terraria.exe</HintPath>
       <Private>False</Private>
     </Reference>
+	<Reference Include="Terraria" Condition="'$(Configuration)' == 'Release'">
+      <HintPath>..\Terraria\Terraria.exe</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="TerrariaServer" Condition="'$(Configuration)' == 'DebugServer'">
       <HintPath>..\TerrariaServer\TerrariaServer.exe</HintPath>
       <Private>False</Private>
