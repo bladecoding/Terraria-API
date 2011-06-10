@@ -25,7 +25,9 @@ namespace TerrariaAPI
 
         public const string PluginSettingsPath = PluginsPath + "\\Settings";
 
+#if CLIENT
         public static XNAConsole XNAConsole { get; private set; }
+#endif
 
         private static List<PluginContainer> Plugins = new List<PluginContainer>();
         private static List<string> FailedPlugins = new List<string>();
@@ -119,8 +121,10 @@ namespace TerrariaAPI
             if (error)
                 MessageBox.Show("Outdated plugins found. Check ErrorLog.txt for details.", "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+#if CLIENT
             XNAConsole = new XNAConsole(Game);
             Game.Components.Add(XNAConsole);
+#endif
 
             DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
             NetHooks.SendData += NetHooks_SendData;
@@ -129,8 +133,10 @@ namespace TerrariaAPI
 
         private static void GameHooks_LoadContent(ContentManager obj)
         {
+#if CLIENT
             XNAConsole.LoadFont(Main.fontMouseText);
             Console.WriteLine("Testing...");
+#endif
         }
 
         public static void DeInitialize()
