@@ -103,7 +103,6 @@ namespace TrainerPlugin
 
         private void ApplySettings(TrainerSettings settings)
         {
-            Main.godMode = settings.GodMode;
 
             if (settings.InfiniteHealth)
             {
@@ -207,10 +206,8 @@ namespace TrainerPlugin
                 Lighting.addLight(x, y, 1f);
             }
 
-            Main.debugMode = settings.DebugMode;
             Main.grabSun = settings.GrabSun;
             Main.stopSpawns = settings.StopSpawns;
-            Main.dumbAI = settings.DumbAI;
         }
     }
 }
