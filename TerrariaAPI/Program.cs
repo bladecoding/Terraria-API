@@ -127,8 +127,8 @@ namespace TerrariaAPI
 #endif
 
             DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
-            NetHooks.SendData += NetHooks_SendData;
-            GameHooks.LoadContent += new Action<ContentManager>(GameHooks_LoadContent);
+            ClientHooks.Chat += ClientHooks_Chat; 
+            GameHooks.LoadContent += GameHooks_LoadContent;
         }
 
         private static void GameHooks_LoadContent(ContentManager obj)
@@ -146,6 +146,10 @@ namespace TerrariaAPI
 
             foreach (var p in Plugins)
                 p.Dispose();
+
+            DrawHooks.EndDrawMenu -= DrawHooks_EndDrawMenu;
+            ClientHooks.Chat -= ClientHooks_Chat;
+            GameHooks.LoadContent -= GameHooks_LoadContent;
         }
 
         private static Assembly Compile(string name, string data, bool addfail = true)
@@ -180,15 +184,12 @@ namespace TerrariaAPI
             return r.CompiledAssembly;
         }
 
-        private static void NetHooks_SendData(SendDataEventArgs e)
+        static void ClientHooks_Chat(ref string msg, HandledEventArgs e)
         {
             if (Main.netMode != 1)
                 return;
 
-            if (e.msgType != 0x19)
-                return;
-
-            if (!e.text.StartsWith("/reload"))
+            if (!msg.StartsWith("/preload"))
                 return;
 
             Main.NewText("Reloading plugins");
