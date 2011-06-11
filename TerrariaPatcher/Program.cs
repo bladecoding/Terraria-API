@@ -4,9 +4,9 @@ using Mono.Cecil;
 
 namespace TerrariaPatcher
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (File.Exists("terraria.exe"))
             {

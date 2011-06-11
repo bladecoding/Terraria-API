@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Terraria;
 using TerrariaAPI;
