@@ -10,7 +10,7 @@ namespace ItemPlugin
 {
     /// <summary>
     /// F9 = Show item editor form
-    /// B = Open bank
+    /// Ctrl + B = Open bank
     /// </summary>
     public class ItemPlugin : TerrariaPlugin
     {
@@ -80,7 +80,7 @@ namespace ItemPlugin
                 {
                     itemForm.Visible = !itemForm.Visible;
                 }
-                else if (input.IsKeyDown(Keys.B, true))
+                else if (input.IsControlDown && input.IsKeyDown(Keys.B, true))
                 {
                     OpenBank();
                 }

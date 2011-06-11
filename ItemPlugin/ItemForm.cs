@@ -19,6 +19,8 @@ namespace ItemPlugin
         {
             InitializeComponent();
 
+            SortItemsByName = true;
+
             ItemCount = Main.itemTexture.Length;
             items = GetItems();
 

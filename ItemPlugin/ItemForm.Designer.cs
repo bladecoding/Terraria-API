@@ -37,6 +37,9 @@
             // 
             // pgItem
             // 
+            this.pgItem.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pgItem.HelpVisible = false;
             this.pgItem.Location = new System.Drawing.Point(232, 48);
             this.pgItem.Name = "pgItem";
@@ -58,6 +61,8 @@
             // 
             // lvItems
             // 
+            this.lvItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.lvItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chItems});
             this.lvItems.FullRowSelect = true;
@@ -79,6 +84,8 @@
             // cbSortByName
             // 
             this.cbSortByName.AutoSize = true;
+            this.cbSortByName.Checked = true;
+            this.cbSortByName.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbSortByName.Location = new System.Drawing.Point(296, 16);
             this.cbSortByName.Name = "cbSortByName";
             this.cbSortByName.Size = new System.Drawing.Size(115, 17);
