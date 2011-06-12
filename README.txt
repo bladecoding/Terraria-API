@@ -11,3 +11,5 @@ F5 = Show/Hide minimap
 F6 = Show minimap settings form
 F7 = Show trainer form
 F8 = Show texture loader form
+F9 = Show item editor form
+Ctrl + B = Open bank

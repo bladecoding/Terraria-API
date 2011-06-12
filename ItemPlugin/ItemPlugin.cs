@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
 using TerrariaAPI;
@@ -8,7 +9,8 @@ using TerrariaAPI.Hooks;
 namespace ItemPlugin
 {
     /// <summary>
-    /// F9 = Item form
+    /// F9 = Show item editor form
+    /// Ctrl + B = Open bank
     /// </summary>
     public class ItemPlugin : TerrariaPlugin
     {
@@ -37,6 +39,11 @@ namespace ItemPlugin
             get { return "Give/Edit items"; }
         }
 
+        private Player me
+        {
+            get { return Main.player[Main.myPlayer]; }
+        }
+
         private InputManager input;
         private ItemForm itemForm;
 
@@ -44,17 +51,23 @@ namespace ItemPlugin
             : base(game)
         {
             input = new InputManager();
-            itemForm = new ItemForm();
         }
 
         public override void Initialize()
         {
+            GameHooks.LoadContent += GameHooks_LoadContent;
             GameHooks.Update += GameHooks_Update;
         }
 
         public override void DeInitialize()
         {
+            GameHooks.LoadContent -= GameHooks_LoadContent;
             GameHooks.Update -= GameHooks_Update;
+        }
+
+        private void GameHooks_LoadContent(ContentManager obj)
+        {
+            itemForm = new ItemForm();
         }
 
         private void GameHooks_Update(GameTime obj)
@@ -63,11 +76,24 @@ namespace ItemPlugin
             {
                 input.Update();
 
-                if (input.IsKeyDown(Keys.F9, true))
+                if (input.IsKeyDown(Keys.F9, true) && itemForm != null)
                 {
                     itemForm.Visible = !itemForm.Visible;
                 }
+                else if (input.IsControlDown && input.IsKeyDown(Keys.B, true))
+                {
+                    OpenBank();
+                }
             }
+        }
+
+        private void OpenBank()
+        {
+            me.chestX = (int)((me.position.X + me.width * 0.5) / 16.0);
+            me.chestY = (int)((me.position.Y + me.height * 0.5) / 16.0);
+            me.chest = -2;
+            Main.playerInventory = true;
+            Main.PlaySound(10, -1, -1, 1);
         }
     }
 }

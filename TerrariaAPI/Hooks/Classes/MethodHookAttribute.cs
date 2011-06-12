@@ -3,7 +3,7 @@
 namespace TerrariaAPI.Hooks.Classes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    class MethodHookAttribute : Attribute
+    internal class MethodHookAttribute : Attribute
     {
     }
 }

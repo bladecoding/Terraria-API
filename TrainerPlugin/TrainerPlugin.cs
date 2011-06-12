@@ -103,7 +103,6 @@ namespace TrainerPlugin
 
         private void ApplySettings(TrainerSettings settings)
         {
-
             if (settings.InfiniteHealth)
             {
                 me.statLife = me.statLifeMax;

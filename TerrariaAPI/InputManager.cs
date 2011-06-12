@@ -15,6 +15,21 @@ namespace TerrariaAPI
         private MouseState currentMouseState;
         private MouseState previousMouseState;
 
+        public bool IsAltDown
+        {
+            get { return IsKeyDown(Keys.LeftAlt) || IsKeyDown(Keys.RightAlt); }
+        }
+
+        public bool IsControlDown
+        {
+            get { return IsKeyDown(Keys.LeftControl) || IsKeyDown(Keys.RightControl); }
+        }
+
+        public bool IsShiftDown
+        {
+            get { return IsKeyDown(Keys.LeftShift) || IsKeyDown(Keys.RightShift); }
+        }
+
         public InputManager()
         {
             currentKeyboardState = new KeyboardState();
