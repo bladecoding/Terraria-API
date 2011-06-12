@@ -6,6 +6,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace TerrariaAPI
 {
@@ -85,6 +86,45 @@ namespace TerrariaAPI
             }
 
             return bmp;
+        }
+
+        private const float rw = 0.212671f;
+        private const float gw = 0.715160f;
+        private const float bw = 0.072169f;
+
+        public static Image ApplyColorMatrix(Image img, ColorMatrix matrix)
+        {
+            Bitmap bmp = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                using (ImageAttributes imgattr = new ImageAttributes())
+                {
+                    imgattr.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                    g.CompositingQuality = CompositingQuality.HighQuality;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.SmoothingMode = SmoothingMode.HighQuality;
+                    g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, imgattr);
+                }
+            }
+
+            return bmp;
+        }
+
+        public static ColorMatrix Colorize(Color color, float percentage)
+        {
+            float r = (float)color.R / 255;
+            float g = (float)color.G / 255;
+            float b = (float)color.B / 255;
+            float amount = percentage / 100;
+            float inv_amount = 1 - amount;
+
+            return new ColorMatrix(new[]{
+                new float[] {inv_amount + amount * r * rw, amount * g * rw, amount * b * rw, 0, 0},
+                new float[] {amount * r * gw, inv_amount + amount * g * gw, amount * b * gw, 0, 0},
+                new float[] {amount * r * bw, amount * g * bw, inv_amount + amount * b * bw, 0, 0},
+                new float[] {0, 0, 0, 1, 0},
+                new float[] {0, 0, 0, 0, 1}});
         }
     }
 }

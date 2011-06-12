@@ -1,84 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Terraria;
-using TerrariaAPI;
 
 namespace ItemPlugin
 {
     public partial class ItemForm : Form
     {
-        private ItemType[] items;
-
         public bool SortItemsByName { get; set; }
-        public int ItemCount { get; private set; }
+        public string ItemsFilter { get; set; }
+
+        private ItemManager itemManager;
 
         public ItemForm()
         {
             InitializeComponent();
 
             SortItemsByName = true;
-
-            ItemCount = Main.itemTexture.Length;
-            items = GetItems();
-
-            LoadIcons();
+            ItemsFilter = string.Empty;
+            itemManager = new ItemManager(lvItems);
             LoadItems();
-        }
-
-        private void LoadIcons()
-        {
-            ImageList il = new ImageList();
-            il.ColorDepth = ColorDepth.Depth32Bit;
-
-            for (int i = 0; i < ItemCount; i++)
-            {
-                Image img = DrawingHelper.TextureToImage(Main.itemTexture[i]);
-                img = DrawingHelper.ResizeImage(img, 16, 16);
-                il.Images.Add(img);
-            }
-
-            lvItems.SmallImageList = il;
         }
 
         private void LoadItems()
         {
-            ItemType[] itemsList;
+            IEnumerable<ItemType> itemsList;
 
             if (SortItemsByName)
             {
-                itemsList = items.OrderBy(x => x.Name).ToArray();
+                itemsList = itemManager.Items.OrderBy(x => x.Name);
             }
             else
             {
-                itemsList = items;
+                itemsList = itemManager.Items.OrderBy(x => x.ID);
+            }
+
+            if (!string.IsNullOrWhiteSpace(ItemsFilter))
+            {
+                itemsList = itemsList.Where(x => x.Name.IndexOf(ItemsFilter, StringComparison.InvariantCultureIgnoreCase) >= 0);
             }
 
             lvItems.Items.Clear();
 
             foreach (ItemType item in itemsList)
             {
-                lvItems.Items.Add(item.Name, item.ID).Tag = item;
+                lvItems.Items.Add(item.Name, item.Name).Tag = item;
             }
-        }
-
-        private ItemType[] GetItems()
-        {
-            List<ItemType> items = new List<ItemType>();
-
-            for (int i = 1; i < ItemCount; i++)
-            {
-                Item item = new Item();
-                item.RealSetDefaults(i);
-                if (!string.IsNullOrEmpty(item.name))
-                {
-                    items.Add(new ItemType(i, item.name));
-                }
-            }
-
-            return items.ToArray();
         }
 
         private void lvItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -97,6 +65,12 @@ namespace ItemPlugin
             LoadItems();
         }
 
+        private void txtFilter_TextChanged(object sender, EventArgs e)
+        {
+            ItemsFilter = txtFilter.Text;
+            LoadItems();
+        }
+
         private void btnGive_Click(object sender, EventArgs e)
         {
             ItemEx item = pgItem.SelectedObject as ItemEx;
@@ -105,6 +79,8 @@ namespace ItemPlugin
             {
                 Main.player[Main.myPlayer].GetItem(Main.myPlayer, item.Item);
             }
+
+            btnGive.Enabled = false;
         }
 
         private void ItemForm_FormClosing(object sender, FormClosingEventArgs e)
