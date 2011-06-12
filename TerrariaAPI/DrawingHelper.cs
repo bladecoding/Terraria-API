@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
@@ -62,69 +61,61 @@ namespace TerrariaAPI
 
         public static Bitmap ResizeImage(Image img, int width, int height)
         {
-            // Figure out the ratio
-            double ratioX = (double)width / (double)img.Width;
-            double ratioY = (double)height / (double)img.Height;
-            double ratio = ratioX < ratioY ? ratioX : ratioY; // Use whichever multiplier is smaller
+            double ratio;
+            int newWidth, newHeight;
 
-            // Now we can get the new height and width
-            int newWidth = Convert.ToInt32(img.Width * ratio);
-            int newHeight = Convert.ToInt32(img.Height * ratio);
+            if (img.Width <= width && img.Height <= height)
+            {
+                ratio = 1.0;
+                newWidth = img.Width;
+                newHeight = img.Height;
+            }
+            else
+            {
+                double ratioX = (double)width / (double)img.Width;
+                double ratioY = (double)height / (double)img.Height;
+                ratio = ratioX < ratioY ? ratioX : ratioY;
+                newWidth = (int)(img.Width * ratio);
+                newHeight = (int)(img.Height * ratio);
+            }
 
-            // Now calculate the X, Y position of the upper-left corner (one of these will always be zero)
-            int posX = Convert.ToInt32((width - (img.Width * ratio)) / 2);
-            int posY = Convert.ToInt32((height - (img.Height * ratio)) / 2);
+            int posX = (int)((width - (img.Width * ratio)) / 2);
+            int posY = (int)((height - (img.Height * ratio)) / 2);
 
             Bitmap bmp = new Bitmap(width, height);
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                g.CompositingQuality = CompositingQuality.HighQuality;
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.InterpolationMode = InterpolationMode.NearestNeighbor;
                 g.DrawImage(img, posX, posY, newWidth, newHeight);
             }
 
             return bmp;
         }
 
-        private const float rw = 0.212671f;
-        private const float gw = 0.715160f;
-        private const float bw = 0.072169f;
-
-        public static Image ApplyColorMatrix(Image img, ColorMatrix matrix)
+        public static Image ColorizeImage(Image img, Color color)
         {
-            Bitmap bmp = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
+            Bitmap bmp = new Bitmap(img.Width, img.Height);
 
             using (Graphics g = Graphics.FromImage(bmp))
+            using (ImageAttributes imgattr = new ImageAttributes())
             {
-                using (ImageAttributes imgattr = new ImageAttributes())
-                {
-                    imgattr.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-                    g.CompositingQuality = CompositingQuality.HighQuality;
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    g.SmoothingMode = SmoothingMode.HighQuality;
-                    g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, imgattr);
-                }
+                float red = (float)color.R / 255;
+                float green = (float)color.G / 255;
+                float blue = (float)color.B / 255;
+
+                ColorMatrix matrix = new ColorMatrix(new[]{
+                    new float[] {red, 0, 0, 0, 0},
+                    new float[] {0, green, 0, 0, 0},
+                    new float[] {0, 0, blue, 0, 0},
+                    new float[] {0, 0, 0, 1, 0},
+                    new float[] {0, 0, 0, 0, 1}});
+
+                imgattr.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, imgattr);
             }
 
             return bmp;
-        }
-
-        public static ColorMatrix Colorize(Color color, float percentage)
-        {
-            float r = (float)color.R / 255;
-            float g = (float)color.G / 255;
-            float b = (float)color.B / 255;
-            float amount = percentage / 100;
-            float inv_amount = 1 - amount;
-
-            return new ColorMatrix(new[]{
-                new float[] {inv_amount + amount * r * rw, amount * g * rw, amount * b * rw, 0, 0},
-                new float[] {amount * r * gw, inv_amount + amount * g * gw, amount * b * gw, 0, 0},
-                new float[] {amount * r * bw, amount * g * bw, inv_amount + amount * b * bw, 0, 0},
-                new float[] {0, 0, 0, 1, 0},
-                new float[] {0, 0, 0, 0, 1}});
         }
     }
 }

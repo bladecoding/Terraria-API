@@ -67,6 +67,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.lvItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chItems});
+            this.lvItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.lvItems.FullRowSelect = true;
             this.lvItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvItems.HideSelection = false;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -21,6 +20,7 @@ namespace ItemPlugin
         {
             lv = listView;
             il = new ImageList();
+            il.ImageSize = new Size(32, 32);
             il.ColorDepth = ColorDepth.Depth32Bit;
             lv.SmallImageList = il;
 
@@ -89,12 +89,13 @@ namespace ItemPlugin
                 Image img;
                 Texture2D texture = Main.itemTexture[itemType.ID];
                 img = DrawingHelper.TextureToImage(texture);
+
                 if (itemType.Color != default(Color))
                 {
-                    ColorMatrix cm = DrawingHelper.Colorize(itemType.Color, 100);
-                    img = DrawingHelper.ApplyColorMatrix(img, cm);
+                    img = DrawingHelper.ColorizeImage(img, itemType.Color);
                 }
-                img = DrawingHelper.ResizeImage(img, 16, 16);
+
+                img = DrawingHelper.ResizeImage(img, 32, 32);
                 il.Images.Add(itemType.Name, img);
             }
         }

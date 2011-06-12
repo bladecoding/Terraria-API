@@ -45,7 +45,7 @@ namespace ItemPlugin
 
             foreach (ItemType item in itemsList)
             {
-                lvItems.Items.Add(item.Name, item.Name).Tag = item;
+                lvItems.Items.Add(" " + item.Name, item.Name).Tag = item;
             }
         }
 
