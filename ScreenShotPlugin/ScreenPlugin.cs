@@ -79,6 +79,8 @@ namespace ScreenShotPlugin
         TileFrame[] Tiles;
         WallFrame[] Walls;
         RawImage[] Backgrounds;
+        TileFrame[] TreeTops;
+        TileFrame[] TreeBranches;
 
         public int[] Widths;
         public int[] Heights;
@@ -101,7 +103,8 @@ namespace ScreenShotPlugin
                 }
                 else
                 {
-                    Tiles[i] = new OddTileFrame(Main.tileTexture[i], Widths[i], Heights[i]);
+                    if (i != 27)
+                        Tiles[i] = new OddTileFrame(Main.tileTexture[i], Widths[i], Heights[i]);
                 }
             }
 
@@ -112,6 +115,16 @@ namespace ScreenShotPlugin
             Backgrounds = new RawImage[Main.backgroundTexture.Length];
             for (int i = 1; i < Main.backgroundTexture.Length; i++)
                 Backgrounds[i] = TextureHelper.TextureToRaw(Main.backgroundTexture[i]);
+
+            TreeTops = new TileFrame[Main.treeTopTexture.Length];
+            for (int i = 0; i < Main.treeTopTexture.Length; i++)
+                TreeTops[i] = new TileFrame(Main.treeTopTexture[i], Main.treeTopTexture[i].Width / 3 - 2);
+
+            TreeBranches = new TileFrame[Main.treeBranchTexture.Length];
+            for (int i = 0; i < Main.treeBranchTexture.Length; i++)
+                TreeBranches[i] = new TileFrame(Main.treeBranchTexture[i], 40);
+
+
         }
 
         void GameHooks_Update(GameTime obj)
@@ -206,8 +219,143 @@ namespace ScreenShotPlugin
 
                     if (tile.active)
                     {
+                        if (tile.type == 27)
+                            continue;
                         var frame = Tiles[tile.type].GetFrame(tile.frameX, tile.frameY);
                         CopyImgTo(img, x * 16, y * 16, frame);
+                    }
+                }
+            }
+        }
+
+        void RenderTreeTops(RawImage img, int startx, int starty, int width, int height)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                int tiley = starty + y;
+                if (tiley < 0 || tiley > Main.maxTilesY)
+                    continue;
+                for (int x = 0; x < width; x++)
+                {
+                    int tilex = startx + x;
+                    if (tilex < 0 || tilex > Main.maxTilesX)
+                        continue;
+
+                    var tile = Main.tile[tilex, tiley];
+                    if (tile == null)
+                        continue;
+
+                    if (!tile.active)
+                        continue;
+
+                    if (((tile.type == 0x5) && (tile.frameY >= 0xc6)) && (tile.frameX >= 0x16))
+                    {
+                        int num14;
+                        int num18;
+                        int num13 = 0x0;
+                        if (tile.frameX == 0x16)
+                        {
+                            if (tile.frameY == 0xdc)
+                            {
+                                num13 = 0x1;
+                            }
+                            else if (tile.frameY == 0xf2)
+                            {
+                                num13 = 0x2;
+                            }
+                            num14 = 0x0;
+                            int num15 = 0x50;
+                            int num16 = 0x50;
+                            int num17 = 0x20;
+                            num18 = tiley;
+                            while (num18 < (tiley + 0x64))
+                            {
+                                if (Main.tile[tilex, num18].type == 0x2)
+                                {
+                                    num14 = 0x0;
+                                    break;
+                                }
+                                if (Main.tile[tilex, num18].type == 0x17)
+                                {
+                                    num14 = 0x1;
+                                    break;
+                                }
+                                if (Main.tile[tilex, num18].type == 0x3c)
+                                {
+                                    num14 = 0x2;
+                                    num15 = 0x72;
+                                    num16 = 0x60;
+                                    num17 = 0x30;
+                                    break;
+                                }
+                                num18++;
+                            }
+                            CopyImgTo(img, (x * 16) - num17, ((y + 1) * 16) - num16, TreeTops[num14].GetFrame(num13 * (num15 + 0x2), 0));
+                        }
+                        else if (tile.frameX == 0x2c)
+                        {
+                            if (tile.frameY == 0xdc)
+                            {
+                                num13 = 0x1;
+                            }
+                            else if (tile.frameY == 0xf2)
+                            {
+                                num13 = 0x2;
+                            }
+                            num14 = 0x0;
+                            num18 = tiley;
+                            while (num18 < (tiley + 0x64))
+                            {
+                                if (Main.tile[tilex + 0x1, num18].type == 0x2)
+                                {
+                                    num14 = 0x0;
+                                    break;
+                                }
+                                if (Main.tile[tilex + 0x1, num18].type == 0x17)
+                                {
+                                    num14 = 0x1;
+                                    break;
+                                }
+                                if (Main.tile[tilex + 0x1, num18].type == 0x3c)
+                                {
+                                    num14 = 0x2;
+                                    break;
+                                }
+                                num18++;
+                            }
+                            CopyImgTo(img, (x * 16) - 0x18, (y * 16) - 0xC, TreeBranches[num14].GetFrame(0, num13 * 0x2a));
+                        }
+                        else if (tile.frameX == 0x42)
+                        {
+                            if (tile.frameY == 0xdc)
+                            {
+                                num13 = 0x1;
+                            }
+                            else if (tile.frameY == 0xf2)
+                            {
+                                num13 = 0x2;
+                            }
+                            num14 = 0x0;
+                            for (num18 = tiley; num18 < (tiley + 0x64); num18++)
+                            {
+                                if (Main.tile[tilex - 0x1, num18].type == 0x2)
+                                {
+                                    num14 = 0x0;
+                                    break;
+                                }
+                                if (Main.tile[tilex - 0x1, num18].type == 0x17)
+                                {
+                                    num14 = 0x1;
+                                    break;
+                                }
+                                if (Main.tile[tilex - 0x1, num18].type == 0x3c)
+                                {
+                                    num14 = 0x2;
+                                    break;
+                                }
+                            }
+                            CopyImgTo(img, (x * 16), (y * 16) - 0xC, TreeBranches[num14].GetFrame(0x2a, num13 * 0x2a));
+                        }
                     }
                 }
             }
@@ -219,6 +367,7 @@ namespace ScreenShotPlugin
 
             RenderBackgrounds(img, startx, starty, width, height);
             RenderWalls(img, startx, starty, width, height);
+            RenderTreeTops(img, startx, starty, width, height);
             RenderTiles(img, startx, starty, width, height);
 
             var bmp = new Bitmap(img.Width, img.Height);
@@ -260,7 +409,7 @@ namespace ScreenShotPlugin
         public static RawImage TextureToRaw(Texture2D text, Rectangle rect)
         {
             var ret = new RawImage(rect.Width, rect.Height);
-            text.GetData(0, rect, ret.Data, rect.X + (rect.Y * rect.Width), ret.Data.Length);
+            text.GetData(0, rect, ret.Data, 0, ret.Data.Length);
             AbgrToArgb(ret);
             return ret;
         }
@@ -290,6 +439,11 @@ namespace ScreenShotPlugin
         public int FrameHeight { get; set; }
 
         public virtual int Border { get { return 2; } }
+
+        public TileFrame(Texture2D text, int frame)
+            : this(text, frame, frame)
+        {
+        }
 
         public TileFrame(Texture2D text, int framewidth, int frameheight)
         {
