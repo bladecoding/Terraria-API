@@ -70,12 +70,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TerrariaAPI\TerrariaAPI.csproj">
-      <Project>{6D26750B-AAAA-48E8-9457-917F9F6F8D94}</Project>
-      <Name>TerrariaAPI</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
