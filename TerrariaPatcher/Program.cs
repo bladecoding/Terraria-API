@@ -178,7 +178,7 @@ namespace TerrariaPatcher
 
         static string DownloadPatch(string md5)
         {
-            return new WebClient().DownloadString("http://dl.dropbox.com/u/29760911/" + AssemblyName + "Api/Terraira_" + md5 + ".diff");
+            return new WebClient().DownloadString("http://dl.dropbox.com/u/29760911/" + AssemblyName + "Api/" + AssemblyName + "_" + md5 + ".diff");
         }
 
         static string MD5(Stream stream)
