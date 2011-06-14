@@ -15,7 +15,7 @@ namespace TerrariaPatcher
 #if CLIENT
         static readonly string AssemblyName = "Terraria";
 #elif SERVER
-        static readonly string Name = "TerrariaServer";
+        static readonly string AssemblyName = "TerrariaServer";
 #else
 #error Invalid Defines
 #endif
