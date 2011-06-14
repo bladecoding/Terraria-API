@@ -12,23 +12,30 @@ namespace TerrariaPatcher
     class Program
     {
         static readonly string TmpDir = "apitmp";
+#if CLIENT
+        static readonly string AssemblyName = "Terraria";
+#elif SERVER
+        static readonly string Name = "TerrariaServer";
+#else
+#error Invalid Defines
+#endif
         static void Main(string[] args)
         {
             try
             {
-                if (!File.Exists("Terraria.exe"))
+                if (!File.Exists(AssemblyName + ".exe"))
                 {
-                    Output("Terraria.exe not found");
+                    Output(AssemblyName + ".exe not found");
                     Console.ReadLine();
                     return;
                 }
 
                 string md5;
-                using (var fs = new FileStream("Terraria.exe", FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var fs = new FileStream(AssemblyName + ".exe", FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     md5 = MD5(fs);
                 }
-                var terrariaver = FileVersionInfo.GetVersionInfo("Terraria.exe");
+                var terrariaver = FileVersionInfo.GetVersionInfo(AssemblyName + ".exe");
                 string apitmp = Path.Combine(Environment.CurrentDirectory, "apitmp");
 
                 Output("Downloading Patches Information");
@@ -37,14 +44,14 @@ namespace TerrariaPatcher
                 string vmd5;
                 if (!patches.TryGetValue(terrariaver.ProductVersion, out vmd5))
                 {
-                    Output("Terraria version not supported ({0})", terrariaver.ProductVersion);
+                    Output(AssemblyName + " version not supported ({0})", terrariaver.ProductVersion);
                     Console.ReadLine();
                     return;
                 }
 
                 if (vmd5 != md5)
                 {
-                    Output("Terraria hash mismatch (already patched?).");
+                    Output(AssemblyName + " hash mismatch (already patched?).");
                     Output("Version {0}", terrariaver.ProductVersion);
                     Output("Expected {0} got {1}", vmd5, md5);
                     Console.ReadLine();
@@ -56,7 +63,7 @@ namespace TerrariaPatcher
 
                 Output("Downloading Diff");
                 string patch = DownloadPatch(md5);
-                File.WriteAllText(Path.Combine(TmpDir, "Terraria.diff"), patch);
+                File.WriteAllText(Path.Combine(TmpDir, AssemblyName + ".diff"), patch);
 
                 Output("Extracting Resources");
                 File.WriteAllBytes(Path.Combine(TmpDir, "ildasm.exe"), Properties.Resources.ildasm);
@@ -66,7 +73,7 @@ namespace TerrariaPatcher
                 Output("Running IlDasm");
                 var proc = new Process();
                 proc.StartInfo.FileName = "apitmp/ildasm.exe";
-                proc.StartInfo.Arguments = "Terraria.exe /output:" + Path.Combine(TmpDir, "Terraria.il");
+                proc.StartInfo.Arguments = AssemblyName + ".exe /output:" + Path.Combine(TmpDir, AssemblyName + ".il");
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.RedirectStandardOutput = true;
                 proc.StartInfo.RedirectStandardError = true;
@@ -78,7 +85,7 @@ namespace TerrariaPatcher
                 Output("Running Patch");
                 proc = new Process();
                 proc.StartInfo.FileName = "apitmp/patch.exe";
-                proc.StartInfo.Arguments = "-u -o NewTerraria.il -i Terraria.diff";
+                proc.StartInfo.Arguments = "-u -o New" + AssemblyName + ".il -i " + AssemblyName + ".diff";
                 proc.StartInfo.WorkingDirectory = apitmp;
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.RedirectStandardOutput = true;
@@ -88,13 +95,13 @@ namespace TerrariaPatcher
                 Log(proc.StandardOutput.ReadToEnd());
                 Log(proc.StandardError.ReadToEnd());
 
-                if (File.Exists(Path.Combine(apitmp, "NewTerraria.il.rej")))
-                    Log("\n\n[[{0}]]\n\n",File.ReadAllText(Path.Combine(apitmp, "NewTerraria.il.rej")));
+                if (File.Exists(Path.Combine(apitmp, "New" + AssemblyName + ".il.rej")))
+                    Log("\n\n[[{0}]]\n\n", File.ReadAllText(Path.Combine(apitmp, "New" + AssemblyName + ".il.rej")));
 
                 Output("Running Ilasm");
                 proc = new Process();
                 proc.StartInfo.FileName = Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "ilasm.exe");
-                proc.StartInfo.Arguments = "NewTerraria.il /quiet /output=Terraria.exe /res=Terraria.res";
+                proc.StartInfo.Arguments = "New" + AssemblyName + ".il /quiet /output=" + AssemblyName + ".exe /res=" + AssemblyName + ".res";
                 proc.StartInfo.WorkingDirectory = apitmp;
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.RedirectStandardOutput = true;
@@ -105,9 +112,9 @@ namespace TerrariaPatcher
                 Log(proc.StandardError.ReadToEnd());
 
                 Output("Finishing");
-                if (File.Exists(Path.Combine(TmpDir, "Terraria.exe")))
+                if (File.Exists(Path.Combine(TmpDir, AssemblyName+".exe")))
                 {
-                    File.Copy(Path.Combine(TmpDir, "Terraria.exe"), "Terraria.exe", true);
+                    File.Copy(Path.Combine(TmpDir, AssemblyName + ".exe"), AssemblyName + "API.exe", true);
                     Output("Success");
                 }
                 else
@@ -156,7 +163,7 @@ namespace TerrariaPatcher
         {
             var ret = new Dictionary<string, string>();
 
-            string patches = new WebClient().DownloadString("http://dl.dropbox.com/u/29760911/TerrariaApi/patches.txt");
+            string patches = new WebClient().DownloadString("http://dl.dropbox.com/u/29760911/" + AssemblyName + "Api/patches.txt");
             var ps = patches.Split('\n', '\r');
             foreach (var p in ps)
             {
@@ -171,7 +178,7 @@ namespace TerrariaPatcher
 
         static string DownloadPatch(string md5)
         {
-            return new WebClient().DownloadString("http://dl.dropbox.com/u/29760911/TerrariaApi/Terraira_" + md5 + ".diff");
+            return new WebClient().DownloadString("http://dl.dropbox.com/u/29760911/" + AssemblyName + "Api/Terraira_" + md5 + ".diff");
         }
 
         static string MD5(Stream stream)
