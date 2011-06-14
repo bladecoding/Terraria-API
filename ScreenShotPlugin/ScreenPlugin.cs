@@ -16,6 +16,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace ScreenShotPlugin
 {
+    [APIVersion(1, 3)]
     public class ScreenPlugin : TerrariaPlugin
     {
         public override string Name
@@ -26,11 +27,6 @@ namespace ScreenShotPlugin
         public override Version Version
         {
             get { return new Version(1, 0); }
-        }
-
-        public override Version APIVersion
-        {
-            get { return new Version(1, 2); }
         }
 
         public override string Author

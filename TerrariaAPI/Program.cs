@@ -15,7 +15,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 2, 0, 0);
+        public static readonly Version ApiVersion = new Version(1, 3, 0, 1);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
@@ -59,7 +59,15 @@ namespace TerrariaAPI
                     {
                         if (t.BaseType == typeof(TerrariaPlugin))
                         {
-                            Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, main)));
+                            if (Compatible(t))
+                            {
+                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game)));
+                            }
+                            else
+                            {
+                                File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + f.Name + " (" + t.GetType() + ")");
+                                error = true;
+                            }
                         }
                     }
                 }
@@ -85,7 +93,15 @@ namespace TerrariaAPI
                         {
                             if (t.BaseType == typeof(TerrariaPlugin))
                             {
-                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game), false));
+                                if (Compatible(t))
+                                {
+                                    Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game), false));
+                                }
+                                else
+                                {
+                                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + f.Name + " (" + t.GetType() + ")");
+                                    error = true;
+                                }
                             }
                         }
                     }
@@ -104,22 +120,14 @@ namespace TerrariaAPI
                 MessageBox.Show("There were errors while loading the mods, check the error logs for more details",
                     "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            error = false;
+
+            //Sort the plugins so the ones with higher order get initialized first.
+            Plugins.Sort((pc1, pc2) => pc1.Plugin.Order.CompareTo(pc2.Plugin.Order));
+
             foreach (var p in Plugins)
             {
-                if (p.Plugin.APIVersion.Major != ApiVersion.Major || p.Plugin.APIVersion.Minor != ApiVersion.Minor)
-                {
-                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + p.Plugin.Name + " (" + p.GetType() + ")");
-                    error = true;
-                }
-                else
-                {
-                    p.Initialize();
-                }
+                p.Initialize();
             }
-
-            if (error)
-                MessageBox.Show("Outdated plugins found. Check ErrorLog.txt for details.", "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 #if CLIENT
             XNAConsole = new XNAConsole(Game);
@@ -127,8 +135,20 @@ namespace TerrariaAPI
 #endif
 
             DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
-            ClientHooks.Chat += ClientHooks_Chat; 
+            ClientHooks.Chat += ClientHooks_Chat;
             GameHooks.LoadContent += GameHooks_LoadContent;
+        }
+
+        static bool Compatible(Type type)
+        {
+            var objs = type.GetCustomAttributes(typeof(APIVersionAttribute), false);
+            if (objs.Length != 1)
+                return false;
+
+            var apiver = (APIVersionAttribute)objs[0];
+            var ver = apiver.ApiVersion;
+
+            return ver.Major == ApiVersion.Major && ver.Minor == ApiVersion.Minor;
         }
 
         private static void GameHooks_LoadContent(ContentManager obj)
@@ -215,7 +235,14 @@ namespace TerrariaAPI
                         {
                             if (t.BaseType == typeof(TerrariaPlugin))
                             {
-                                Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game), false));
+                                if (Compatible(t))
+                                {
+                                    Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game)));
+                                }
+                                else
+                                {
+                                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + f.Name + " (" + t.GetType() + ")");
+                                }
                             }
                         }
                     }

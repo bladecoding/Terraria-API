@@ -16,6 +16,7 @@ namespace TeleportPlugin
     /// F3 = Teleport to cursor position
     /// F4 = Open teleport form
     /// </summary>
+    [APIVersion(1, 3)]
     public class TeleportPlugin : TerrariaPlugin
     {
         public override string Name
@@ -36,11 +37,6 @@ namespace TeleportPlugin
         public override string Description
         {
             get { return "Plugin that allows teleportation"; }
-        }
-
-        public override Version APIVersion
-        {
-            get { return new Version(1, 2); }
         }
 
         public const string SettingsFilename = "TeleportSettings.xml";

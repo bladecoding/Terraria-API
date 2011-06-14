@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System;
+using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
@@ -26,7 +27,7 @@ namespace TerrariaAPI.Hooks
         {
             if (Chat == null)
                 return false;
-            HandledEventArgs args = new HandledEventArgs();
+            var args = new HandledEventArgs();
             Chat(ref msg, args);
             return args.Handled;
         }
