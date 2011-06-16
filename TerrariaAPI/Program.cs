@@ -15,7 +15,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 3, 0, 1);
+        public static readonly Version ApiVersion = new Version(1, 3, 1, 0);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
@@ -29,8 +29,9 @@ namespace TerrariaAPI
         public static XNAConsole XNAConsole { get; private set; }
 #endif
 
-        private static List<PluginContainer> Plugins = new List<PluginContainer>();
+        public static List<PluginContainer> Plugins = new List<PluginContainer>();
         private static List<string> FailedPlugins = new List<string>();
+        static Dictionary<string, Assembly> LoadedAssemblies = new Dictionary<string, Assembly>();
         private static Assembly[] Assemblies;
         private static Main Game;
 
@@ -45,6 +46,8 @@ namespace TerrariaAPI
                 Directory.CreateDirectory(PluginsPath);
             }
 
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
             // Not loaded for some reason :s
             Assembly.Load("System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
             Assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -54,7 +57,14 @@ namespace TerrariaAPI
             {
                 try
                 {
-                    var asm = Assembly.Load(File.ReadAllBytes(f.FullName));
+                    string name = Path.GetFileNameWithoutExtension(f.Name);
+                    Assembly asm;
+                    if (!LoadedAssemblies.TryGetValue(name, out asm))
+                    {
+                        asm = Assembly.Load(File.ReadAllBytes(f.FullName));
+                        LoadedAssemblies.Add(name, asm);
+                    }
+
                     foreach (var t in asm.GetTypes())
                     {
                         if (t.BaseType == typeof(TerrariaPlugin))
@@ -137,6 +147,31 @@ namespace TerrariaAPI
             DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
             ClientHooks.Chat += ClientHooks_Chat;
             GameHooks.LoadContent += GameHooks_LoadContent;
+        }
+
+        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string name = args.Name.Split(',')[0];
+            string path = Path.Combine(PluginsPath, name + ".dll");
+            try
+            {
+                if (File.Exists(path))
+                {
+                    Assembly asm;
+                    if (!LoadedAssemblies.TryGetValue(name, out asm))
+                    {
+                        asm = Assembly.Load(File.ReadAllBytes(path));
+                        LoadedAssemblies.Add(name, asm);
+                    }
+                    return asm;
+                }
+            }
+            catch (Exception e)
+            {
+                File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + name + Environment.NewLine + e.Message +
+                        Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+            } 
+            return null;
         }
 
         static bool Compatible(Type type)
