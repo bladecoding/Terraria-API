@@ -125,7 +125,7 @@ namespace TerrariaPatcher
             catch (Exception ex)
             {
                 Log(ex.ToString());
-                Output("Exception: " + ex.ToString());
+                Output("Exception: " + ex);
             }
             finally
             {
