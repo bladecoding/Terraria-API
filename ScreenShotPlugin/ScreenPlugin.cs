@@ -77,6 +77,7 @@ namespace ScreenShotPlugin
         RawImage[] Backgrounds;
         TileFrame[] TreeTops;
         TileFrame[] TreeBranches;
+        RawImage[] Clouds;
 
         public int[] Widths;
         public int[] Heights;
@@ -84,29 +85,41 @@ namespace ScreenShotPlugin
         void GameHooks_LoadContent(ContentManager obj)
         {
             TileTypes = new int[Main.tileTexture.Length];
-            TileTypes[27] = 1;
+            TileTypes[27] = -1;
             TileTypes[34] = 1;
             TileTypes[35] = 1;
             TileTypes[36] = 1;
             TileTypes[50] = 1;
+            TileTypes[78] = 2;
 
             Tiles = new TileFrame[Main.tileTexture.Length];
             for (int i = 0; i < Main.tileTexture.Length; i++)
             {
+                if (TileTypes[i] == -1)
+                    continue;
+
                 if (TileTypes[i] == 0)
                 {
                     Tiles[i] = new TileFrame(Main.tileTexture[i], Widths[i], Heights[i]);
                 }
-                else
+                else if (TileTypes[i] == 1)
                 {
-                    if (i != 27)
-                        Tiles[i] = new OddTileFrame(Main.tileTexture[i], Widths[i], Heights[i]);
+                    Tiles[i] = new OddTileFrame(Main.tileTexture[i], Widths[i], Heights[i]);
                 }
+                else if (TileTypes[i] == 2)
+                {
+                    Tiles[i] = new TileFrame(Main.tileTexture[i], Widths[i], Heights[i]);
+                    Tiles[i].Border = 0;
+                }
+                Tiles[i].CreateFrames();
             }
 
             Walls = new WallFrame[Main.wallTexture.Length];
             for (int i = 1; i < Main.wallTexture.Length; i++)
+            {
                 Walls[i] = new WallFrame(Main.wallTexture[i], 32, 32);
+                Walls[i].CreateFrames();
+            }
 
             Backgrounds = new RawImage[Main.backgroundTexture.Length];
             for (int i = 1; i < Main.backgroundTexture.Length; i++)
@@ -114,13 +127,22 @@ namespace ScreenShotPlugin
 
             TreeTops = new TileFrame[Main.treeTopTexture.Length];
             for (int i = 0; i < Main.treeTopTexture.Length; i++)
-                TreeTops[i] = new TileFrame(Main.treeTopTexture[i], Main.treeTopTexture[i].Width / 3 - 2);
+            {
+                TreeTops[i] = new TileFrame(Main.treeTopTexture[i], Main.treeTopTexture[i].Width/3 - 2,
+                                            Main.treeTopTexture[i].Height - 2);
+                TreeTops[i].CreateFrames();
+            }
 
             TreeBranches = new TileFrame[Main.treeBranchTexture.Length];
             for (int i = 0; i < Main.treeBranchTexture.Length; i++)
+            {
                 TreeBranches[i] = new TileFrame(Main.treeBranchTexture[i], 40);
+                TreeBranches[i].CreateFrames();
+            }
 
-
+            Clouds = new RawImage[Main.cloudTexture.Length];
+            for (int i = 0; i < Main.cloudTexture.Length; i++)
+                Clouds[i] = TextureHelper.TextureToRaw(Main.cloudTexture[i]);
         }
 
         void GameHooks_Update(GameTime obj)
@@ -130,12 +152,15 @@ namespace ScreenShotPlugin
             if (input.IsKeyDown(Keys.F12, true))
             {
                 var pos = Main.player[Main.myPlayer].position;
-                Render((int)(pos.X / 16) - 125, (int)(pos.Y / 16) - 125, 250, 250);
+                int width = 1000;
+                int height = 200;
+                Render((int)(pos.X / 16) - (width / 2), (int)(pos.Y / 16) - (height / 2), width, height);
             }
         }
 
         int Sky = System.Drawing.Color.FromArgb(155, 209, 255).ToArgb();
-        void RenderBackgrounds(RawImage img, int startx, int starty, int width, int height)
+
+        void RenderSky(RawImage img, int startx, int starty, int width, int height)
         {
             for (int y = 0; y < img.Height; y++)
             {
@@ -144,8 +169,28 @@ namespace ScreenShotPlugin
                     img[x, y] = Sky;
                 }
             }
+        }
 
+        void RenderClouds(RawImage img, int startx, int starty, int width, int height)
+        {
+            var rand = new Random();
+            int surface = ((int)Main.worldSurface - starty);
+            if (surface > 0)
+            {
+                int space = surface * width;
+                int count = space / 1000;
+                for (int i = 0; i < count; i++)
+                {
+                    int x = rand.Next(0, width * 16);
+                    int y = rand.Next(0, surface * 16);
+                    int type = rand.Next(0, 4);
+                    CopyImgTo(img, x, y, Clouds[type]);
+                }
+            }
+        }
 
+        void RenderBackgrounds(RawImage img, int startx, int starty, int width, int height)
+        {
             int surface = (int)Main.worldSurface - (starty + 1);
             if (surface > 0 && surface < height)
             {
@@ -215,7 +260,7 @@ namespace ScreenShotPlugin
 
                     if (tile.active)
                     {
-                        if (tile.type == 27)
+                        if (TileTypes[tile.type] == -1)
                             continue;
                         var frame = Tiles[tile.type].GetFrame(tile.frameX, tile.frameY);
                         CopyImgTo(img, x * 16, y * 16, frame);
@@ -361,10 +406,13 @@ namespace ScreenShotPlugin
         {
             var img = new RawImage(width * 16, height * 16);
 
+            RenderSky(img, startx, starty, width, height);
+            RenderClouds(img, startx, starty, width, height);
             RenderBackgrounds(img, startx, starty, width, height);
             RenderWalls(img, startx, starty, width, height);
             RenderTreeTops(img, startx, starty, width, height);
             RenderTiles(img, startx, starty, width, height);
+
 
             var bmp = new Bitmap(img.Width, img.Height);
             var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
@@ -434,7 +482,9 @@ namespace ScreenShotPlugin
 
         public int FrameHeight { get; set; }
 
-        public virtual int Border { get { return 2; } }
+        public int Border { get; set; }
+
+        public Texture2D Texture { get; protected set; }
 
         public TileFrame(Texture2D text, int frame)
             : this(text, frame, frame)
@@ -443,27 +493,23 @@ namespace ScreenShotPlugin
 
         public TileFrame(Texture2D text, int framewidth, int frameheight)
         {
+            Texture = text;
+            Border = 2;
             FrameWidth = framewidth;
             FrameHeight = frameheight;
-            Init(text);
         }
 
-        void Init(Texture2D text)
+        public virtual void CreateFrames()
         {
-            GetFrames(text);
-        }
-
-        protected virtual void GetFrames(Texture2D text)
-        {
-            Columns = text.Width / (FrameWidth + Border);
-            Rows = text.Height / (FrameHeight + Border);
+            Columns = Texture.Width / (FrameWidth + Border);
+            Rows = Texture.Height / (FrameHeight + Border);
             Frames = new RawImage[Columns, Rows];
 
             for (int r = 0; r < Rows; r++)
             {
                 for (int c = 0; c < Columns; c++)
                 {
-                    Frames[c, r] = TextureHelper.TextureToRaw(text, new Rectangle(c * (FrameWidth + Border), r * (FrameHeight + Border), FrameWidth, FrameHeight));
+                    Frames[c, r] = TextureHelper.TextureToRaw(Texture, new Rectangle(c * (FrameWidth + Border), r * (FrameHeight + Border), FrameWidth, FrameHeight));
                 }
             }
         }
@@ -480,8 +526,8 @@ namespace ScreenShotPlugin
         public WallFrame(Texture2D text, int framewidth, int frameheight)
             : base(text, framewidth, frameheight)
         {
+            Border = 4;
         }
-        public override int Border { get { return 4; } }
     }
     public class OddTileFrame : TileFrame
     {
@@ -490,17 +536,17 @@ namespace ScreenShotPlugin
         {
         }
 
-        protected override void GetFrames(Texture2D text)
+        public override void CreateFrames()
         {
-            Columns = (int)Math.Ceiling(text.Width / (float)(FrameWidth + Border));
-            Rows = (int)Math.Ceiling(text.Height / (float)(FrameHeight + Border));
+            Columns = (int)Math.Ceiling(Texture.Width / (float)(FrameWidth + Border));
+            Rows = (int)Math.Ceiling(Texture.Height / (float)(FrameHeight + Border));
             Frames = new RawImage[Columns, Rows];
 
             for (int r = 0; r < Rows; r++)
             {
                 for (int c = 0; c < Columns; c++)
                 {
-                    Frames[c, r] = TextureHelper.TextureToRaw(text, new Rectangle(c * (FrameWidth + Border), r * (FrameHeight + Border), FrameWidth, FrameHeight));
+                    Frames[c, r] = TextureHelper.TextureToRaw(Texture, new Rectangle(c * (FrameWidth + Border), r * (FrameHeight + Border), FrameWidth, FrameHeight));
                 }
             }
         }
