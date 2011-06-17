@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TerrariaAPI.Hooks;
 
 namespace TerrariaAPI
 {
@@ -17,10 +18,11 @@ namespace TerrariaAPI
 
         private StringWriter stringWriter;
         private StringBuilder outputBuffer;
-        private int lineWidth, consoleXSize, consoleYSize;
+        private int lineWidth, consoleXOffset, consoleYOffset, consoleWidth, consoleHeight;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
         private Texture2D background;
+        private Texture2D border;
         private ConsoleState consoleState;
         private double stateStartTime;
         private InputManager input;
@@ -40,23 +42,28 @@ namespace TerrariaAPI
             outputBuffer = new StringBuilder(1024);
             stringWriter = new StringWriter(outputBuffer);
             Console.SetOut(stringWriter);
+
+            GameHooks.Update += GameHooks_Update;
+            DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
+            DrawHooks.EndDraw += DrawHooks_EndDraw;
         }
 
         public void LoadFont(SpriteFont font)
         {
             this.font = font;
-            consoleXSize = Game.Window.ClientBounds.Right - Game.Window.ClientBounds.Left - 20;
-            consoleYSize = font.LineSpacing * MaxLineCount + 20;
-            lineWidth = (int)((consoleXSize - 20) / font.MeasureString("a").X) - 2;
+            consoleWidth = Game.Window.ClientBounds.Right - Game.Window.ClientBounds.Left - 20;
+            consoleHeight = font.LineSpacing * MaxLineCount + 20;
+            lineWidth = (int)((consoleWidth - 20) / font.MeasureString("a").X) - 2;
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            background = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, new Color(0, 0, 0, 125));
+            background = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, new Color(0, 0, 0, 175));
+            border = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, Color.White);
         }
 
-        public override void Update(GameTime gameTime)
+        private void GameHooks_Update(GameTime gameTime)
         {
             input.Update();
 
@@ -81,14 +88,14 @@ namespace TerrariaAPI
                     }
                     break;
                 case ConsoleState.Open:
-                    if (input.IsKeyDown(Keys.OemTilde))
+                    if (input.IsKeyDown(Keys.OemTilde, true))
                     {
                         consoleState = ConsoleState.Closing;
                         stateStartTime = now;
                     }
                     break;
                 case ConsoleState.Closed:
-                    if (input.IsKeyDown(Keys.OemTilde))
+                    if (input.IsKeyDown(Keys.OemTilde, true))
                     {
                         consoleState = ConsoleState.Opening;
                         stateStartTime = now;
@@ -96,11 +103,60 @@ namespace TerrariaAPI
                     }
                     break;
             }
+
+            if (Visible)
+            {
+                consoleWidth = this.Game.Window.ClientBounds.Right - this.Game.Window.ClientBounds.Left - 20;
+                consoleHeight = this.font.LineSpacing * MaxLineCount + 20;
+
+                consoleXOffset = 10;
+                consoleYOffset = 0;
+
+                if (consoleState == ConsoleState.Opening)
+                {
+                    consoleYOffset = (int)MathHelper.Lerp(-consoleHeight, 0, (float)Math.Sqrt((float)(now - stateStartTime) / (float)AnimationTime));
+                }
+                else if (consoleState == ConsoleState.Closing)
+                {
+                    consoleYOffset = (int)MathHelper.Lerp(0, -consoleHeight, ((float)(now - stateStartTime) / (float)AnimationTime) * ((float)(now - stateStartTime) / (float)AnimationTime));
+                }
+
+                lineWidth = (int)((consoleWidth - 20) / font.MeasureString("a").X) - 2;
+            }
         }
 
-        public void Write(string str)
+        private void DrawHooks_EndDrawMenu(SpriteBatch spriteBatch)
         {
-            outputBuffer.Append(str);
+            Draw(spriteBatch);
+        }
+
+        private void DrawHooks_EndDraw(SpriteBatch spriteBatch)
+        {
+            Draw(spriteBatch);
+        }
+
+        private void Draw(SpriteBatch spriteBatch)
+        {
+            if (Visible)
+            {
+                spriteBatch.Draw(background, new Rectangle(consoleXOffset, consoleYOffset, consoleWidth, consoleHeight), Color.White); // Background
+                spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset, 1, consoleHeight), Color.White); // Left border
+                spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset + consoleHeight - 1, consoleWidth, 1), Color.White); // Bottom border
+                spriteBatch.Draw(border, new Rectangle(consoleXOffset + consoleWidth - 1, consoleYOffset, 1, consoleHeight), Color.White); // Right border
+
+                List<string> lines = ParseOutputBuffer(outputBuffer.ToString());
+
+                for (int i = 0; i < lines.Count && i <= MaxLineCount; i++)
+                {
+                    DrawingHelper.DrawTextWithShadow(spriteBatch, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleHeight - 10 - font.LineSpacing * i),
+                        font, Color.White, Color.Black);
+                }
+            }
+        }
+
+        public void Write(string text)
+        {
+            outputBuffer.Append(text);
         }
 
         public void WriteLine(string text)
@@ -111,42 +167,6 @@ namespace TerrariaAPI
         public void Clear()
         {
             outputBuffer.Clear();
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            double now = gameTime.TotalGameTime.TotalSeconds;
-
-            consoleXSize = this.Game.Window.ClientBounds.Right - this.Game.Window.ClientBounds.Left - 20;
-            consoleYSize = this.font.LineSpacing * MaxLineCount + 20;
-
-            int consoleXOffset = 10;
-            int consoleYOffset = 0;
-
-            if (consoleState == ConsoleState.Opening)
-            {
-                consoleYOffset = (int)MathHelper.Lerp(-consoleYSize, 0, (float)Math.Sqrt((float)(now - stateStartTime) / (float)AnimationTime));
-            }
-            else if (consoleState == ConsoleState.Closing)
-            {
-                consoleYOffset = (int)MathHelper.Lerp(0, -consoleYSize, ((float)(now - stateStartTime) / (float)AnimationTime) * ((float)(now - stateStartTime) / (float)AnimationTime));
-            }
-
-            this.lineWidth = (int)((consoleXSize - 20) / font.MeasureString("a").X) - 2;
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-
-            spriteBatch.Draw(background, new Rectangle(consoleXOffset, consoleYOffset, consoleXSize, consoleYSize), Color.White);
-
-            List<string> lines = ParseOutputBuffer(outputBuffer.ToString());
-
-            for (int i = 0; i < lines.Count && i <= MaxLineCount; i++)
-            {
-                DrawingHelper.DrawTextWithShadow(spriteBatch, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleYSize - 10 - font.LineSpacing * i),
-                    font, Color.White, Color.Black);
-            }
-
-            spriteBatch.End();
         }
 
         private List<string> ParseOutputBuffer(string line)

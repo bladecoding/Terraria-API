@@ -130,7 +130,6 @@ namespace TerrariaAPI
                 MessageBox.Show("There were errors while loading the mods, check the error logs for more details",
                     "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-
             //Sort the plugins so the ones with higher order get initialized first.
             Plugins.Sort((pc1, pc2) => pc1.Plugin.Order.CompareTo(pc2.Plugin.Order));
 
@@ -149,7 +148,7 @@ namespace TerrariaAPI
             GameHooks.LoadContent += GameHooks_LoadContent;
         }
 
-        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string name = args.Name.Split(',')[0];
             string path = Path.Combine(PluginsPath, name + ".dll");
@@ -170,11 +169,11 @@ namespace TerrariaAPI
             {
                 File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + name + Environment.NewLine + e.Message +
                         Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
-            } 
+            }
             return null;
         }
 
-        static bool Compatible(Type type)
+        private static bool Compatible(Type type)
         {
             var objs = type.GetCustomAttributes(typeof(APIVersionAttribute), false);
             if (objs.Length != 1)
@@ -190,7 +189,10 @@ namespace TerrariaAPI
         {
 #if CLIENT
             XNAConsole.LoadFont(Main.fontMouseText);
-            Console.WriteLine("Testing...");
+            for (int i = 0; i < 25; i++)
+            {
+                Console.WriteLine("Testing: " + (i + 1) + "/25");
+            }
 #endif
         }
 
@@ -239,7 +241,7 @@ namespace TerrariaAPI
             return r.CompiledAssembly;
         }
 
-        static void ClientHooks_Chat(ref string msg, HandledEventArgs e)
+        private static void ClientHooks_Chat(ref string msg, HandledEventArgs e)
         {
             if (Main.netMode != 1)
                 return;

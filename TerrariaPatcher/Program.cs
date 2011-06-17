@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 
 namespace TerrariaPatcher
 {
-    class Program
+    internal class Program
     {
         static readonly string TmpDir = "apitmp";
 #if CLIENT
@@ -19,7 +19,8 @@ namespace TerrariaPatcher
 #else
 #error Invalid Defines
 #endif
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             try
             {
@@ -136,30 +137,32 @@ namespace TerrariaPatcher
             Console.ReadLine();
         }
 
-        static void Output(string str)
+        private static void Output(string str)
         {
             if (str.Length < 1)
                 return;
             Console.WriteLine(str);
             Log(str);
         }
-        static void Output(string str, params object[] objs)
+
+        private static void Output(string str, params object[] objs)
         {
             Output(string.Format(str, objs));
         }
 
-        static void Log(string str)
+        private static void Log(string str)
         {
             if (str.Length < 1)
                 return;
             File.AppendAllText("patchlog.txt", str + "\n");
         }
-        static void Log(string str, params object[] objs)
+
+        private static void Log(string str, params object[] objs)
         {
             Log(string.Format(str, objs));
         }
 
-        static Dictionary<string, string> DownloadPatches()
+        private static Dictionary<string, string> DownloadPatches()
         {
             var ret = new Dictionary<string, string>();
 
@@ -176,12 +179,12 @@ namespace TerrariaPatcher
             return ret;
         }
 
-        static string DownloadPatch(string md5)
+        private static string DownloadPatch(string md5)
         {
             return new WebClient().DownloadString("http://dl.dropbox.com/u/29760911/" + AssemblyName + "Api/" + AssemblyName + "_" + md5 + ".diff");
         }
 
-        static string MD5(Stream stream)
+        private static string MD5(Stream stream)
         {
             using (var sha = MD5CryptoServiceProvider.Create())
             {
@@ -189,6 +192,5 @@ namespace TerrariaPatcher
                 return bytes.Aggregate("", (s, b) => s + b.ToString("X2"));
             }
         }
-
     }
 }

@@ -67,10 +67,12 @@ namespace TerrariaAPI
     public class APIVersionAttribute : Attribute
     {
         public Version ApiVersion;
+
         public APIVersionAttribute(Version version)
         {
             ApiVersion = version;
         }
+
         public APIVersionAttribute(int major, int minor)
             : this(new Version(major, minor))
         {

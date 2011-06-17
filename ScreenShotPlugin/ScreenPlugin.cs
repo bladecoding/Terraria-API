@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -70,7 +67,6 @@ namespace ScreenShotPlugin
             GameHooks.Update -= GameHooks_Update;
         }
 
-
         int[] TileTypes;
         TileFrame[] Tiles;
         WallFrame[] Walls;
@@ -82,7 +78,7 @@ namespace ScreenShotPlugin
         public int[] Widths;
         public int[] Heights;
 
-        void GameHooks_LoadContent(ContentManager obj)
+        private void GameHooks_LoadContent(ContentManager obj)
         {
             TileTypes = new int[Main.tileTexture.Length];
             TileTypes[27] = -1;
@@ -145,7 +141,7 @@ namespace ScreenShotPlugin
                 Clouds[i] = TextureHelper.TextureToRaw(Main.cloudTexture[i]);
         }
 
-        void GameHooks_Update(GameTime obj)
+        private void GameHooks_Update(GameTime obj)
         {
             input.Update();
 
@@ -160,7 +156,7 @@ namespace ScreenShotPlugin
 
         int Sky = System.Drawing.Color.FromArgb(155, 209, 255).ToArgb();
 
-        void RenderSky(RawImage img, int startx, int starty, int width, int height)
+        private void RenderSky(RawImage img, int startx, int starty, int width, int height)
         {
             for (int y = 0; y < img.Height; y++)
             {
@@ -171,7 +167,7 @@ namespace ScreenShotPlugin
             }
         }
 
-        void RenderClouds(RawImage img, int startx, int starty, int width, int height)
+        private void RenderClouds(RawImage img, int startx, int starty, int width, int height)
         {
             var rand = new Random();
             int surface = ((int)Main.worldSurface - starty);
@@ -189,7 +185,7 @@ namespace ScreenShotPlugin
             }
         }
 
-        void RenderBackgrounds(RawImage img, int startx, int starty, int width, int height)
+        private void RenderBackgrounds(RawImage img, int startx, int starty, int width, int height)
         {
             int surface = (int)Main.worldSurface - (starty + 1);
             if (surface > 0 && surface < height)
@@ -215,7 +211,7 @@ namespace ScreenShotPlugin
             int rock = (int)Main.rockLayer - starty;
         }
 
-        void RenderWalls(RawImage img, int startx, int starty, int width, int height)
+        private void RenderWalls(RawImage img, int startx, int starty, int width, int height)
         {
             for (int y = 0; y < height; y++)
             {
@@ -241,7 +237,7 @@ namespace ScreenShotPlugin
             }
         }
 
-        void RenderTiles(RawImage img, int startx, int starty, int width, int height)
+        private void RenderTiles(RawImage img, int startx, int starty, int width, int height)
         {
             for (int y = 0; y < height; y++)
             {
@@ -269,7 +265,7 @@ namespace ScreenShotPlugin
             }
         }
 
-        void RenderTreeTops(RawImage img, int startx, int starty, int width, int height)
+        private void RenderTreeTops(RawImage img, int startx, int starty, int width, int height)
         {
             for (int y = 0; y < height; y++)
             {
@@ -402,7 +398,7 @@ namespace ScreenShotPlugin
             }
         }
 
-        void Render(int startx, int starty, int width, int height)
+        private void Render(int startx, int starty, int width, int height)
         {
             var img = new RawImage(width * 16, height * 16);
 
@@ -412,7 +408,6 @@ namespace ScreenShotPlugin
             RenderWalls(img, startx, starty, width, height);
             RenderTreeTops(img, startx, starty, width, height);
             RenderTiles(img, startx, starty, width, height);
-
 
             var bmp = new Bitmap(img.Width, img.Height);
             var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
@@ -426,6 +421,7 @@ namespace ScreenShotPlugin
             bmp.UnlockBits(data);
             bmp.Save("test.png");
         }
+
         public static void CopyImgTo(RawImage dest, int destx, int desty, RawImage src)
         {
             if (src == null)
@@ -450,6 +446,7 @@ namespace ScreenShotPlugin
             AbgrToArgb(ret);
             return ret;
         }
+
         public static RawImage TextureToRaw(Texture2D text, Rectangle rect)
         {
             var ret = new RawImage(rect.Width, rect.Height);
@@ -457,7 +454,8 @@ namespace ScreenShotPlugin
             AbgrToArgb(ret);
             return ret;
         }
-        static void AbgrToArgb(RawImage ints)
+
+        private static void AbgrToArgb(RawImage ints)
         {
             for (int y = 0; y < ints.Height; y++)
             {
@@ -521,6 +519,7 @@ namespace ScreenShotPlugin
             return Frames[x, y];
         }
     }
+
     public class WallFrame : TileFrame
     {
         public WallFrame(Texture2D text, int framewidth, int frameheight)
@@ -529,6 +528,7 @@ namespace ScreenShotPlugin
             Border = 4;
         }
     }
+
     public class OddTileFrame : TileFrame
     {
         public OddTileFrame(Texture2D text, int framewidth, int frameheight)
@@ -557,12 +557,14 @@ namespace ScreenShotPlugin
         public int[] Data { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
+
         public RawImage(int[] data, int width, int height)
         {
             Data = data;
             Width = width;
             Height = height;
         }
+
         public RawImage(int width, int height)
             : this(new int[width * height], width, height)
         {

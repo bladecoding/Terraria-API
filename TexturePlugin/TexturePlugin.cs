@@ -61,6 +61,7 @@ namespace TexturePlugin
             if (Game.IsActive)
             {
                 input.Update();
+
                 if (input.IsKeyDown(Keys.F8, true))
                 {
                     if (textureform == null || textureform.IsDisposed)
