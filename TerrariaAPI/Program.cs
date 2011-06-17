@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using Microsoft.CSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using TerrariaAPI.Hooks;
 
@@ -58,7 +57,8 @@ namespace TerrariaAPI
             Assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             bool error = false;
-            foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.dll"))
+
+            foreach (FileInfo f in new DirectoryInfo(PluginsPath).GetFiles("*.dll"))
             {
                 try
                 {
@@ -80,7 +80,8 @@ namespace TerrariaAPI
                             }
                             else
                             {
-                                File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + f.Name + " (" + t.GetType() + ")");
+                                AppendLog("Outdated plugin: {0} ({1})", f.Name, t.GetType());
+
                                 error = true;
                             }
                         }
@@ -90,21 +91,23 @@ namespace TerrariaAPI
                 {
                     if (e is TargetInvocationException)
                         e = ((TargetInvocationException)e).InnerException;
-                    File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine + e.Message +
-                        Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+
+                    AppendLog(f.Name, e);
+
                     FailedPlugins.Add(f.Name);
                     error = true;
                 }
             }
 
-            foreach (var f in new DirectoryInfo(PluginsPath).GetFiles("*.cs"))
+            foreach (FileInfo f in new DirectoryInfo(PluginsPath).GetFiles("*.cs"))
             {
                 try
                 {
-                    var asm = Compile(f.Name, File.ReadAllText(f.FullName));
+                    Assembly asm = Compile(f.Name, File.ReadAllText(f.FullName));
+
                     if (asm != null)
                     {
-                        foreach (var t in asm.GetTypes())
+                        foreach (Type t in asm.GetTypes())
                         {
                             if (t.BaseType == typeof(TerrariaPlugin))
                             {
@@ -114,7 +117,8 @@ namespace TerrariaAPI
                                 }
                                 else
                                 {
-                                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + f.Name + " (" + t.GetType() + ")");
+                                    AppendLog("Outdated plugin: {0} ({1})", f.Name, t.GetType());
+
                                     error = true;
                                 }
                             }
@@ -125,35 +129,61 @@ namespace TerrariaAPI
                 {
                     if (e is TargetInvocationException)
                         e = ((TargetInvocationException)e).InnerException;
-                    File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + f.Name + Environment.NewLine +
-                        e.Message + Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace + Environment.NewLine + Environment.NewLine);
+
+                    AppendLog(f.Name, e);
+
                     FailedPlugins.Add(f.Name);
                     error = true;
                 }
             }
+
             if (error)
-                MessageBox.Show("There were errors while loading the mods, check the error logs for more details",
-                    "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            //Sort the plugins so the ones with higher order get initialized first.
-            Plugins.Sort((pc1, pc2) => pc1.Plugin.Order.CompareTo(pc2.Plugin.Order));
-
-            foreach (PluginContainer p in Plugins)
             {
-                p.Initialize();
-                string str = string.Format("{0} v{1} ({2}) initiated.", p.Plugin.Name, p.Plugin.Version, p.Plugin.Author);
-                Console.WriteLine(str);
+                MessageBox.Show("There were errors while loading the mods, check console or error logs for more details.",
+                    "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
+            // Sort the plugins so the ones with higher order get initialized first.
+            Plugins.Sort((pc1, pc2) => pc1.Plugin.Order.CompareTo(pc2.Plugin.Order));
+
+            if (Plugins.Count > 0)
+            {
+                foreach (PluginContainer p in Plugins)
+                {
+                    p.Initialize();
+
+                    Console.WriteLine("{0} v{1} ({2}) initiated.", p.Plugin.Name, p.Plugin.Version, p.Plugin.Author);
+                }
+
+                Console.WriteLine();
+            }
+
+            if (FailedPlugins.Count > 0)
+            {
+                Console.WriteLine("Plugins failed to load: " + string.Join(", ", FailedPlugins));
+            }
+
             ClientHooks.Chat += ClientHooks_Chat;
             GameHooks.LoadContent += GameHooks_LoadContent;
+        }
+
+        private static void AppendLog(string format, params object[] args)
+        {
+            string text = string.Format(format, args);
+            Console.WriteLine(text);
+            File.AppendAllText("ErrorLog.txt", text + Environment.NewLine);
+        }
+
+        private static void AppendLog(string name, Exception e)
+        {
+            AppendLog("Exception while trying to load: {0}\r\n{1}\r\nStack trace:\r\n{2}\r\n", name, e.Message, e.StackTrace);
         }
 
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string name = args.Name.Split(',')[0];
             string path = Path.Combine(PluginsPath, name + ".dll");
+
             try
             {
                 if (File.Exists(path))
@@ -169,9 +199,9 @@ namespace TerrariaAPI
             }
             catch (Exception e)
             {
-                File.AppendAllText("ErrorLog.txt", "Exception while trying to load: " + name + Environment.NewLine + e.Message +
-                        Environment.NewLine + "Stack trace: " + Environment.NewLine + e.StackTrace);
+                AppendLog(name, e);
             }
+
             return null;
         }
 
@@ -202,7 +232,6 @@ namespace TerrariaAPI
             foreach (var p in Plugins)
                 p.Dispose();
 
-            DrawHooks.EndDrawMenu -= DrawHooks_EndDrawMenu;
             ClientHooks.Chat -= ClientHooks_Chat;
             GameHooks.LoadContent -= GameHooks_LoadContent;
         }
@@ -225,12 +254,9 @@ namespace TerrariaAPI
             {
                 for (int i = 0; i < r.Errors.Count; i++)
                 {
-                    File.AppendAllText("ErrorLog.txt",
-                                       "Error compiling: " + name + Environment.NewLine + "Line number " +
-                                       r.Errors[i].Line +
-                                       ", Error Number: " + r.Errors[i].ErrorNumber +
-                                       ", '" + r.Errors[i].ErrorText + ";" +
-                                       Environment.NewLine + Environment.NewLine);
+                    AppendLog("Error compiling: {0}\r\nLine number: {1}, Error number: {2}, Error text: {3}\r\n",
+                        name, r.Errors[i].Line, r.Errors[i].ErrorNumber, r.Errors[i].ErrorText);
+
                     if (addfail)
                         FailedPlugins.Add(name);
                 }
@@ -266,7 +292,7 @@ namespace TerrariaAPI
                     var asm = Compile(f.Name, File.ReadAllText(f.FullName));
                     if (asm != null)
                     {
-                        foreach (var t in asm.GetTypes())
+                        foreach (Type t in asm.GetTypes())
                         {
                             if (t.BaseType == typeof(TerrariaPlugin))
                             {
@@ -276,7 +302,7 @@ namespace TerrariaAPI
                                 }
                                 else
                                 {
-                                    File.AppendAllText("ErrorLog.txt", "Outdated plugin: " + f.Name + " (" + t.GetType() + ")");
+                                    AppendLog("Outdated plugin: {0} ({1})", f.Name, t.GetType());
                                 }
                             }
                         }
@@ -286,11 +312,9 @@ namespace TerrariaAPI
                 {
                     if (ex is TargetInvocationException)
                         ex = ((TargetInvocationException)ex).InnerException;
-                    File.AppendAllText("ErrorLog.txt",
-                                       "Exception while trying to load: " + f.Name + Environment.NewLine +
-                                       ex.Message + Environment.NewLine + "Stack trace: " +
-                                       Environment.NewLine + ex.StackTrace +
-                                       Environment.NewLine + Environment.NewLine);
+
+                    AppendLog(f.Name, e);
+
                     FailedPlugins.Add(f.Name);
                 }
             }
@@ -299,32 +323,6 @@ namespace TerrariaAPI
             {
                 if (!Plugins[i].Dll)
                     Plugins[i].Initialize();
-            }
-        }
-
-        private static void DrawHooks_EndDrawMenu(SpriteBatch obj)
-        {
-            DrawingHelper.DrawTextWithShadow(obj, string.Format("TerrariaAPI v{0}", ApiVersion), new Vector2(10, 6), Main.fontMouseText, Color.White, Color.Black);
-
-            int pos = 1;
-
-            foreach (var p in Plugins)
-            {
-                if (pos > 34)
-                    break;
-
-                string str = string.Format("{0} v{1} ({2})", p.Plugin.Name, p.Plugin.Version, p.Plugin.Author);
-                DrawingHelper.DrawTextWithShadow(obj, str, new Vector2(10, 6 + (24 * pos)), Main.fontMouseText, p.Initialized ? Color.White : Color.Yellow, Color.Black);
-                pos++;
-            }
-
-            foreach (var f in FailedPlugins)
-            {
-                if (pos > 34)
-                    break;
-
-                DrawingHelper.DrawTextWithShadow(obj, f, new Vector2(10, 6 + (24 * pos)), Main.fontMouseText, Color.Red, Color.Black);
-                pos++;
             }
         }
     }

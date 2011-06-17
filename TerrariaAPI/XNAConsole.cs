@@ -42,6 +42,13 @@ namespace TerrariaAPI
             Console.SetOut(stringWriter);
         }
 
+        protected override void LoadContent()
+        {
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            background = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, new Color(0, 0, 0, 175));
+            border = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, Color.White);
+        }
+
         public void LoadFont(SpriteFont font)
         {
             spriteFont = font;
@@ -50,11 +57,29 @@ namespace TerrariaAPI
             lineWidth = (int)((consoleWidth - 20) / font.MeasureString("a").X) - 2;
         }
 
-        protected override void LoadContent()
+        public void Write(string text)
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            background = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, new Color(0, 0, 0, 175));
-            border = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, Color.White);
+            outputBuffer.Append(text);
+        }
+
+        public void Write(string format, params object[] args)
+        {
+            outputBuffer.AppendFormat(format, args);
+        }
+
+        public void WriteLine(string text)
+        {
+            outputBuffer.AppendLine(text);
+        }
+
+        public void WriteLine(string format, params object[] args)
+        {
+            outputBuffer.AppendFormat(format + Environment.NewLine, args);
+        }
+
+        public void Clear()
+        {
+            outputBuffer.Clear();
         }
 
         public override void Update(GameTime gameTime)
@@ -125,6 +150,8 @@ namespace TerrariaAPI
 
         private void DrawConsole()
         {
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+
             spriteBatch.Draw(background, new Rectangle(consoleXOffset, consoleYOffset, consoleWidth, consoleHeight), Color.White); // Background
             spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset, 1, consoleHeight), Color.White); // Border: Left
             spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset + consoleHeight - 1, consoleWidth, 1), Color.White); // Border: Bottom
@@ -137,21 +164,8 @@ namespace TerrariaAPI
                 DrawingHelper.DrawTextWithShadow(spriteBatch, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleHeight - 10 - spriteFont.LineSpacing * i),
                     spriteFont, Color.White, Color.Black);
             }
-        }
 
-        public void Write(string text)
-        {
-            outputBuffer.Append(text);
-        }
-
-        public void WriteLine(string text)
-        {
-            outputBuffer.AppendLine(text);
-        }
-
-        public void Clear()
-        {
-            outputBuffer.Clear();
+            spriteBatch.End();
         }
 
         private List<string> ParseOutputBuffer(string line)
