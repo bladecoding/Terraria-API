@@ -39,6 +39,11 @@ namespace TerrariaAPI
         {
             Game = main;
 
+#if CLIENT
+            XNAConsole = new XNAConsole(Game);
+            Game.Components.Add(XNAConsole);
+#endif
+
             Application.EnableVisualStyles();
 
             if (!Directory.Exists(PluginsPath))
@@ -133,15 +138,12 @@ namespace TerrariaAPI
             //Sort the plugins so the ones with higher order get initialized first.
             Plugins.Sort((pc1, pc2) => pc1.Plugin.Order.CompareTo(pc2.Plugin.Order));
 
-            foreach (var p in Plugins)
+            foreach (PluginContainer p in Plugins)
             {
                 p.Initialize();
+                string str = string.Format("{0} v{1} ({2}) initiated.", p.Plugin.Name, p.Plugin.Version, p.Plugin.Author);
+                Console.WriteLine(str);
             }
-
-#if CLIENT
-            XNAConsole = new XNAConsole(Game);
-            Game.Components.Add(XNAConsole);
-#endif
 
             DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
             ClientHooks.Chat += ClientHooks_Chat;
@@ -189,10 +191,6 @@ namespace TerrariaAPI
         {
 #if CLIENT
             XNAConsole.LoadFont(Main.fontMouseText);
-            for (int i = 0; i < 25; i++)
-            {
-                Console.WriteLine("Testing: " + (i + 1) + "/25");
-            }
 #endif
         }
 

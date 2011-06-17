@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TerrariaAPI.Hooks;
 
 namespace TerrariaAPI
 {
@@ -20,9 +19,8 @@ namespace TerrariaAPI
         private StringBuilder outputBuffer;
         private int lineWidth, consoleXOffset, consoleYOffset, consoleWidth, consoleHeight;
         private SpriteBatch spriteBatch;
-        private SpriteFont font;
-        private Texture2D background;
-        private Texture2D border;
+        private SpriteFont spriteFont;
+        private Texture2D background, border;
         private ConsoleState consoleState;
         private double stateStartTime;
         private InputManager input;
@@ -42,15 +40,11 @@ namespace TerrariaAPI
             outputBuffer = new StringBuilder(1024);
             stringWriter = new StringWriter(outputBuffer);
             Console.SetOut(stringWriter);
-
-            GameHooks.Update += GameHooks_Update;
-            DrawHooks.EndDrawMenu += DrawHooks_EndDrawMenu;
-            DrawHooks.EndDraw += DrawHooks_EndDraw;
         }
 
         public void LoadFont(SpriteFont font)
         {
-            this.font = font;
+            spriteFont = font;
             consoleWidth = Game.Window.ClientBounds.Right - Game.Window.ClientBounds.Left - 20;
             consoleHeight = font.LineSpacing * MaxLineCount + 20;
             lineWidth = (int)((consoleWidth - 20) / font.MeasureString("a").X) - 2;
@@ -63,7 +57,7 @@ namespace TerrariaAPI
             border = DrawingHelper.CreateOnePixelTexture(GraphicsDevice, Color.White);
         }
 
-        private void GameHooks_Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             input.Update();
 
@@ -103,54 +97,45 @@ namespace TerrariaAPI
                     }
                     break;
             }
+        }
 
-            if (Visible)
+        public override void Draw(GameTime gameTime)
+        {
+            double now = gameTime.TotalGameTime.TotalSeconds;
+
+            consoleWidth = Game.Window.ClientBounds.Right - Game.Window.ClientBounds.Left - 20;
+            consoleHeight = spriteFont.LineSpacing * MaxLineCount + 20;
+
+            consoleXOffset = 10;
+            consoleYOffset = 0;
+
+            if (consoleState == ConsoleState.Opening)
             {
-                consoleWidth = this.Game.Window.ClientBounds.Right - this.Game.Window.ClientBounds.Left - 20;
-                consoleHeight = this.font.LineSpacing * MaxLineCount + 20;
-
-                consoleXOffset = 10;
-                consoleYOffset = 0;
-
-                if (consoleState == ConsoleState.Opening)
-                {
-                    consoleYOffset = (int)MathHelper.Lerp(-consoleHeight, 0, (float)Math.Sqrt((float)(now - stateStartTime) / (float)AnimationTime));
-                }
-                else if (consoleState == ConsoleState.Closing)
-                {
-                    consoleYOffset = (int)MathHelper.Lerp(0, -consoleHeight, ((float)(now - stateStartTime) / (float)AnimationTime) * ((float)(now - stateStartTime) / (float)AnimationTime));
-                }
-
-                lineWidth = (int)((consoleWidth - 20) / font.MeasureString("a").X) - 2;
+                consoleYOffset = (int)MathHelper.Lerp(-consoleHeight, 0, (float)Math.Sqrt((float)(now - stateStartTime) / (float)AnimationTime));
             }
-        }
-
-        private void DrawHooks_EndDrawMenu(SpriteBatch spriteBatch)
-        {
-            Draw(spriteBatch);
-        }
-
-        private void DrawHooks_EndDraw(SpriteBatch spriteBatch)
-        {
-            Draw(spriteBatch);
-        }
-
-        private void Draw(SpriteBatch spriteBatch)
-        {
-            if (Visible)
+            else if (consoleState == ConsoleState.Closing)
             {
-                spriteBatch.Draw(background, new Rectangle(consoleXOffset, consoleYOffset, consoleWidth, consoleHeight), Color.White); // Background
-                spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset, 1, consoleHeight), Color.White); // Left border
-                spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset + consoleHeight - 1, consoleWidth, 1), Color.White); // Bottom border
-                spriteBatch.Draw(border, new Rectangle(consoleXOffset + consoleWidth - 1, consoleYOffset, 1, consoleHeight), Color.White); // Right border
+                consoleYOffset = (int)MathHelper.Lerp(0, -consoleHeight, ((float)(now - stateStartTime) / (float)AnimationTime) * ((float)(now - stateStartTime) / (float)AnimationTime));
+            }
 
-                List<string> lines = ParseOutputBuffer(outputBuffer.ToString());
+            lineWidth = (int)((consoleWidth - 20) / spriteFont.MeasureString("a").X) - 2;
 
-                for (int i = 0; i < lines.Count && i <= MaxLineCount; i++)
-                {
-                    DrawingHelper.DrawTextWithShadow(spriteBatch, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleHeight - 10 - font.LineSpacing * i),
-                        font, Color.White, Color.Black);
-                }
+            DrawConsole();
+        }
+
+        private void DrawConsole()
+        {
+            spriteBatch.Draw(background, new Rectangle(consoleXOffset, consoleYOffset, consoleWidth, consoleHeight), Color.White); // Background
+            spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset, 1, consoleHeight), Color.White); // Border: Left
+            spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset + consoleHeight - 1, consoleWidth, 1), Color.White); // Border: Bottom
+            spriteBatch.Draw(border, new Rectangle(consoleXOffset + consoleWidth - 1, consoleYOffset, 1, consoleHeight), Color.White); // Border: Right
+
+            List<string> lines = ParseOutputBuffer(outputBuffer.ToString());
+
+            for (int i = 0; i < lines.Count && i <= MaxLineCount; i++)
+            {
+                DrawingHelper.DrawTextWithShadow(spriteBatch, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleHeight - 10 - spriteFont.LineSpacing * i),
+                    spriteFont, Color.White, Color.Black);
             }
         }
 
