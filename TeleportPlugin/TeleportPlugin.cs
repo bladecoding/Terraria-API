@@ -16,7 +16,7 @@ namespace TeleportPlugin
     /// F3 = Teleport to cursor position
     /// F4 = Open teleport form
     /// </summary>
-    [APIVersion(1, 3)]
+    [APIVersion(1, 4)]
     public class TeleportPlugin : TerrariaPlugin
     {
         public override string Name

@@ -4,7 +4,7 @@ namespace TerrariaAPI.Hooks
 {
     public class SendDataEventArgs : HandledEventArgs
     {
-        public int msgType { get; set; }
+        public PacketTypes MsgID { get; set; }
 
         public int remoteClient { get; set; }
 
@@ -23,7 +23,7 @@ namespace TerrariaAPI.Hooks
 
     public class GetDataEventArgs : HandledEventArgs
     {
-        public byte MsgID { get; set; }
+        public PacketTypes MsgID { get; set; }
 
         public messageBuffer Msg { get; set; }
 
@@ -44,7 +44,7 @@ namespace TerrariaAPI.Hooks
 
             var args = new SendDataEventArgs()
             {
-                msgType = msgType,
+                MsgID = (PacketTypes)msgType,
                 remoteClient = remoteClient,
                 ignoreClient = ignoreClient,
                 text = text,
@@ -56,7 +56,7 @@ namespace TerrariaAPI.Hooks
 
             SendData(args);
 
-            msgType = args.msgType;
+            msgType = (int)args.MsgID;
             remoteClient = args.remoteClient;
             ignoreClient = args.ignoreClient;
             text = args.text;
@@ -78,7 +78,7 @@ namespace TerrariaAPI.Hooks
 
             var args = new GetDataEventArgs()
             {
-                MsgID = msgid,
+                MsgID = (PacketTypes)msgid,
                 Msg = msg,
                 Index = idx,
                 Length = length
@@ -86,7 +86,7 @@ namespace TerrariaAPI.Hooks
 
             GetData(args);
 
-            msgid = args.MsgID;
+            msgid = (byte)args.MsgID;
             idx = args.Index;
             length = args.Length;
 
