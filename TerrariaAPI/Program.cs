@@ -15,7 +15,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 3, 1, 0);
+        public static readonly Version ApiVersion = new Version(1, 4, 0, 0);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";

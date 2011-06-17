@@ -12,7 +12,7 @@ namespace ItemPlugin
     /// F9 = Show item editor form
     /// Ctrl + B = Open bank
     /// </summary>
-    [APIVersion(1, 3)]
+    [APIVersion(1, 4)]
     public class ItemPlugin : TerrariaPlugin
     {
         public override string Name

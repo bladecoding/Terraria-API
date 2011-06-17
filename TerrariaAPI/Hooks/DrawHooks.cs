@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
@@ -20,9 +21,9 @@ namespace TerrariaAPI.Hooks
         /// <summary>
         /// Called right after SpriteBatch.End
         /// </summary>
-        public static event Action<SpriteBatch> DrawEnd;
+        public static event Action<GameTime> DrawEnd;
 
-        public static void OnDrawEnd(SpriteBatch batch)
+        public static void OnDrawEnd(GameTime batch)
         {
             if (DrawEnd != null)
                 DrawEnd(batch);

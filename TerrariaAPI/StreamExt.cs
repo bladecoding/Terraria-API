@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Packable.StreamBinary
+namespace StreamBinary
 {
     public static class StreamExt
     {
@@ -226,7 +226,7 @@ namespace Packable.StreamBinary
     }
 }
 
-namespace Packable.StreamBinary.Generic
+namespace StreamBinary.Generic
 {
     public static class StreamGenericExt
     {
