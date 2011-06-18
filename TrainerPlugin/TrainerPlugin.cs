@@ -10,7 +10,7 @@ namespace TrainerPlugin
     /// <summary>
     /// F7 = Show trainer form
     /// </summary>
-    [APIVersion(1, 4)]
+    [APIVersion(1, 5)]
     public class TrainerPlugin : TerrariaPlugin
     {
         public override string Name

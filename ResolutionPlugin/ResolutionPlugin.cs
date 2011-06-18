@@ -12,7 +12,7 @@ namespace ResolutionPlugin
     /// <summary>
     /// Commands: fs, fullscreen, auto, w, width, x, h, height, y, skip, skipintro, fps
     /// </summary>
-    [APIVersion(1, 4)]
+    [APIVersion(1, 5)]
     public class ResolutionPlugin : TerrariaPlugin
     {
         public override string Name
@@ -27,7 +27,7 @@ namespace ResolutionPlugin
 
         public override string Author
         {
-            get { return "Jaex / High"; }
+            get { return "High / Jaex"; }
         }
 
         public override string Description

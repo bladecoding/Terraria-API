@@ -15,7 +15,7 @@ namespace MinimapPlugin
     /// F5 = Show/Hide minimap
     /// F6 = Show minimap settings form
     /// </summary>
-    [APIVersion(1, 4)]
+    [APIVersion(1, 5)]
     public class MinimapPlugin : TerrariaPlugin
     {
         public override string Name

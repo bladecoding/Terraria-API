@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.CSharp;
@@ -15,7 +16,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 4, 0, 0);
+        public static readonly Version ApiVersion = new Version(1, 5, 0, 0);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
@@ -144,10 +145,10 @@ namespace TerrariaAPI
                     "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            // Sort the plugins so the ones with higher order get initialized first.
-            Plugins.Sort((pc1, pc2) => pc1.Plugin.Order.CompareTo(pc2.Plugin.Order));
+            // Sort the plugins so the ones with higher order get initialized first
+            var sortedPlugins = Plugins.OrderByDescending(x => x.Plugin.Order).ThenBy(x => x.Plugin.Name);
 
-            foreach (PluginContainer p in Plugins)
+            foreach (PluginContainer p in sortedPlugins)
             {
                 p.Initialize();
 
