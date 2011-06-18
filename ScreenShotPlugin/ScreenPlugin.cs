@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using Microsoft.Xna.Framework;
@@ -53,18 +54,16 @@ namespace ScreenShotPlugin
             Heights[0xf] = Heights[0xe] = Heights[0x10] = Heights[0x11] = Heights[0x12] = Heights[0x14] = Heights[0x15] = Heights[0x1a] = Heights[0x1b] = Heights[0x20] = Heights[0x45] = Heights[0x48] = Heights[0x4d] = 0x12;
         }
 
-        InputManager input = new InputManager();
-
         public override void Initialize()
         {
             GameHooks.LoadContent += GameHooks_LoadContent;
-            GameHooks.Update += GameHooks_Update;
+            ClientHooks.Chat += ClientHooks_Chat;
         }
 
         public override void DeInitialize()
         {
             GameHooks.LoadContent -= GameHooks_LoadContent;
-            GameHooks.Update -= GameHooks_Update;
+            ClientHooks.Chat -= ClientHooks_Chat;
         }
 
         int[] TileTypes;
@@ -77,6 +76,32 @@ namespace ScreenShotPlugin
 
         public int[] Widths;
         public int[] Heights;
+
+
+        void ClientHooks_Chat(ref string msg, HandledEventArgs e)
+        {
+            if (!msg.StartsWith("/render"))
+                return;
+
+            var ps = msg.Split(' ');
+            if (ps.Length != 5)
+                return;
+
+            int[] pis = new int[4];
+            for (int i = 0; i < pis.Length; i++)
+            {
+                if (!int.TryParse(ps[i + 1], out pis[i]))
+                    return;
+            }
+
+            var pos = Main.player[Main.myPlayer].position;
+            int xoff = pis[0];
+            int yoff = pis[1];
+            int width = pis[2];
+            int height = pis[3];
+            Render((int)(pos.X / 16) - xoff, (int)(pos.Y / 16) - yoff, width, height);
+
+        }
 
         private void GameHooks_LoadContent(ContentManager obj)
         {
@@ -124,7 +149,7 @@ namespace ScreenShotPlugin
             TreeTops = new TileFrame[Main.treeTopTexture.Length];
             for (int i = 0; i < Main.treeTopTexture.Length; i++)
             {
-                TreeTops[i] = new TileFrame(Main.treeTopTexture[i], Main.treeTopTexture[i].Width/3 - 2,
+                TreeTops[i] = new TileFrame(Main.treeTopTexture[i], Main.treeTopTexture[i].Width / 3 - 2,
                                             Main.treeTopTexture[i].Height - 2);
                 TreeTops[i].CreateFrames();
             }
@@ -139,19 +164,6 @@ namespace ScreenShotPlugin
             Clouds = new RawImage[Main.cloudTexture.Length];
             for (int i = 0; i < Main.cloudTexture.Length; i++)
                 Clouds[i] = TextureHelper.TextureToRaw(Main.cloudTexture[i]);
-        }
-
-        private void GameHooks_Update(GameTime obj)
-        {
-            input.Update();
-
-            if (input.IsKeyDown(Keys.F12, true))
-            {
-                var pos = Main.player[Main.myPlayer].position;
-                int width = 1000;
-                int height = 200;
-                Render((int)(pos.X / 16) - (width / 2), (int)(pos.Y / 16) - (height / 2), width, height);
-            }
         }
 
         int Sky = System.Drawing.Color.FromArgb(155, 209, 255).ToArgb();
