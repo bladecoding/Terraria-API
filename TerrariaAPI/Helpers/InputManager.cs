@@ -4,17 +4,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TerrariaAPI
 {
+    public enum MouseButtons { Left, Right, Middle, X1, X2 }
+
     public class InputManager
     {
-        public delegate void MouseClickDelegate(Vector2 clickPosition, bool wasSingleClick);
-
-        public event MouseClickDelegate OnMouse1Press;
-        public event MouseClickDelegate OnMouse1Release;
-
-        private KeyboardState currentKeyboardState;
-        private KeyboardState previousKeyboardState;
-        private MouseState currentMouseState;
-        private MouseState previousMouseState;
+        private KeyboardState currentKeyboardState, previousKeyboardState;
+        private MouseState currentMouseState, previousMouseState;
 
         public bool IsAltDown
         {
@@ -46,36 +41,16 @@ namespace TerrariaAPI
 
             currentKeyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
-
-            if (OnMouse1Press != null && currentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                OnMouse1Press(GetMousePos(), previousMouseState.LeftButton == ButtonState.Released);
-            }
-
-            if (OnMouse1Release != null && currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed)
-            {
-                OnMouse1Release(GetMousePos(), true);
-            }
         }
 
         public bool IsKeyDown(Keys key, bool once = false)
         {
-            if (once)
-            {
-                return currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key);
-            }
-
-            return currentKeyboardState.IsKeyDown(key);
+            return currentKeyboardState.IsKeyDown(key) && (!once || previousKeyboardState.IsKeyUp(key));
         }
 
         public bool IsKeyUp(Keys key, bool once = false)
         {
-            if (once)
-            {
-                return currentKeyboardState.IsKeyUp(key) && previousKeyboardState.IsKeyDown(key);
-            }
-
-            return currentKeyboardState.IsKeyUp(key);
+            return currentKeyboardState.IsKeyUp(key) && (!once || previousKeyboardState.IsKeyDown(key));
         }
 
         public Keys[] GetPressedKeys(bool once = false)
@@ -98,9 +73,48 @@ namespace TerrariaAPI
             return currentKeyboardState.GetPressedKeys();
         }
 
-        public Vector2 GetMousePos()
+        public bool IsMouseDown(MouseButtons buttons, bool once = false)
+        {
+            ButtonState currentButtonState = GetButtonState(currentMouseState, buttons);
+            ButtonState previousButtonState = GetButtonState(previousMouseState, buttons);
+
+            return currentButtonState == ButtonState.Pressed && (!once || previousButtonState == ButtonState.Released);
+        }
+
+        public bool IsMouseUp(MouseButtons buttons, bool once = false)
+        {
+            ButtonState currentButtonState = GetButtonState(currentMouseState, buttons);
+            ButtonState previousButtonState = GetButtonState(previousMouseState, buttons);
+
+            return currentButtonState == ButtonState.Released && (!once || previousButtonState == ButtonState.Pressed);
+        }
+
+        public Vector2 GetMousePosition()
         {
             return new Vector2(currentMouseState.X, currentMouseState.Y);
+        }
+
+        public int GetMouseScrollWheelDelta()
+        {
+            return currentMouseState.ScrollWheelValue - previousMouseState.ScrollWheelValue;
+        }
+
+        private ButtonState GetButtonState(MouseState mouseState, MouseButtons buttons)
+        {
+            switch (buttons)
+            {
+                default:
+                case MouseButtons.Left:
+                    return mouseState.LeftButton;
+                case MouseButtons.Right:
+                    return mouseState.RightButton;
+                case MouseButtons.Middle:
+                    return mouseState.MiddleButton;
+                case MouseButtons.X1:
+                    return mouseState.XButton1;
+                case MouseButtons.X2:
+                    return mouseState.XButton2;
+            }
         }
     }
 }
