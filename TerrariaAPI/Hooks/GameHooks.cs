@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 using Terraria;
 
 namespace TerrariaAPI.Hooks
@@ -92,6 +93,18 @@ namespace TerrariaAPI.Hooks
         {
             if (WorldDisconnect != null)
                 WorldDisconnect();
+        }
+
+        public static event Action<HandledEventArgs> GetKeyState;
+
+        public static bool OnGetKeyState()
+        {
+            if (GetKeyState == null)
+                return false;
+
+            var args = new HandledEventArgs();
+            GetKeyState(args);
+            return args.Handled;
         }
     }
 }
