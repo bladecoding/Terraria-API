@@ -26,8 +26,8 @@ namespace TerrariaAPI
 
         /// <summary>
         /// Order of when the plugin will be initialized.
-        /// 0 = Last
-        /// 1 = Second to last
+        /// 0 = First
+        /// 1 = Second
         /// ...
         /// </summary>
         public int Order { get; set; }

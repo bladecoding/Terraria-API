@@ -2,8 +2,10 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
@@ -75,7 +77,8 @@ namespace ScreenShotPlugin
         public int[] Widths;
         public int[] Heights;
 
-        private void ClientHooks_Chat(ref string msg, HandledEventArgs e)
+
+        void ClientHooks_Chat(ref string msg, HandledEventArgs e)
         {
             if (!msg.StartsWith("/render"))
                 return;
@@ -97,6 +100,7 @@ namespace ScreenShotPlugin
             int width = pis[2];
             int height = pis[3];
             Render((int)(pos.X / 16) - xoff, (int)(pos.Y / 16) - yoff, width, height);
+
         }
 
         private void GameHooks_LoadContent(ContentManager obj)
