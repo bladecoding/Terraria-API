@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = System.Drawing.Rectangle;
+using XNARectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace TerrariaAPI
 {
@@ -48,15 +49,29 @@ namespace TerrariaAPI
             return texture;
         }
 
-        private static Vector2[] shadowOffset = { new Vector2(-1, -1), new Vector2(1, -1), new Vector2(1, 1), new Vector2(-1, 1) };
+        private static readonly Vector2[] shadowOffset = { new Vector2(-1, -1), new Vector2(1, -1), new Vector2(1, 1), new Vector2(-1, 1) };
 
-        public static void DrawTextWithShadow(SpriteBatch sb, string text, Vector2 position, SpriteFont font, Color color, Color shadowColor)
+        public static void DrawTextWithShadow(SpriteBatch sb, string text, Vector2 position, SpriteFont font, Color textColor, Color shadowColor)
         {
             sb.DrawString(font, text, position + shadowOffset[0], shadowColor);
             sb.DrawString(font, text, position + shadowOffset[1], shadowColor);
             sb.DrawString(font, text, position + shadowOffset[2], shadowColor);
             sb.DrawString(font, text, position + shadowOffset[3], shadowColor);
-            sb.DrawString(font, text, position, color);
+            sb.DrawString(font, text, position, textColor);
+        }
+
+        public static void DrawRectangle(SpriteBatch sb, Texture2D background, Texture2D border, XNARectangle rectangle)
+        {
+            sb.Draw(background, rectangle, Color.White);
+            DrawBorder(sb, border, rectangle);
+        }
+
+        public static void DrawBorder(SpriteBatch sb, Texture2D border, XNARectangle rectangle)
+        {
+            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y, rectangle.Width, 1), Color.White); // Top
+            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y, 1, rectangle.Height), Color.White); // Left
+            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y + rectangle.Height - 1, rectangle.Width, 1), Color.White); // Bottom
+            sb.Draw(border, new XNARectangle(rectangle.X + rectangle.Width - 1, rectangle.Y, 1, rectangle.Height), Color.White); // Right
         }
 
         public static Bitmap ResizeImage(Image img, int width, int height)

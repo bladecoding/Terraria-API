@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace TerrariaAPI
@@ -75,6 +76,26 @@ namespace TerrariaAPI
             }
 
             return currentKeyboardState.IsKeyUp(key);
+        }
+
+        public Keys[] GetPressedKeys(bool once = false)
+        {
+            if (once)
+            {
+                List<Keys> keys = new List<Keys>();
+
+                foreach (Keys key in currentKeyboardState.GetPressedKeys())
+                {
+                    if (previousKeyboardState.IsKeyUp(key))
+                    {
+                        keys.Add(key);
+                    }
+                }
+
+                return keys.ToArray();
+            }
+
+            return currentKeyboardState.GetPressedKeys();
         }
 
         public Vector2 GetMousePos()

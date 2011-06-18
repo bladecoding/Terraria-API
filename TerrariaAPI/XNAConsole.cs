@@ -12,6 +12,8 @@ namespace TerrariaAPI
     {
         private enum ConsoleState { Closed, Closing, Open, Opening }
 
+        public event Action<string> MessageSend;
+
         public double AnimationTime { get; set; }
         public int MaxLineCount { get; set; }
 
@@ -24,6 +26,7 @@ namespace TerrariaAPI
         private ConsoleState consoleState;
         private double stateStartTime;
         private InputManager input;
+        private string inputMessage;
 
         public XNAConsole(Game game)
             : base(game)
@@ -37,6 +40,7 @@ namespace TerrariaAPI
             stateStartTime = 0;
 
             input = new InputManager();
+
             outputBuffer = new StringBuilder(1024);
             stringWriter = new StringWriter(outputBuffer);
             Console.SetOut(stringWriter);
@@ -122,6 +126,57 @@ namespace TerrariaAPI
                     }
                     break;
             }
+
+            ControlInput();
+        }
+
+        private void ControlInput()
+        {
+            foreach (Keys key in input.GetPressedKeys(true))
+            {
+                int num = (int)key;
+
+                if (num == 8 && inputMessage.Length > 0) // Backspace
+                {
+                    inputMessage = inputMessage.Remove(inputMessage.Length - 1);
+                }
+                else if (num == 32) // Space
+                {
+                    inputMessage += ' ';
+                }
+                else if (num >= 65 && num <= 90) // A - Z
+                {
+                    if (!input.IsShiftDown)
+                    {
+                        num += 32;
+                    }
+
+                    inputMessage += (char)num;
+                }
+                else if ((num >= 48 && num <= 57) || (num >= 96 && num <= 105)) // 0 - 9
+                {
+                    if (num >= 96)
+                    {
+                        num -= 48;
+                    }
+
+                    inputMessage += (char)num;
+                }
+                else if (num == 13) // Enter
+                {
+                    OnMessageSend(inputMessage);
+                    WriteLine(inputMessage);
+                    inputMessage = string.Empty;
+                }
+            }
+        }
+
+        protected void OnMessageSend(string text)
+        {
+            if (MessageSend != null)
+            {
+                MessageSend(text);
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -132,7 +187,7 @@ namespace TerrariaAPI
             consoleHeight = spriteFont.LineSpacing * MaxLineCount + 20;
 
             consoleXOffset = 10;
-            consoleYOffset = 0;
+            consoleYOffset = 10;
 
             if (consoleState == ConsoleState.Opening)
             {
@@ -152,16 +207,22 @@ namespace TerrariaAPI
         {
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
-            spriteBatch.Draw(background, new Rectangle(consoleXOffset, consoleYOffset, consoleWidth, consoleHeight), Color.White); // Background
-            spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset, 1, consoleHeight), Color.White); // Border: Left
-            spriteBatch.Draw(border, new Rectangle(consoleXOffset, consoleYOffset + consoleHeight - 1, consoleWidth, 1), Color.White); // Border: Bottom
-            spriteBatch.Draw(border, new Rectangle(consoleXOffset + consoleWidth - 1, consoleYOffset, 1, consoleHeight), Color.White); // Border: Right
+            DrawingHelper.DrawRectangle(spriteBatch, background, border,
+                new Rectangle(consoleXOffset, consoleYOffset, consoleWidth, consoleHeight));
+            DrawingHelper.DrawRectangle(spriteBatch, background, border,
+                new Rectangle(consoleXOffset, consoleYOffset + consoleHeight - 1, consoleWidth, spriteFont.LineSpacing + 20));
 
             List<string> lines = ParseOutputBuffer(outputBuffer.ToString());
 
             for (int i = 0; i < lines.Count && i <= MaxLineCount; i++)
             {
-                DrawingHelper.DrawTextWithShadow(spriteBatch, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleHeight - 10 - spriteFont.LineSpacing * i),
+                DrawingHelper.DrawTextWithShadow(spriteBatch, lines[i], new Vector2(consoleXOffset + 10, consoleYOffset + consoleHeight - 10 - spriteFont.LineSpacing * i - 1),
+                    spriteFont, Color.White, Color.Black);
+            }
+
+            if (!string.IsNullOrEmpty(inputMessage))
+            {
+                DrawingHelper.DrawTextWithShadow(spriteBatch, inputMessage, new Vector2(consoleXOffset + 10, consoleYOffset + consoleHeight + spriteFont.LineSpacing - 10 - 1),
                     spriteFont, Color.White, Color.Black);
             }
 
