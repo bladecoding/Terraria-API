@@ -145,8 +145,7 @@ namespace TerrariaAPI
                     "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            // Sort the plugins so the ones with higher order get initialized first
-            var sortedPlugins = Plugins.OrderByDescending(x => x.Plugin.Order).ThenBy(x => x.Plugin.Name);
+            var sortedPlugins = Plugins.OrderBy(x => x.Plugin.Order).ThenBy(x => x.Plugin.Name);
 
             foreach (PluginContainer p in sortedPlugins)
             {
