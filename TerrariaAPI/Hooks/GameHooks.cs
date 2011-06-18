@@ -1,7 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using Terraria;
 
 namespace TerrariaAPI.Hooks

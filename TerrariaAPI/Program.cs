@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -25,7 +26,7 @@ namespace TerrariaAPI
         public const string PluginSettingsPath = PluginsPath + "\\Settings";
 
 #if CLIENT
-        public static XNAConsole XNAConsole { get; private set; }
+        public static TerrariaConsole XNAConsole { get; private set; }
 #endif
 
         public static List<PluginContainer> Plugins = new List<PluginContainer>();
@@ -39,7 +40,7 @@ namespace TerrariaAPI
             Game = main;
 
 #if CLIENT
-            XNAConsole = new XNAConsole(Game);
+            XNAConsole = new TerrariaConsole(Game);
             Game.Components.Add(XNAConsole);
 #endif
 
@@ -146,16 +147,11 @@ namespace TerrariaAPI
             // Sort the plugins so the ones with higher order get initialized first.
             Plugins.Sort((pc1, pc2) => pc1.Plugin.Order.CompareTo(pc2.Plugin.Order));
 
-            if (Plugins.Count > 0)
+            foreach (PluginContainer p in Plugins)
             {
-                foreach (PluginContainer p in Plugins)
-                {
-                    p.Initialize();
+                p.Initialize();
 
-                    Console.WriteLine("{0} v{1} ({2}) initiated.", p.Plugin.Name, p.Plugin.Version, p.Plugin.Author);
-                }
-
-                Console.WriteLine();
+                Console.WriteLine("{0} v{1} ({2}) initiated.", p.Plugin.Name, p.Plugin.Version, p.Plugin.Author);
             }
 
             if (FailedPlugins.Count > 0)

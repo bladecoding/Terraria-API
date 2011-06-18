@@ -1,4 +1,6 @@
-﻿namespace TerrariaAPI.Hooks
+﻿using System.ComponentModel;
+
+namespace TerrariaAPI.Hooks
 {
     /// <summary>
     ///

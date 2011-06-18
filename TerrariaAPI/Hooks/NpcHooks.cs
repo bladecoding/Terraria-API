@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System.ComponentModel;
+using Terraria;
 
 namespace TerrariaAPI.Hooks
 {

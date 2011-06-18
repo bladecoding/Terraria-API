@@ -1,34 +1,25 @@
-﻿using Terraria;
+﻿using System.ComponentModel;
+using Terraria;
 
 namespace TerrariaAPI.Hooks
 {
     public class SendDataEventArgs : HandledEventArgs
     {
         public PacketTypes MsgID { get; set; }
-
         public int remoteClient { get; set; }
-
         public int ignoreClient { get; set; }
-
         public string text { get; set; }
-
         public int number { get; set; }
-
         public float number2 { get; set; }
-
         public float number3 { get; set; }
-
         public float number4 { get; set; }
     }
 
     public class GetDataEventArgs : HandledEventArgs
     {
         public PacketTypes MsgID { get; set; }
-
         public messageBuffer Msg { get; set; }
-
         public int Index { get; set; }
-
         public int Length { get; set; }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,7 @@ namespace TerrariaAPI
     {
         private enum ConsoleState { Closed, Closing, Open, Opening }
 
-        public event Action<string> MessageSend;
+        public event Action<string, HandledEventArgs> MessageSend;
 
         public double AnimationTime { get; set; }
         public int MaxLineCount { get; set; }
@@ -127,10 +128,10 @@ namespace TerrariaAPI
                     break;
             }
 
-            ControlInput();
+            CheckInput();
         }
 
-        private void ControlInput()
+        private void CheckInput()
         {
             foreach (Keys key in input.GetPressedKeys(true))
             {
@@ -164,19 +165,28 @@ namespace TerrariaAPI
                 }
                 else if (num == 13) // Enter
                 {
-                    OnMessageSend(inputMessage);
-                    WriteLine(inputMessage);
+                    bool handled = OnMessageSend(inputMessage);
+
+                    if (!handled && !string.IsNullOrWhiteSpace(inputMessage))
+                    {
+                        WriteLine(inputMessage);
+                    }
+
                     inputMessage = string.Empty;
                 }
             }
         }
 
-        protected void OnMessageSend(string text)
+        protected bool OnMessageSend(string text)
         {
             if (MessageSend != null)
             {
-                MessageSend(text);
+                HandledEventArgs args = new HandledEventArgs();
+                MessageSend(text, args);
+                return args.Handled;
             }
+
+            return false;
         }
 
         public override void Draw(GameTime gameTime)
