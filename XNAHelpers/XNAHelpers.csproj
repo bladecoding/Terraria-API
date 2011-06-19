@@ -96,11 +96,15 @@
   <ItemGroup>
     <Compile Include="DrawingHelper.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="FastDateTime.cs" />
     <Compile Include="FrameRateCounter.cs" />
+    <Compile Include="GameTimer.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="MathHelper.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="MathHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsHelper.cs" />
+    <Compile Include="SteamExtensions.cs" />
     <Compile Include="StreamExt.cs" />
     <Compile Include="XNAConsole.cs" />
   </ItemGroup>

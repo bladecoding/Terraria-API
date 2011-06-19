@@ -36,7 +36,7 @@ namespace XNAHelpers
 
         public static float NextAngle(this Random rand)
         {
-            return rand.NextFloat(MathHelper.TwoPI);
+            return rand.NextFloat(MathHelpers.TwoPI);
         }
     }
 }

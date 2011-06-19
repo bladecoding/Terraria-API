@@ -204,11 +204,11 @@ namespace XNAHelpers
 
             if (consoleState == ConsoleState.Opening)
             {
-                consoleYOffset = (int)MathHelper.Lerp(-consoleHeight, 0, (float)Math.Sqrt((float)(now - stateStartTime) / (float)AnimationTime));
+                consoleYOffset = (int)MathHelpers.Lerp(-consoleHeight, 0, (float)Math.Sqrt((float)(now - stateStartTime) / (float)AnimationTime));
             }
             else if (consoleState == ConsoleState.Closing)
             {
-                consoleYOffset = (int)MathHelper.Lerp(0, -consoleHeight, ((float)(now - stateStartTime) / (float)AnimationTime) * ((float)(now - stateStartTime) / (float)AnimationTime));
+                consoleYOffset = (int)MathHelpers.Lerp(0, -consoleHeight, ((float)(now - stateStartTime) / (float)AnimationTime) * ((float)(now - stateStartTime) / (float)AnimationTime));
             }
 
             lineWidth = (int)((consoleWidth - 20) / spriteFont.MeasureString("a").X) - 2;
