@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using TerrariaAPI;
+using XNAHelpers;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace ItemPlugin

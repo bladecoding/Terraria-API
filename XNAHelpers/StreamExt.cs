@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace StreamBinary
+namespace XNAHelpers
 {
     public static class StreamExt
     {
@@ -224,10 +224,7 @@ namespace StreamBinary
             ms.Position = 0;
         }
     }
-}
 
-namespace StreamBinary.Generic
-{
     public static class StreamGenericExt
     {
         static Dictionary<Type, Action<Stream, object>> WriteFuncs = new Dictionary<Type, Action<Stream, object>>()

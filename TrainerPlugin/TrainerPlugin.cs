@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
+using XNAHelpers;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TrainerPlugin

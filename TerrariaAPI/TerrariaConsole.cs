@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using TerrariaAPI.Hooks;
+using XNAHelpers;
 
 namespace TerrariaAPI
 {

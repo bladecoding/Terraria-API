@@ -87,7 +87,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\DrawingHelper.cs" />
     <Compile Include="Hooks\Classes\MethodHookAttribute.cs" />
     <Compile Include="Hooks\Classes\SetDefaults.cs" />
     <Compile Include="Hooks\ClientHooks.cs" />
@@ -98,18 +97,18 @@
     <Compile Include="Hooks\NpcHooks.cs" />
     <Compile Include="Hooks\PlayerHooks.cs" />
     <Compile Include="Hooks\ServerHooks.cs" />
-    <Compile Include="Helpers\InputManager.cs" />
     <Compile Include="PacketTypes.cs" />
     <Compile Include="PluginContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\SettingsHelper.cs" />
-    <Compile Include="Helpers\StreamExt.cs" />
     <Compile Include="TerrariaConsole.cs" />
     <Compile Include="TerrariaPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\XNAConsole.cs" />
+    <ProjectReference Include="..\XNAHelpers\XNAHelpers.csproj">
+      <Project>{45E0A18E-EC3B-4316-BB20-81F01F64FE62}</Project>
+      <Name>XNAHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

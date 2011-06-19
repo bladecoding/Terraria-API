@@ -8,7 +8,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = System.Drawing.Rectangle;
 using XNARectangle = Microsoft.Xna.Framework.Rectangle;
 
-namespace TerrariaAPI
+namespace XNAHelpers
 {
     public static class DrawingHelper
     {

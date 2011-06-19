@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemPlugin", "ItemPlugin\It
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenShotPlugin", "ScreenShotPlugin\ScreenShotPlugin.csproj", "{9A249AF8-A605-402D-8962-51280F9340BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAHelpers", "XNAHelpers\XNAHelpers.csproj", "{45E0A18E-EC3B-4316-BB20-81F01F64FE62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -235,6 +237,26 @@ Global
 		{9A249AF8-A605-402D-8962-51280F9340BE}.ReleaseServer|Mixed Platforms.ActiveCfg = ReleaseServer|Any CPU
 		{9A249AF8-A605-402D-8962-51280F9340BE}.ReleaseServer|Mixed Platforms.Build.0 = ReleaseServer|Any CPU
 		{9A249AF8-A605-402D-8962-51280F9340BE}.ReleaseServer|x86.ActiveCfg = ReleaseServer|Any CPU
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Debug|x86.ActiveCfg = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Debug|x86.Build.0 = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.DebugServer|Any CPU.ActiveCfg = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.DebugServer|Mixed Platforms.ActiveCfg = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.DebugServer|Mixed Platforms.Build.0 = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.DebugServer|x86.ActiveCfg = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.DebugServer|x86.Build.0 = Debug|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Release|Any CPU.ActiveCfg = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Release|Mixed Platforms.Build.0 = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Release|x86.ActiveCfg = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.Release|x86.Build.0 = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.ReleaseServer|Any CPU.ActiveCfg = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.ReleaseServer|Mixed Platforms.ActiveCfg = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.ReleaseServer|Mixed Platforms.Build.0 = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.ReleaseServer|x86.ActiveCfg = Release|x86
+		{45E0A18E-EC3B-4316-BB20-81F01F64FE62}.ReleaseServer|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

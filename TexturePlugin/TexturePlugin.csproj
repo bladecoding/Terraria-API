@@ -69,6 +69,10 @@
       <Name>TerrariaAPI</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\XNAHelpers\XNAHelpers.csproj">
+      <Project>{45E0A18E-EC3B-4316-BB20-81F01F64FE62}</Project>
+      <Name>XNAHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TextureForm.resx">

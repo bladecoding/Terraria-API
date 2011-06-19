@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -6,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
+using XNAHelpers;
 using Color = Microsoft.Xna.Framework.Color;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
@@ -71,7 +73,8 @@ namespace MinimapPlugin
             renderthread = new Thread(RenderMap);
             renderthread.Start();
 
-            ThreadPool.QueueUserWorkItem(state => settings = TerrariaAPI.SettingsHelper.Load<MinimapSettings>(SettingsFilename));
+            string path = Path.Combine(Program.PluginSettingsPath, SettingsFilename);
+            ThreadPool.QueueUserWorkItem(state => settings = SettingsHelper.Load<MinimapSettings>(path));
         }
 
         public override void DeInitialize()
@@ -85,7 +88,8 @@ namespace MinimapPlugin
 
             if (settings != null)
             {
-                TerrariaAPI.SettingsHelper.Save(settings, SettingsFilename);
+                string path = Path.Combine(Program.PluginSettingsPath, SettingsFilename);
+                SettingsHelper.Save(settings, path);
             }
         }
 

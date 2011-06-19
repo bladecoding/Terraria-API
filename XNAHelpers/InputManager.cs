@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace TerrariaAPI
+namespace XNAHelpers
 {
     public enum MouseButtons { Left, Right, Middle, X1, X2 }
 
@@ -38,7 +38,6 @@ namespace TerrariaAPI
         {
             previousKeyboardState = currentKeyboardState;
             previousMouseState = currentMouseState;
-
             currentKeyboardState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
         }
@@ -73,18 +72,18 @@ namespace TerrariaAPI
             return currentKeyboardState.GetPressedKeys();
         }
 
-        public bool IsMouseDown(MouseButtons buttons, bool once = false)
+        public bool IsMouseDown(MouseButtons button, bool once = false)
         {
-            ButtonState currentButtonState = GetButtonState(currentMouseState, buttons);
-            ButtonState previousButtonState = GetButtonState(previousMouseState, buttons);
+            ButtonState currentButtonState = GetButtonState(currentMouseState, button);
+            ButtonState previousButtonState = GetButtonState(previousMouseState, button);
 
             return currentButtonState == ButtonState.Pressed && (!once || previousButtonState == ButtonState.Released);
         }
 
-        public bool IsMouseUp(MouseButtons buttons, bool once = false)
+        public bool IsMouseUp(MouseButtons button, bool once = false)
         {
-            ButtonState currentButtonState = GetButtonState(currentMouseState, buttons);
-            ButtonState previousButtonState = GetButtonState(previousMouseState, buttons);
+            ButtonState currentButtonState = GetButtonState(currentMouseState, button);
+            ButtonState previousButtonState = GetButtonState(previousMouseState, button);
 
             return currentButtonState == ButtonState.Released && (!once || previousButtonState == ButtonState.Pressed);
         }
@@ -99,9 +98,9 @@ namespace TerrariaAPI
             return currentMouseState.ScrollWheelValue - previousMouseState.ScrollWheelValue;
         }
 
-        private ButtonState GetButtonState(MouseState mouseState, MouseButtons buttons)
+        private ButtonState GetButtonState(MouseState mouseState, MouseButtons button)
         {
-            switch (buttons)
+            switch (button)
             {
                 default:
                 case MouseButtons.Left:

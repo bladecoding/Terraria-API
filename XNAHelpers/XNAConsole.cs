@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace TerrariaAPI
+namespace XNAHelpers
 {
     public class XNAConsole : DrawableGameComponent
     {
@@ -128,7 +128,10 @@ namespace TerrariaAPI
                     break;
             }
 
-            CheckInput();
+            if (Visible)
+            {
+                CheckInput();
+            }
         }
 
         private void CheckInput()

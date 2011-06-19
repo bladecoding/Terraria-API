@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
+using XNAHelpers;
 
 namespace ItemPlugin
 {

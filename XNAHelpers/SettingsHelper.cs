@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace TerrariaAPI
+namespace XNAHelpers
 {
     public static class SettingsHelper
     {
-        public static bool Save<T>(T obj, string fileName)
+        public static bool Save<T>(T obj, string path)
         {
-            string path = Path.Combine(Program.PluginSettingsPath, fileName);
-
             try
             {
                 lock (obj)
@@ -35,16 +31,14 @@ namespace TerrariaAPI
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                Console.WriteLine(e.ToString());
             }
 
             return false;
         }
 
-        public static T Load<T>(string fileName, bool onErrorShowWarning = true) where T : new()
+        public static T Load<T>(string path) where T : new()
         {
-            string path = Path.Combine(Program.PluginSettingsPath, fileName);
-
             try
             {
                 if (!string.IsNullOrEmpty(path) && File.Exists(path))
@@ -57,13 +51,7 @@ namespace TerrariaAPI
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
-
-                if (onErrorShowWarning)
-                {
-                    string text = string.Format("Settings path:\r\n{0}\r\n\r\nError:\r\n{1}", path, e.ToString());
-                    MessageBox.Show(text, "Error when loading settings file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                Console.WriteLine(e.ToString());
             }
 
             return new T();

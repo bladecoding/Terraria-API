@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
+using XNAHelpers;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TeleportPlugin
@@ -58,7 +60,8 @@ namespace TeleportPlugin
             ClientHooks.Chat += ClientHooks_Chat;
             DrawHooks.EndDraw += DrawHooks_EndDraw;
 
-            ThreadPool.QueueUserWorkItem(state => helper = TerrariaAPI.SettingsHelper.Load<TeleportHelper>(SettingsFilename));
+            string path = Path.Combine(Program.PluginSettingsPath, SettingsFilename);
+            ThreadPool.QueueUserWorkItem(state => helper = SettingsHelper.Load<TeleportHelper>(path));
         }
 
         public override void DeInitialize()
@@ -70,7 +73,8 @@ namespace TeleportPlugin
 
             if (helper != null)
             {
-                TerrariaAPI.SettingsHelper.Save(helper, SettingsFilename);
+                string path = Path.Combine(Program.PluginSettingsPath, SettingsFilename);
+                SettingsHelper.Save(helper, path);
             }
         }
 
