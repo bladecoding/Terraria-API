@@ -11,6 +11,11 @@ namespace ItemPlugin
         public bool SortItemsByName { get; set; }
         public string ItemsFilter { get; set; }
 
+        private Player me
+        {
+            get { return Main.player[Main.myPlayer]; }
+        }
+
         private ItemManager itemManager;
 
         public ItemForm()
@@ -53,9 +58,13 @@ namespace ItemPlugin
         {
             if (lvItems.SelectedItems.Count > 0)
             {
-                ItemType item = lvItems.SelectedItems[0].Tag as ItemType;
-                pgItem.SelectedObject = item.CreateItem();
-                btnGive.Enabled = true;
+                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
+                ItemEx item = type.CreateItem();
+                pgItem.SelectedObject = item;
+                nudStack.Minimum = 1;
+                nudStack.Maximum = Math.Max(1, item.MaxStack);
+                nudStack.Value = Math.Max(1, item.MaxStack);
+                btnGive.Enabled = btnGiveQuick.Enabled = btnThrowQuick.Enabled = true;
             }
         }
 
@@ -77,10 +86,48 @@ namespace ItemPlugin
 
             if (item != null && item.Active)
             {
-                Main.player[Main.myPlayer].GetItem(Main.myPlayer, item.Item);
+                me.GetItem(Main.myPlayer, item.Item);
             }
 
             btnGive.Enabled = false;
+        }
+
+        private void btnGiveQuick_Click(object sender, EventArgs e)
+        {
+            if (lvItems.SelectedItems.Count > 0)
+            {
+                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
+                ItemEx item = type.CreateItem();
+                item.Stack = (int)nudStack.Value;
+                me.GetItem(Main.myPlayer, item.Item);
+            }
+        }
+
+        private void btnThrow_Click(object sender, EventArgs e)
+        {
+            if (lvItems.SelectedItems.Count > 0)
+            {
+                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
+                ThrowItem(type.ID);
+            }
+        }
+
+        private void ThrowItem(int itemType)
+        {
+            int num = Item.NewItem((int)me.position.X, (int)me.position.Y, me.width, me.height, itemType, (int)nudStack.Value, false);
+
+            if (Main.netMode == 0)
+            {
+                Main.item[num].noGrabDelay = 100;
+            }
+
+            Main.item[num].velocity.Y = -2f;
+            Main.item[num].velocity.X = (float)(4 * me.direction) + me.velocity.X;
+
+            if (Main.netMode == 1)
+            {
+                NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f);
+            }
         }
 
         private void ItemForm_FormClosing(object sender, FormClosingEventArgs e)
