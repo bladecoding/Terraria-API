@@ -10,6 +10,7 @@ V1.3
 -Order property added. Plugins are sorted by order before being initialized.
 -Name/Version/Description/Author made virtual meaning you don't have to overide them.
 
+
 Plugins keybinds:
 F1 = Teleport to last player
 F2 = Teleport to last location
@@ -20,4 +21,3 @@ F6 = Show minimap settings form
 F7 = Show trainer form
 F8 = Show texture loader form
 F9 = Show item editor form
-Ctrl + B = Open bank

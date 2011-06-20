@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using TerrariaAPI;
 using TerrariaAPI.Hooks;
@@ -38,6 +41,7 @@ namespace TrainerPlugin
         private TrainerForm trainerform;
         private TrainerSettings trainerSettings;
         private TrainerSettings defaultSettings;
+        private Texture2D gridtexture;
 
         private Player me
         {
@@ -53,21 +57,25 @@ namespace TrainerPlugin
             trainerform = new TrainerForm(trainerSettings);
         }
 
-        public override void Dispose()
-        {
-            trainerform.Dispose();
-        }
-
         public override void Initialize()
         {
+            GameHooks.LoadContent += GameHooks_LoadContent;
             GameHooks.Update += TerrariaHooks_Update;
             PlayerHooks.UpdatePhysics += PlayerHooks_UpdatePhysics;
+            DrawHooks.DrawInterface += DrawHooks_DrawInterface;
+        }
+
+        private void GameHooks_LoadContent(ContentManager obj)
+        {
+            gridtexture = TrainerHelper.CreateGrid(Game.GraphicsDevice);
         }
 
         public override void DeInitialize()
         {
+            GameHooks.LoadContent -= GameHooks_LoadContent;
             GameHooks.Update -= TerrariaHooks_Update;
             PlayerHooks.UpdatePhysics -= PlayerHooks_UpdatePhysics;
+            DrawHooks.DrawInterface -= DrawHooks_DrawInterface;
         }
 
         private void TerrariaHooks_Update(GameTime obj)
@@ -79,6 +87,18 @@ namespace TrainerPlugin
                 if (input.IsKeyDown(Keys.F7, true))
                 {
                     trainerform.Visible = !trainerform.Visible;
+                }
+                else if (input.IsControlDown && input.IsKeyDown(Keys.B, true) && trainerSettings.AllowBankOpen)
+                {
+                    TrainerHelper.OpenBank();
+                }
+                else if (input.IsControlDown && input.IsKeyDown(Keys.Z, true) && trainerSettings.CreateWater)
+                {
+                    TrainerHelper.AddLiquidToCursor(true);
+                }
+                else if (input.IsControlDown && input.IsKeyDown(Keys.X, true) && trainerSettings.CreateLava)
+                {
+                    TrainerHelper.AddLiquidToCursor(false);
                 }
             }
         }
@@ -190,20 +210,33 @@ namespace TrainerPlugin
 
             if (settings.LightYourCharacter)
             {
-                int x = (int)(me.position.X / 16);
-                int y = (int)(me.position.Y / 16);
-                Lighting.addLight(x, y, 1f);
+                TrainerHelper.LightCharacter();
             }
 
             if (settings.LightCursor)
             {
-                int x = (int)((Main.mouseState.X + Main.screenPosition.X) / 16f);
-                int y = (int)((Main.mouseState.Y + Main.screenPosition.Y) / 16f);
-                Lighting.addLight(x, y, 1f);
+                TrainerHelper.LightCursor();
             }
 
             Main.grabSun = settings.GrabSun;
             Main.stopSpawns = settings.StopSpawns;
+        }
+
+        private void DrawHooks_DrawInterface(SpriteBatch sb, HandledEventArgs e)
+        {
+            if (trainerSettings.DrawGrid)
+            {
+                int offx = (int)(Main.screenPosition.X) % 16;
+                int offy = (int)(Main.screenPosition.Y) % 16;
+
+                for (int y = -offy; y < Main.screenHeight + 16; y += 16)
+                {
+                    for (int x = -offx; x < Main.screenWidth + 16; x += 16)
+                    {
+                        sb.Draw(gridtexture, new Vector2(x, y), Color.White);
+                    }
+                }
+            }
         }
     }
 }

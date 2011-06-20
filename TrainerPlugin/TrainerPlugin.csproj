@@ -57,6 +57,7 @@
     <Compile Include="TrainerForm.Designer.cs">
       <DependentUpon>TrainerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TrainerHelper.cs" />
     <Compile Include="TrainerPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrainerSettings.cs" />

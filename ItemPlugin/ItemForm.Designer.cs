@@ -52,6 +52,7 @@
             // 
             // btnGive
             // 
+            this.btnGive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGive.Enabled = false;
             this.btnGive.Location = new System.Drawing.Point(552, 8);
             this.btnGive.Name = "btnGive";

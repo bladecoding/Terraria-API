@@ -38,5 +38,10 @@ namespace XNAHelpers
         {
             return rand.NextFloat(MathHelpers.TwoPI);
         }
+
+        public static int ToAbgr(this Color color)
+        {
+            return (color.A << 24) | (color.B << 16) | (color.G << 8) | color.R;
+        }
     }
 }

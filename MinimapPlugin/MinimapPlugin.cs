@@ -147,7 +147,7 @@ namespace MinimapPlugin
                     position = new Vector2(settings.MinimapPositionOffset, Main.screenHeight - minimap.Height - settings.MinimapPositionOffset);
                 }
 
-                Game.spriteBatch.Draw(minimap, position, new Color(1, 1, 1, settings.MinimapTransparency));
+                Game.spriteBatch.Draw(minimap, position, Color.White * settings.MinimapTransparency);
                 // DrawPlayers();
             }
         }

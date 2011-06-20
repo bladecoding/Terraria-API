@@ -1,4 +1,6 @@
-﻿namespace MinimapPlugin
+﻿// Credit Terraria World Viewer - http://terrariaworldviewer.codeplex.com
+
+namespace MinimapPlugin
 {
     public static class MinimapHelper
     {

@@ -190,8 +190,8 @@ namespace TeleportPlugin
 
         public void TeleportToCursor()
         {
-            float x = Main.mouseState.X + Main.screenPosition.X;
-            float y = Main.mouseState.Y + Main.screenPosition.Y - Me.height;
+            float x = Main.screenPosition.X + Main.mouseState.X + (Me.width / 2f);
+            float y =  Main.screenPosition.Y + Main.mouseState.Y - Me.height;
             TeleportToPosition(x, y);
         }
 

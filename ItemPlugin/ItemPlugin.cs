@@ -11,7 +11,6 @@ namespace ItemPlugin
 {
     /// <summary>
     /// F9 = Show item editor form
-    /// Ctrl + B = Open bank
     /// </summary>
     [APIVersion(1, 5)]
     public class ItemPlugin : TerrariaPlugin
@@ -34,11 +33,6 @@ namespace ItemPlugin
         public override string Description
         {
             get { return "Give/Edit items"; }
-        }
-
-        private Player me
-        {
-            get { return Main.player[Main.myPlayer]; }
         }
 
         private InputManager input;
@@ -77,20 +71,7 @@ namespace ItemPlugin
                 {
                     itemForm.Visible = !itemForm.Visible;
                 }
-                else if (input.IsControlDown && input.IsKeyDown(Keys.B, true))
-                {
-                    OpenBank();
-                }
             }
-        }
-
-        private void OpenBank()
-        {
-            me.chestX = (int)((me.position.X + me.width * 0.5) / 16.0);
-            me.chestY = (int)((me.position.Y + me.height * 0.5) / 16.0);
-            me.chest = -2;
-            Main.playerInventory = true;
-            Main.PlaySound(10, -1, -1, 1);
         }
     }
 }
