@@ -23,6 +23,26 @@ namespace ItemPlugin
             return me.GetItem(Main.myPlayer, item);
         }
 
+        public static bool RemoveItem(Item item)
+        {
+            if (item != null && item.active)
+            {
+                item.active = false;
+
+                for (int i = 0; i < me.inventory.Length; i++)
+                {
+                    if (me.inventory[i] == item)
+                    {
+                        me.inventory[i] = new Item();
+                        Main.PlaySound(7, (int)me.position.X, (int)me.position.Y, 1);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static Item ThrowItem(string itemName, int stack = 0)
         {
             Item item = CreateItem(itemName, stack);

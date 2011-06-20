@@ -96,13 +96,11 @@ namespace ItemPlugin
 
         private void btnRemoveItem_Click(object sender, EventArgs e)
         {
-            // TODO: Item remove not working yet.
-
             ItemEx item = pgItem.SelectedObject as ItemEx;
 
-            if (item != null && item.Active)
+            if (item != null)
             {
-                item.Item.active = false;
+                ItemHelper.RemoveItem(item.Item);
             }
 
             btnRemoveItem.Enabled = false;
