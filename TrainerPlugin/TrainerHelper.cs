@@ -64,7 +64,14 @@ namespace TrainerPlugin
             Main.tile[x, y].lava = !isWater;
             Main.tile[x, y].liquid = 255;
 
-            NetMessage.sendWater(x, y);
+            if (Main.netMode == 1)
+            {
+                NetMessage.sendWater(x, y);
+            }
+            else
+            {
+                Liquid.AddWater(x, y);
+            }
         }
 
         public static Texture2D CreateGrid(GraphicsDevice gd)

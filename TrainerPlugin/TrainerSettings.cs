@@ -48,18 +48,21 @@ namespace TrainerPlugin
         public bool GrabSun { get; set; }
         [DefaultValue(false), Description("Stops npc spawns.")]
         public bool StopSpawns { get; set; }
-        [DefaultValue(false), Description("When you press Ctrl + B piggy bank will open. Only works in single player.")]
-        public bool AllowBankOpen { get; set; }
-        [DefaultValue(false), Description("When you press Ctrl + Z creates water to where cursor position is.")]
-        public bool CreateWater { get; set; }
-        [DefaultValue(false), Description("When you press Ctrl + X creates Lava to where cursor position is.")]
-        public bool CreateLava { get; set; }
         [DefaultValue(false), Description("Draws tile grid.")]
         public bool DrawGrid { get; set; }
+        [DefaultValue(true), Description("When you press Ctrl + B piggy bank will open. Only works in single player.")]
+        public bool AllowBankOpen { get; set; }
+        [DefaultValue(true), Description("When you press Ctrl + Z creates water to where cursor position is.")]
+        public bool CreateWater { get; set; }
+        [DefaultValue(true), Description("When you press Ctrl + X creates Lava to where cursor position is.")]
+        public bool CreateLava { get; set; }
 
         public TrainerSettings()
         {
             EnableTrainer = true;
+            AllowBankOpen = true;
+            CreateWater = true;
+            CreateLava = true;
         }
     }
 }

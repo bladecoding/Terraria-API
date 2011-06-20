@@ -64,7 +64,8 @@ namespace ItemPlugin
                 nudStack.Minimum = 1;
                 nudStack.Maximum = Math.Max(1, item.MaxStack);
                 nudStack.Value = Math.Max(1, item.MaxStack);
-                btnGive.Enabled = btnGiveQuick.Enabled = btnThrowQuick.Enabled = true;
+                btnGiveItem.Enabled = btnGiveOne.Enabled = btnThrowOne.Enabled = btnGiveN.Enabled = btnThrowN.Enabled = true;
+                btnRemoveItem.Enabled = false;
             }
         }
 
@@ -89,51 +90,64 @@ namespace ItemPlugin
                 me.GetItem(Main.myPlayer, item.Item);
             }
 
-            btnGive.Enabled = false;
+            btnGiveItem.Enabled = false;
+            btnRemoveItem.Enabled = true;
         }
 
-        private void btnGiveQuick_Click(object sender, EventArgs e)
+        private void btnRemoveItem_Click(object sender, EventArgs e)
         {
-            if (lvItems.SelectedItems.Count > 0)
-            {
-                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
-                ItemEx item = type.CreateItem();
-                item.Stack = (int)nudStack.Value;
-                me.GetItem(Main.myPlayer, item.Item);
-            }
-        }
+            // TODO: Item remove not working yet.
 
-        private void btnThrow_Click(object sender, EventArgs e)
-        {
-            if (lvItems.SelectedItems.Count > 0)
-            {
-                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
-                ThrowItem(type.ID);
-            }
-        }
+            ItemEx item = pgItem.SelectedObject as ItemEx;
 
-        private void ThrowItem(int itemType)
-        {
-            int num = Item.NewItem((int)me.position.X, (int)me.position.Y, me.width, me.height, itemType, (int)nudStack.Value, false);
-
-            if (Main.netMode == 0)
+            if (item != null && item.Active)
             {
-                Main.item[num].noGrabDelay = 100;
+                item.Item.active = false;
             }
 
-            Main.item[num].velocity.Y = -2f;
-            Main.item[num].velocity.X = (float)(4 * me.direction) + me.velocity.X;
-
-            if (Main.netMode == 1)
-            {
-                NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f);
-            }
+            btnRemoveItem.Enabled = false;
         }
 
         private void ItemForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
             Visible = false;
+        }
+
+        private void btnGiveOne_Click(object sender, EventArgs e)
+        {
+            if (lvItems.SelectedItems.Count > 0)
+            {
+                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
+                ItemHelper.GiveItem(type.Name, 1);
+            }
+        }
+
+        private void btnThrowOne_Click(object sender, EventArgs e)
+        {
+            if (lvItems.SelectedItems.Count > 0)
+            {
+                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
+                ItemHelper.ThrowItem(type.Name, 1);
+            }
+        }
+
+        private void btnGiveN_Click(object sender, EventArgs e)
+        {
+            if (lvItems.SelectedItems.Count > 0)
+            {
+                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
+                ItemHelper.GiveItem(type.Name, (int)nudStack.Value);
+            }
+        }
+
+        private void btnThrowN_Click(object sender, EventArgs e)
+        {
+            if (lvItems.SelectedItems.Count > 0)
+            {
+                ItemType type = lvItems.SelectedItems[0].Tag as ItemType;
+                ItemHelper.ThrowItem(type.Name, (int)nudStack.Value);
+            }
         }
     }
 }

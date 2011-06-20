@@ -18,8 +18,7 @@ namespace ItemPlugin
 
         public ItemEx CreateItem()
         {
-            Item item = new Item();
-            item.RealSetDefaults(Name);
+            Item item = ItemHelper.CreateItem(Name);
             return new ItemEx(item);
         }
 
