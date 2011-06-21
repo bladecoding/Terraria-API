@@ -10,6 +10,7 @@ namespace XNAHelpers
     {
         private KeyboardState currentKeyboardState, previousKeyboardState;
         private MouseState currentMouseState, previousMouseState;
+        private double keyboardDelay, mouseDelay;
 
         public InputManager()
         {
@@ -19,27 +20,37 @@ namespace XNAHelpers
             previousMouseState = new MouseState();
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
             previousMouseState = currentMouseState;
             currentMouseState = Mouse.GetState();
+
+            if (keyboardDelay > 0)
+            {
+                keyboardDelay -= gameTime.ElapsedGameTime.TotalMilliseconds;
+            }
+
+            if (mouseDelay > 0)
+            {
+                mouseDelay -= gameTime.ElapsedGameTime.TotalMilliseconds;
+            }
         }
 
-        // Keyboard
+        #region Keyboard
 
-        public bool IsAltDown
+        public bool IsAltKeyDown
         {
             get { return IsKeyDown(Keys.LeftAlt) || IsKeyDown(Keys.RightAlt); }
         }
 
-        public bool IsControlDown
+        public bool IsControlKeyDown
         {
             get { return IsKeyDown(Keys.LeftControl) || IsKeyDown(Keys.RightControl); }
         }
 
-        public bool IsShiftDown
+        public bool IsShiftKeyDown
         {
             get { return IsKeyDown(Keys.LeftShift) || IsKeyDown(Keys.RightShift); }
         }
@@ -47,6 +58,17 @@ namespace XNAHelpers
         public bool IsKeyDown(Keys key)
         {
             return currentKeyboardState.IsKeyDown(key);
+        }
+
+        public bool IsKeyDown(Keys key, int delay)
+        {
+            if (keyboardDelay <= 0 && currentKeyboardState.IsKeyDown(key))
+            {
+                keyboardDelay = delay;
+                return true;
+            }
+
+            return false;
         }
 
         public bool IsKeyUp(Keys key)
@@ -64,59 +86,82 @@ namespace XNAHelpers
             return currentKeyboardState.IsKeyUp(key) && previousKeyboardState.IsKeyDown(key);
         }
 
-        public Keys[] GetPressedKeys(bool once = false)
+        public Keys[] GetKeysDown()
         {
-            if (once)
-            {
-                List<Keys> keys = new List<Keys>();
-
-                foreach (Keys key in currentKeyboardState.GetPressedKeys())
-                {
-                    if (previousKeyboardState.IsKeyUp(key))
-                    {
-                        keys.Add(key);
-                    }
-                }
-
-                return keys.ToArray();
-            }
-
             return currentKeyboardState.GetPressedKeys();
         }
 
-        // Mouse
-
-        public bool IsMouseDown(MouseButtons button)
+        public Keys[] GetKeysPressed()
         {
-            return GetButtonState(currentMouseState, button) == ButtonState.Pressed;
+            List<Keys> keys = new List<Keys>();
+
+            foreach (Keys key in currentKeyboardState.GetPressedKeys())
+            {
+                if (previousKeyboardState.IsKeyUp(key))
+                {
+                    keys.Add(key);
+                }
+            }
+
+            return keys.ToArray();
         }
 
-        public bool IsMouseUp(MouseButtons button)
+        #endregion Keyboard
+
+        #region Mouse
+
+        public Vector2 MousePosition
         {
-            return GetButtonState(currentMouseState, button) == ButtonState.Released;
+            get { return new Vector2(currentMouseState.X, currentMouseState.Y); }
         }
 
-        public bool IsMousePressed(MouseButtons button)
+        public Vector2 MouseVelocity
         {
-            return GetButtonState(currentMouseState, button) == ButtonState.Pressed && GetButtonState(previousMouseState, button) == ButtonState.Released;
+            get { return new Vector2(currentMouseState.X - previousMouseState.X, currentMouseState.Y - previousMouseState.Y); }
         }
 
-        public bool IsMouseReleased(MouseButtons button)
+        public float MouseScrollWheelPosition
         {
-            return GetButtonState(currentMouseState, button) == ButtonState.Released && GetButtonState(previousMouseState, button) == ButtonState.Pressed;
+            get { return currentMouseState.ScrollWheelValue; }
         }
 
-        public Vector2 GetMousePosition()
+        public float MouseScrollWheelVelocity
         {
-            return new Vector2(currentMouseState.X, currentMouseState.Y);
+            get { return currentMouseState.ScrollWheelValue - previousMouseState.ScrollWheelValue; }
         }
 
-        public int GetMouseScrollWheelDelta()
+        public bool IsMouseButtonDown(MouseButtons button)
         {
-            return currentMouseState.ScrollWheelValue - previousMouseState.ScrollWheelValue;
+            return GetMouseButtonState(currentMouseState, button) == ButtonState.Pressed;
         }
 
-        private ButtonState GetButtonState(MouseState mouseState, MouseButtons button)
+        public bool IsMouseButtonDown(MouseButtons button, int delay)
+        {
+            if (mouseDelay <= 0 && GetMouseButtonState(currentMouseState, button) == ButtonState.Pressed)
+            {
+                mouseDelay = delay;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsMouseButtonUp(MouseButtons button)
+        {
+            return GetMouseButtonState(currentMouseState, button) == ButtonState.Released;
+        }
+
+        public bool IsMouseButtonPressed(MouseButtons button)
+        {
+            return GetMouseButtonState(currentMouseState, button) == ButtonState.Pressed && GetMouseButtonState(previousMouseState, button) == ButtonState.Released;
+        }
+
+        public bool IsMouseButtonReleased(MouseButtons button)
+        {
+            return GetMouseButtonState(currentMouseState, button) == ButtonState.Released && GetMouseButtonState(previousMouseState, button) == ButtonState.Pressed;
+        }
+
+        private ButtonState GetMouseButtonState(MouseState mouseState, MouseButtons button)
         {
             switch (button)
             {
@@ -133,5 +178,7 @@ namespace XNAHelpers
                     return mouseState.XButton2;
             }
         }
+
+        #endregion Mouse
     }
 }

@@ -78,30 +78,30 @@ namespace TrainerPlugin
             DrawHooks.DrawInterface -= DrawHooks_DrawInterface;
         }
 
-        private void TerrariaHooks_Update(GameTime obj)
+        private void TerrariaHooks_Update(GameTime gameTime)
         {
             if (Game.IsActive && trainerSettings != null)
             {
-                input.Update();
+                input.Update(gameTime);
 
                 if (input.IsKeyPressed(Keys.F7))
                 {
                     trainerform.Visible = !trainerform.Visible;
                 }
-                else if (input.IsControlDown && input.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
+                else if (input.IsControlKeyDown && input.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
                 {
                     TrainerHelper.OpenBank();
                 }
-                else if (input.IsControlDown && input.IsKeyPressed(Keys.Z) && trainerSettings.CreateWater)
+                else if (input.IsControlKeyDown && input.IsKeyDown(Keys.Z, 250) && trainerSettings.CreateWater)
                 {
                     TrainerHelper.AddLiquidToCursor(true);
                 }
-                else if (input.IsControlDown && input.IsKeyPressed(Keys.X) && trainerSettings.CreateLava)
+                else if (input.IsControlKeyDown && input.IsKeyDown(Keys.X, 250) && trainerSettings.CreateLava)
                 {
                     TrainerHelper.AddLiquidToCursor(false);
                 }
 
-                if (input.IsMouseDown(MouseButtons.Middle))
+                if (input.IsMouseButtonDown(MouseButtons.Middle))
                 {
                     if (trainerSettings.DestroyTile)
                     {
