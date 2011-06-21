@@ -63,7 +63,7 @@ namespace TexturePlugin
             {
                 input.Update();
 
-                if (input.IsKeyDown(Keys.F8, true))
+                if (input.IsKeyPressed(Keys.F8))
                 {
                     if (textureform == null || textureform.IsDisposed)
                     {

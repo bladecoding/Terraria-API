@@ -65,9 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatCommand.cs" />
-    <Compile Include="MyListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="TeleportForm.cs">
       <SubType>Form</SubType>
     </Compile>

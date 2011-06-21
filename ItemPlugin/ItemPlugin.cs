@@ -67,7 +67,7 @@ namespace ItemPlugin
             {
                 input.Update();
 
-                if (input.IsKeyDown(Keys.F9, true) && itemForm != null)
+                if (input.IsKeyPressed(Keys.F9) && itemForm != null)
                 {
                     itemForm.Visible = !itemForm.Visible;
                 }

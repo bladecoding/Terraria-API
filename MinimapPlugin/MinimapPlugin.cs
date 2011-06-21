@@ -104,11 +104,11 @@ namespace MinimapPlugin
             {
                 input.Update();
 
-                if (input.IsKeyDown(Keys.F5, true))
+                if (input.IsKeyPressed(Keys.F5))
                 {
                     settings.ShowMinimap = !settings.ShowMinimap;
                 }
-                else if (input.IsKeyDown(Keys.F6, true))
+                else if (input.IsKeyPressed(Keys.F6))
                 {
                     if (settingsForm == null || settingsForm.IsDisposed)
                     {

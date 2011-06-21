@@ -92,11 +92,11 @@ namespace TeleportPlugin
                 {
                     helper.TeleportToLastLocation();
                 }
-                else if (input.IsKeyDown(Keys.F3, true))
+                else if (input.IsKeyPressed(Keys.F3))
                 {
                     helper.TeleportToCursor();
                 }
-                else if (input.IsKeyDown(Keys.F4, true))
+                else if (input.IsKeyPressed(Keys.F4))
                 {
                     if (teleportForm == null || teleportForm.IsDisposed)
                     {

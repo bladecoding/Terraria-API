@@ -33,6 +33,9 @@
             // 
             // pgTrainer
             // 
+            this.pgTrainer.CommandsActiveLinkColor = System.Drawing.SystemColors.ActiveCaption;
+            this.pgTrainer.CommandsDisabledLinkColor = System.Drawing.SystemColors.ControlDark;
+            this.pgTrainer.CommandsLinkColor = System.Drawing.SystemColors.ActiveCaption;
             this.pgTrainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pgTrainer.Location = new System.Drawing.Point(0, 0);
             this.pgTrainer.Name = "pgTrainer";
@@ -54,6 +57,7 @@
             this.Text = "Terraria Trainer";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrainerForm_FormClosing);
+            this.Shown += new System.EventHandler(this.TrainerForm_Shown);
             this.ResumeLayout(false);
 
         }

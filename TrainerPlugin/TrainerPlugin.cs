@@ -84,21 +84,34 @@ namespace TrainerPlugin
             {
                 input.Update();
 
-                if (input.IsKeyDown(Keys.F7, true))
+                if (input.IsKeyPressed(Keys.F7))
                 {
                     trainerform.Visible = !trainerform.Visible;
                 }
-                else if (input.IsControlDown && input.IsKeyDown(Keys.B, true) && trainerSettings.AllowBankOpen)
+                else if (input.IsControlDown && input.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
                 {
                     TrainerHelper.OpenBank();
                 }
-                else if (input.IsControlDown && input.IsKeyDown(Keys.Z, true) && trainerSettings.CreateWater)
+                else if (input.IsControlDown && input.IsKeyPressed(Keys.Z) && trainerSettings.CreateWater)
                 {
                     TrainerHelper.AddLiquidToCursor(true);
                 }
-                else if (input.IsControlDown && input.IsKeyDown(Keys.X, true) && trainerSettings.CreateLava)
+                else if (input.IsControlDown && input.IsKeyPressed(Keys.X) && trainerSettings.CreateLava)
                 {
                     TrainerHelper.AddLiquidToCursor(false);
+                }
+
+                if (input.IsMouseDown(MouseButtons.Middle))
+                {
+                    if (trainerSettings.DestroyTile)
+                    {
+                        TrainerHelper.DestroyTileFromCursor(false, trainerSettings.DestroyMore);
+                    }
+
+                    if (trainerSettings.DestroyWall)
+                    {
+                        TrainerHelper.DestroyTileFromCursor(true, trainerSettings.DestroyMore);
+                    }
                 }
             }
         }

@@ -112,14 +112,14 @@ namespace XNAHelpers
                     }
                     break;
                 case ConsoleState.Open:
-                    if (input.IsKeyDown(Keys.OemTilde, true))
+                    if (input.IsKeyPressed(Keys.OemTilde))
                     {
                         consoleState = ConsoleState.Closing;
                         stateStartTime = now;
                     }
                     break;
                 case ConsoleState.Closed:
-                    if (input.IsKeyDown(Keys.OemTilde, true))
+                    if (input.IsKeyPressed(Keys.OemTilde))
                     {
                         consoleState = ConsoleState.Opening;
                         stateStartTime = now;

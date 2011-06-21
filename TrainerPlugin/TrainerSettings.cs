@@ -38,7 +38,7 @@ namespace TrainerPlugin
         public bool NoPotionCooldown { get; set; }
         [DefaultValue(false), Description("Items won't use mana.")]
         public bool NoManaCost { get; set; }
-        [DefaultValue(false), Description("All tiles will be visible but also disables lighting.")]
+        [DefaultValue(false), Description("All tiles will be visible and light.")]
         public bool LightTiles { get; set; }
         [DefaultValue(false), Description("Your character will emit light. Like orb of light.")]
         public bool LightYourCharacter { get; set; }
@@ -56,6 +56,12 @@ namespace TrainerPlugin
         public bool CreateWater { get; set; }
         [DefaultValue(true), Description("When you press Ctrl + X creates Lava to where cursor position is.")]
         public bool CreateLava { get; set; }
+        [DefaultValue(true), Description("When you press middle mouse button tile will be destroyed from where cursor is.")]
+        public bool DestroyTile { get; set; }
+        [DefaultValue(true), Description("When you press middle mouse button wall will be destroyed from where cursor is.")]
+        public bool DestroyWall { get; set; }
+        [DefaultValue(false), Description("When using DestroyTile or DestroyWall 3x3 (9) tile/wall will be destroyed from where cursor is instead of 1x1 (1).")]
+        public bool DestroyMore { get; set; }
 
         public TrainerSettings()
         {
@@ -63,6 +69,8 @@ namespace TrainerPlugin
             AllowBankOpen = true;
             CreateWater = true;
             CreateLava = true;
+            DestroyTile = true;
+            DestroyWall = true;
         }
     }
 }

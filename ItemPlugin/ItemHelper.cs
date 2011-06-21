@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using TerrariaAPI;
 
 namespace ItemPlugin
 {
@@ -92,7 +93,7 @@ namespace ItemPlugin
 
             if (Main.netMode == 1)
             {
-                NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f);
+                NetMessage.SendData((int)PacketTypes.ItemDrop, -1, -1, "", num, 0f, 0f, 0f);
             }
 
             return item;

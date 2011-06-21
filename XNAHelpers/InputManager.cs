@@ -11,6 +11,24 @@ namespace XNAHelpers
         private KeyboardState currentKeyboardState, previousKeyboardState;
         private MouseState currentMouseState, previousMouseState;
 
+        public InputManager()
+        {
+            currentKeyboardState = new KeyboardState();
+            previousKeyboardState = new KeyboardState();
+            currentMouseState = new MouseState();
+            previousMouseState = new MouseState();
+        }
+
+        public void Update()
+        {
+            previousKeyboardState = currentKeyboardState;
+            currentKeyboardState = Keyboard.GetState();
+            previousMouseState = currentMouseState;
+            currentMouseState = Mouse.GetState();
+        }
+
+        // Keyboard
+
         public bool IsAltDown
         {
             get { return IsKeyDown(Keys.LeftAlt) || IsKeyDown(Keys.RightAlt); }
@@ -26,30 +44,24 @@ namespace XNAHelpers
             get { return IsKeyDown(Keys.LeftShift) || IsKeyDown(Keys.RightShift); }
         }
 
-        public InputManager()
+        public bool IsKeyDown(Keys key)
         {
-            currentKeyboardState = new KeyboardState();
-            previousKeyboardState = new KeyboardState();
-            currentMouseState = new MouseState();
-            previousMouseState = new MouseState();
+            return currentKeyboardState.IsKeyDown(key);
         }
 
-        public void Update()
+        public bool IsKeyUp(Keys key)
         {
-            previousKeyboardState = currentKeyboardState;
-            previousMouseState = currentMouseState;
-            currentKeyboardState = Keyboard.GetState();
-            currentMouseState = Mouse.GetState();
+            return currentKeyboardState.IsKeyUp(key);
         }
 
-        public bool IsKeyDown(Keys key, bool once = false)
+        public bool IsKeyPressed(Keys key)
         {
-            return currentKeyboardState.IsKeyDown(key) && (!once || previousKeyboardState.IsKeyUp(key));
+            return currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key);
         }
 
-        public bool IsKeyUp(Keys key, bool once = false)
+        public bool IsKeyReleased(Keys key)
         {
-            return currentKeyboardState.IsKeyUp(key) && (!once || previousKeyboardState.IsKeyDown(key));
+            return currentKeyboardState.IsKeyUp(key) && previousKeyboardState.IsKeyDown(key);
         }
 
         public Keys[] GetPressedKeys(bool once = false)
@@ -72,20 +84,26 @@ namespace XNAHelpers
             return currentKeyboardState.GetPressedKeys();
         }
 
-        public bool IsMouseDown(MouseButtons button, bool once = false)
-        {
-            ButtonState currentButtonState = GetButtonState(currentMouseState, button);
-            ButtonState previousButtonState = GetButtonState(previousMouseState, button);
+        // Mouse
 
-            return currentButtonState == ButtonState.Pressed && (!once || previousButtonState == ButtonState.Released);
+        public bool IsMouseDown(MouseButtons button)
+        {
+            return GetButtonState(currentMouseState, button) == ButtonState.Pressed;
         }
 
-        public bool IsMouseUp(MouseButtons button, bool once = false)
+        public bool IsMouseUp(MouseButtons button)
         {
-            ButtonState currentButtonState = GetButtonState(currentMouseState, button);
-            ButtonState previousButtonState = GetButtonState(previousMouseState, button);
+            return GetButtonState(currentMouseState, button) == ButtonState.Released;
+        }
 
-            return currentButtonState == ButtonState.Released && (!once || previousButtonState == ButtonState.Pressed);
+        public bool IsMousePressed(MouseButtons button)
+        {
+            return GetButtonState(currentMouseState, button) == ButtonState.Pressed && GetButtonState(previousMouseState, button) == ButtonState.Released;
+        }
+
+        public bool IsMouseReleased(MouseButtons button)
+        {
+            return GetButtonState(currentMouseState, button) == ButtonState.Released && GetButtonState(previousMouseState, button) == ButtonState.Pressed;
         }
 
         public Vector2 GetMousePosition()

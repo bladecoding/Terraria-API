@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using TerrariaAPI;
 using XNAHelpers;
 
 namespace TrainerPlugin
@@ -40,6 +41,66 @@ namespace TrainerPlugin
         public static void LightCursor()
         {
             Lighting.addLight(tileTargetX, tileTargetY, 1f);
+        }
+
+        public static void DestroyTileFromCursor(bool isWall = false, bool isBigBrush = false)
+        {
+            int x = tileTargetX, y = tileTargetY;
+
+            if (isBigBrush)
+            {
+                for (int y2 = y - 1; y2 < y + 2; y2++)
+                {
+                    for (int x2 = x - 1; x2 < x + 2; x2++)
+                    {
+                        if (isWall)
+                        {
+                            DestroyWall(x2, y2);
+                        }
+                        else
+                        {
+                            DestroyTile(x2, y2);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (isWall)
+                {
+                    DestroyWall(x, y);
+                }
+                else
+                {
+                    DestroyTile(x, y);
+                }
+            }
+        }
+
+        public static void DestroyTile(int x, int y)
+        {
+            if (Main.tile[x, y].active)
+            {
+                WorldGen.KillTile(x, y, false, false, true);
+
+                if (Main.netMode == 1)
+                {
+                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", 4, (float)x, (float)y, 0f);
+                }
+            }
+        }
+
+        public static void DestroyWall(int x, int y)
+        {
+            if (Main.tile[x, y].wall > 0)
+            {
+                WorldGen.KillWall(x, y, false);
+
+                if (Main.netMode == 1)
+                {
+                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", 2, (float)x, (float)y, 0f);
+                }
+            }
         }
 
         public static void OpenBank()
