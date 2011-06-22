@@ -43,6 +43,26 @@ namespace TrainerPlugin
             Lighting.addLight(tileTargetX, tileTargetY, 1f);
         }
 
+        public static void AddTileToCursor(int type, bool isBigBrush)
+        {
+            int x = tileTargetX, y = tileTargetY;
+
+            if (isBigBrush)
+            {
+                for (int y2 = y - 1; y2 < y + 2; y2++)
+                {
+                    for (int x2 = x - 1; x2 < x + 2; x2++)
+                    {
+                        CreateTile(x2, y2, type);
+                    }
+                }
+            }
+            else
+            {
+                CreateTile(x, y, type);
+            }
+        }
+
         public static void DestroyTileFromCursor(bool isWall = false, bool isBigBrush = false)
         {
             int x = tileTargetX, y = tileTargetY;
@@ -73,6 +93,19 @@ namespace TrainerPlugin
                 else
                 {
                     DestroyTile(x, y);
+                }
+            }
+        }
+
+        public static void CreateTile(int x, int y, int type)
+        {
+            if (Main.tile[x, y].type != type)
+            {
+                WorldGen.PlaceTile(x, y, type, false, false, Main.myPlayer);
+
+                if (Main.netMode == 1)
+                {
+                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", 1, (float)x, (float)y, type);
                 }
             }
         }

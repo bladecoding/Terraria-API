@@ -74,12 +74,17 @@ namespace XNAHelpers
             sb.Draw(border, new XNARectangle(rectangle.X + rectangle.Width - 1, rectangle.Y, 1, rectangle.Height), Color.White); // Right
         }
 
-        public static Bitmap ResizeImage(Image img, int width, int height)
+        public static Bitmap ResizeImage(Image img, int width, int height, bool allowEnlarge = false, bool centerImage = true)
+        {
+            return ResizeImage(img, new Rectangle(0, 0, width, height), allowEnlarge, centerImage);
+        }
+
+        public static Bitmap ResizeImage(Image img, Rectangle rect, bool allowEnlarge = false, bool centerImage = true)
         {
             double ratio;
-            int newWidth, newHeight;
+            int newWidth, newHeight, newX, newY;
 
-            if (img.Width <= width && img.Height <= height)
+            if (!allowEnlarge && img.Width <= rect.Width && img.Height <= rect.Height)
             {
                 ratio = 1.0;
                 newWidth = img.Width;
@@ -87,22 +92,28 @@ namespace XNAHelpers
             }
             else
             {
-                double ratioX = (double)width / (double)img.Width;
-                double ratioY = (double)height / (double)img.Height;
+                double ratioX = (double)rect.Width / (double)img.Width;
+                double ratioY = (double)rect.Height / (double)img.Height;
                 ratio = ratioX < ratioY ? ratioX : ratioY;
                 newWidth = (int)(img.Width * ratio);
                 newHeight = (int)(img.Height * ratio);
             }
 
-            int posX = (int)((width - (img.Width * ratio)) / 2);
-            int posY = (int)((height - (img.Height * ratio)) / 2);
+            newX = rect.X;
+            newY = rect.Y;
 
-            Bitmap bmp = new Bitmap(width, height);
+            if (centerImage)
+            {
+                newX += (int)((rect.Width - (img.Width * ratio)) / 2);
+                newY += (int)((rect.Height - (img.Height * ratio)) / 2);
+            }
+
+            Bitmap bmp = new Bitmap(rect.Width, rect.Height);
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 g.InterpolationMode = InterpolationMode.NearestNeighbor;
-                g.DrawImage(img, posX, posY, newWidth, newHeight);
+                g.DrawImage(img, newX, newY, newWidth, newHeight);
             }
 
             return bmp;

@@ -101,16 +101,25 @@ namespace TrainerPlugin
                     TrainerHelper.AddLiquidToCursor(false);
                 }
 
-                if (input.IsMouseButtonDown(MouseButtons.Middle))
+                if (input.IsMouseButtonDown(MouseButtons.Right) && trainerSettings.CreateTile)
+                {
+                    Item item = me.inventory[me.selectedItem];
+
+                    if (item.active && item.createTile > -1)
+                    {
+                        TrainerHelper.AddTileToCursor(item.createTile, trainerSettings.BigBrushSize);
+                    }
+                }
+                else if (input.IsMouseButtonDown(MouseButtons.Middle))
                 {
                     if (trainerSettings.DestroyTile)
                     {
-                        TrainerHelper.DestroyTileFromCursor(false, trainerSettings.DestroyMore);
+                        TrainerHelper.DestroyTileFromCursor(false, trainerSettings.BigBrushSize);
                     }
 
                     if (trainerSettings.DestroyWall)
                     {
-                        TrainerHelper.DestroyTileFromCursor(true, trainerSettings.DestroyMore);
+                        TrainerHelper.DestroyTileFromCursor(true, trainerSettings.BigBrushSize);
                     }
                 }
             }
