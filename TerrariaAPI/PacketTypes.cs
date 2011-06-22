@@ -55,4 +55,13 @@
         LiquidSet = 48,
         PlayerSpawnSelf = 49
     }
+
+    public enum TileCommand
+    {
+        KillTile = 0,
+        PlaceTile = 1,
+        KillWall = 2,
+        PlaceWall = 3,
+        KillTileNoItem = 4
+    }
 }

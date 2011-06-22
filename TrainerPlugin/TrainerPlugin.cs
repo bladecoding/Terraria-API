@@ -101,13 +101,20 @@ namespace TrainerPlugin
                     TrainerHelper.AddLiquidToCursor(false);
                 }
 
-                if (input.IsMouseButtonDown(MouseButtons.Right) && trainerSettings.CreateTile)
+                if (input.IsMouseButtonDown(MouseButtons.Right, 50) && trainerSettings.CreateTile)
                 {
                     Item item = me.inventory[me.selectedItem];
 
-                    if (item.active && item.createTile > -1)
+                    if (item.active)
                     {
-                        TrainerHelper.AddTileToCursor(item.createTile, trainerSettings.BigBrushSize);
+                        if (item.createTile >= 0)
+                        {
+                            TrainerHelper.AddTileToCursor(item.createTile, false, trainerSettings.BigBrushSize);
+                        }
+                        else if (item.createWall >= 0)
+                        {
+                            TrainerHelper.AddTileToCursor(item.createWall, true, trainerSettings.BigBrushSize);
+                        }
                     }
                 }
                 else if (input.IsMouseButtonDown(MouseButtons.Middle))

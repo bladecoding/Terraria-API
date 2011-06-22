@@ -43,7 +43,7 @@ namespace TrainerPlugin
             Lighting.addLight(tileTargetX, tileTargetY, 1f);
         }
 
-        public static void AddTileToCursor(int type, bool isBigBrush)
+        public static void AddTileToCursor(int type, bool isWall = false, bool isBigBrush = false)
         {
             int x = tileTargetX, y = tileTargetY;
 
@@ -53,13 +53,27 @@ namespace TrainerPlugin
                 {
                     for (int x2 = x - 1; x2 < x + 2; x2++)
                     {
-                        CreateTile(x2, y2, type);
+                        if (isWall)
+                        {
+                            CreateWall(x2, y2, type);
+                        }
+                        else
+                        {
+                            CreateTile(x2, y2, type);
+                        }
                     }
                 }
             }
             else
             {
-                CreateTile(x, y, type);
+                if (isWall)
+                {
+                    CreateWall(x, y, type);
+                }
+                else
+                {
+                    CreateTile(x, y, type);
+                }
             }
         }
 
@@ -99,13 +113,26 @@ namespace TrainerPlugin
 
         public static void CreateTile(int x, int y, int type)
         {
-            if (Main.tile[x, y].type != type)
+            if (!Main.tile[x, y].active)
             {
                 WorldGen.PlaceTile(x, y, type, false, false, Main.myPlayer);
 
-                if (Main.netMode == 1)
+                if (Main.tile[x, y].type == type && Main.netMode == 1)
                 {
-                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", 1, (float)x, (float)y, type);
+                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", (int)TileCommand.PlaceTile, (float)x, (float)y, type);
+                }
+            }
+        }
+
+        public static void CreateWall(int x, int y, int type)
+        {
+            if (Main.tile[x, y].wall != type)
+            {
+                WorldGen.PlaceWall(x, y, type, false);
+
+                if (Main.tile[x, y].wall == type && Main.netMode == 1)
+                {
+                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", (int)TileCommand.PlaceWall, (float)x, (float)y, type);
                 }
             }
         }
@@ -118,7 +145,7 @@ namespace TrainerPlugin
 
                 if (Main.netMode == 1)
                 {
-                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", 4, (float)x, (float)y, 0f);
+                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", (int)TileCommand.KillTileNoItem, (float)x, (float)y, 0f);
                 }
             }
         }
@@ -131,7 +158,7 @@ namespace TrainerPlugin
 
                 if (Main.netMode == 1)
                 {
-                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", 2, (float)x, (float)y, 0f);
+                    NetMessage.SendData((int)PacketTypes.Tile, -1, -1, "", (int)TileCommand.KillWall, (float)x, (float)y, 0f);
                 }
             }
         }
