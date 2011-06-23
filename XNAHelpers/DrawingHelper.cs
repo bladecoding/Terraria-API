@@ -66,12 +66,12 @@ namespace XNAHelpers
             DrawBorder(sb, border, rectangle);
         }
 
-        public static void DrawBorder(SpriteBatch sb, Texture2D border, XNARectangle rectangle)
+        public static void DrawBorder(SpriteBatch sb, Texture2D border, XNARectangle rectangle, float transparency = 1.0f)
         {
-            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y, rectangle.Width, 1), Color.White); // Top
-            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y, 1, rectangle.Height), Color.White); // Left
-            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y + rectangle.Height - 1, rectangle.Width, 1), Color.White); // Bottom
-            sb.Draw(border, new XNARectangle(rectangle.X + rectangle.Width - 1, rectangle.Y, 1, rectangle.Height), Color.White); // Right
+            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y, rectangle.Width, 1), Color.White * transparency); // Top
+            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y, 1, rectangle.Height), Color.White * transparency); // Left
+            sb.Draw(border, new XNARectangle(rectangle.X, rectangle.Y + rectangle.Height - 1, rectangle.Width, 1), Color.White * transparency); // Bottom
+            sb.Draw(border, new XNARectangle(rectangle.X + rectangle.Width - 1, rectangle.Y, 1, rectangle.Height), Color.White * transparency); // Right
         }
 
         public static Bitmap ResizeImage(Image img, int width, int height, bool allowEnlarge = false, bool centerImage = true)

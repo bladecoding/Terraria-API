@@ -38,10 +38,11 @@ namespace TrainerPlugin
         }
 
         private InputManager input;
-        private TrainerForm trainerform;
+        private TrainerForm trainerForm;
         private TrainerSettings trainerSettings;
         private TrainerSettings defaultSettings;
-        private Texture2D gridtexture;
+        private Texture2D gridTexture;
+        private Texture2D border;
 
         private Player me
         {
@@ -54,7 +55,7 @@ namespace TrainerPlugin
             input = new InputManager();
             trainerSettings = new TrainerSettings();
             defaultSettings = new TrainerSettings();
-            trainerform = new TrainerForm(trainerSettings);
+            trainerForm = new TrainerForm(trainerSettings);
         }
 
         public override void Initialize()
@@ -67,7 +68,8 @@ namespace TrainerPlugin
 
         private void GameHooks_LoadContent(ContentManager obj)
         {
-            gridtexture = TrainerHelper.CreateGrid(Game.GraphicsDevice);
+            gridTexture = TrainerHelper.CreateGrid(Game.GraphicsDevice, 0.1f);
+            border = DrawingHelper.CreateOnePixelTexture(Game.GraphicsDevice, Color.White);
         }
 
         public override void DeInitialize()
@@ -86,7 +88,7 @@ namespace TrainerPlugin
 
                 if (input.IsKeyPressed(Keys.F7))
                 {
-                    trainerform.Visible = !trainerform.Visible;
+                    trainerForm.Visible = !trainerForm.Visible;
                 }
                 else if (input.IsControlKeyDown && input.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
                 {
@@ -255,16 +257,12 @@ namespace TrainerPlugin
         {
             if (trainerSettings.DrawGrid)
             {
-                int offx = (int)(Main.screenPosition.X) % 16;
-                int offy = (int)(Main.screenPosition.Y) % 16;
+                TrainerHelper.DrawGrid(sb, gridTexture);
+            }
 
-                for (int y = -offy; y < Main.screenHeight + 16; y += 16)
-                {
-                    for (int x = -offx; x < Main.screenWidth + 16; x += 16)
-                    {
-                        sb.Draw(gridtexture, new Vector2(x, y), Color.White);
-                    }
-                }
+            if (trainerSettings.DrawGridCursor)
+            {
+                TrainerHelper.DrawGridCursor(sb, border);
             }
         }
     }

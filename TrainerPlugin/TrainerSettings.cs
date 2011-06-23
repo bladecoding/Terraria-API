@@ -50,6 +50,8 @@ namespace TrainerPlugin
         public bool StopSpawns { get; set; }
         [DefaultValue(false), Description("Draws tile grid.")]
         public bool DrawGrid { get; set; }
+        [DefaultValue(false), Description("Draws tile grid to where cursor position is.")]
+        public bool DrawGridCursor { get; set; }
         [DefaultValue(true), Description("When you press Ctrl + B piggy bank will open. Only works in single player.")]
         public bool AllowBankOpen { get; set; }
         [DefaultValue(true), Description("When you press Ctrl + Z creates water to where cursor position is.")]

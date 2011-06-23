@@ -195,10 +195,10 @@ namespace TrainerPlugin
             }
         }
 
-        public static Texture2D CreateGrid(GraphicsDevice gd)
+        public static Texture2D CreateGrid(GraphicsDevice gd, float transparency)
         {
             int[] ints = new int[16 * 16];
-            int border = (Color.White * 0.1f).ToAbgr();
+            int border = (Color.White * transparency).ToAbgr();
 
             // Right border
             for (int i = 15; i < ints.Length; i += 16)
@@ -209,6 +209,47 @@ namespace TrainerPlugin
                 ints[i] = border;
 
             return DrawingHelper.IntsToTexture(gd, ints, 16, 16);
+        }
+
+        public static void DrawGrid(SpriteBatch sb, Texture2D gridTexture)
+        {
+            int offx = (int)(Main.screenPosition.X) % 16;
+            int offy = (int)(Main.screenPosition.Y) % 16;
+
+            for (int y = -offy; y < Main.screenHeight + 16; y += 16)
+            {
+                for (int x = -offx; x < Main.screenWidth + 16; x += 16)
+                {
+                    sb.Draw(gridTexture, new Vector2(x, y), Color.White);
+                }
+            }
+        }
+
+        public static void DrawGridCursor(SpriteBatch sb, Texture2D border, float transparency = 0.5f)
+        {
+            int x = (int)(Main.mouseState.X - ((Main.screenPosition.X + Main.mouseState.X) % 16));
+            int y = (int)(Main.mouseState.Y - ((Main.screenPosition.Y + Main.mouseState.Y) % 16));
+
+            for (int y2 = -1; y2 <= 1; y2++)
+            {
+                for (int x2 = -1; x2 <= 1; x2++)
+                {
+                    int offsetX = x2 * 16;
+                    int offsetY = y2 * 16;
+                    float alpha;
+
+                    if (x2 == 0 && y2 == 0)
+                    {
+                        alpha = transparency;
+                    }
+                    else
+                    {
+                        alpha = transparency / 5;
+                    }
+
+                    DrawingHelper.DrawBorder(sb, border, new Rectangle(x + offsetX, y + offsetY, 16, 16), alpha);
+                }
+            }
         }
     }
 }
