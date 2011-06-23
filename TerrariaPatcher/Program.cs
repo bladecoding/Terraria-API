@@ -36,25 +36,15 @@ namespace TerrariaPatcher
                 {
                     md5 = MD5(fs);
                 }
-                var terrariaver = FileVersionInfo.GetVersionInfo(AssemblyName + ".exe");
+
                 string apitmp = Path.Combine(Environment.CurrentDirectory, "apitmp");
 
                 Output("Downloading Patches Information");
                 var patches = DownloadPatches();
 
-                string vmd5;
-                if (!patches.TryGetValue(terrariaver.ProductVersion, out vmd5))
+                if (!patches.Contains(md5))
                 {
-                    Output(AssemblyName + " version not supported ({0})", terrariaver.ProductVersion);
-                    Console.ReadLine();
-                    return;
-                }
-
-                if (vmd5 != md5)
-                {
-                    Output(AssemblyName + " hash mismatch (already patched?).");
-                    Output("Version {0}", terrariaver.ProductVersion);
-                    Output("Expected {0} got {1}", vmd5, md5);
+                    Output(AssemblyName + " hash not found ({0})", md5);
                     Console.ReadLine();
                     return;
                 }
@@ -162,9 +152,9 @@ namespace TerrariaPatcher
             Log(string.Format(str, objs));
         }
 
-        private static Dictionary<string, string> DownloadPatches()
+        private static List<string> DownloadPatches()
         {
-            var ret = new Dictionary<string, string>();
+            var ret = new List<string>();
 
             string patches = new WebClient().DownloadString("http://dl.dropbox.com/u/29760911/" + AssemblyName + "Api/patches.txt");
             var ps = patches.Split('\n', '\r');
@@ -174,7 +164,7 @@ namespace TerrariaPatcher
                 if (kv.Length != 2)
                     continue;
 
-                ret.Add(kv[0], kv[1]);
+                ret.Add(kv[1]);
             }
             return ret;
         }
