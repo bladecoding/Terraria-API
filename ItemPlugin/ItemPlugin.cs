@@ -61,11 +61,11 @@ namespace ItemPlugin
             itemForm = new ItemForm();
         }
 
-        private void GameHooks_Update(GameTime obj)
+        private void GameHooks_Update(GameTime gameTime)
         {
             if (Game.IsActive)
             {
-                input.Update();
+                input.Update(gameTime);
 
                 if (input.IsKeyPressed(Keys.F9) && itemForm != null)
                 {

@@ -50,18 +50,22 @@ namespace TrainerPlugin
         public bool StopSpawns { get; set; }
         [DefaultValue(false), Description("Draws tile grid.")]
         public bool DrawGrid { get; set; }
+        [DefaultValue(false), Description("Draws tile grid to where cursor position is.")]
+        public bool DrawGridCursor { get; set; }
         [DefaultValue(true), Description("When you press Ctrl + B piggy bank will open. Only works in single player.")]
         public bool AllowBankOpen { get; set; }
         [DefaultValue(true), Description("When you press Ctrl + Z creates water to where cursor position is.")]
         public bool CreateWater { get; set; }
         [DefaultValue(true), Description("When you press Ctrl + X creates Lava to where cursor position is.")]
         public bool CreateLava { get; set; }
+        [DefaultValue(true), Description("When you press right mouse button tile will be created to where cursor is. Tile type will be your current selected inventory item, if it can create tile.")]
+        public bool CreateTile { get; set; }
         [DefaultValue(true), Description("When you press middle mouse button tile will be destroyed from where cursor is.")]
         public bool DestroyTile { get; set; }
         [DefaultValue(true), Description("When you press middle mouse button wall will be destroyed from where cursor is.")]
         public bool DestroyWall { get; set; }
-        [DefaultValue(false), Description("When using DestroyTile or DestroyWall 3x3 (9) tile/wall will be destroyed from where cursor is instead of 1x1 (1).")]
-        public bool DestroyMore { get; set; }
+        [DefaultValue(false), Description("When using CreateTile/DestroyTile/DestroyWall 3x3 (9) tile/wall will be created/destroyed from where cursor is instead of 1x1 (1).")]
+        public bool BigBrushSize { get; set; }
 
         public TrainerSettings()
         {
@@ -69,6 +73,7 @@ namespace TrainerPlugin
             AllowBankOpen = true;
             CreateWater = true;
             CreateLava = true;
+            CreateTile = true;
             DestroyTile = true;
             DestroyWall = true;
         }

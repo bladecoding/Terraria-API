@@ -38,10 +38,11 @@ namespace TrainerPlugin
         }
 
         private InputManager input;
-        private TrainerForm trainerform;
+        private TrainerForm trainerForm;
         private TrainerSettings trainerSettings;
         private TrainerSettings defaultSettings;
-        private Texture2D gridtexture;
+        private Texture2D gridTexture;
+        private Texture2D border;
 
         private Player me
         {
@@ -54,7 +55,7 @@ namespace TrainerPlugin
             input = new InputManager();
             trainerSettings = new TrainerSettings();
             defaultSettings = new TrainerSettings();
-            trainerform = new TrainerForm(trainerSettings);
+            trainerForm = new TrainerForm(trainerSettings);
         }
 
         public override void Initialize()
@@ -67,7 +68,8 @@ namespace TrainerPlugin
 
         private void GameHooks_LoadContent(ContentManager obj)
         {
-            gridtexture = TrainerHelper.CreateGrid(Game.GraphicsDevice);
+            gridTexture = TrainerHelper.CreateGrid(Game.GraphicsDevice, 0.1f);
+            border = DrawingHelper.CreateOnePixelTexture(Game.GraphicsDevice, Color.White);
         }
 
         public override void DeInitialize()
@@ -78,39 +80,55 @@ namespace TrainerPlugin
             DrawHooks.DrawInterface -= DrawHooks_DrawInterface;
         }
 
-        private void TerrariaHooks_Update(GameTime obj)
+        private void TerrariaHooks_Update(GameTime gameTime)
         {
             if (Game.IsActive && trainerSettings != null)
             {
-                input.Update();
+                input.Update(gameTime);
 
                 if (input.IsKeyPressed(Keys.F7))
                 {
-                    trainerform.Visible = !trainerform.Visible;
+                    trainerForm.Visible = !trainerForm.Visible;
                 }
-                else if (input.IsControlDown && input.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
+                else if (input.IsControlKeyDown && input.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
                 {
                     TrainerHelper.OpenBank();
                 }
-                else if (input.IsControlDown && input.IsKeyPressed(Keys.Z) && trainerSettings.CreateWater)
+                else if (input.IsControlKeyDown && input.IsKeyDown(Keys.Z, 250) && trainerSettings.CreateWater)
                 {
                     TrainerHelper.AddLiquidToCursor(true);
                 }
-                else if (input.IsControlDown && input.IsKeyPressed(Keys.X) && trainerSettings.CreateLava)
+                else if (input.IsControlKeyDown && input.IsKeyDown(Keys.X, 250) && trainerSettings.CreateLava)
                 {
                     TrainerHelper.AddLiquidToCursor(false);
                 }
 
-                if (input.IsMouseDown(MouseButtons.Middle))
+                if (input.IsMouseButtonDown(MouseButtons.Right, 50) && trainerSettings.CreateTile)
+                {
+                    Item item = me.inventory[me.selectedItem];
+
+                    if (item.active)
+                    {
+                        if (item.createTile >= 0)
+                        {
+                            TrainerHelper.AddTileToCursor(item.createTile, false, trainerSettings.BigBrushSize);
+                        }
+                        else if (item.createWall >= 0)
+                        {
+                            TrainerHelper.AddTileToCursor(item.createWall, true, trainerSettings.BigBrushSize);
+                        }
+                    }
+                }
+                else if (input.IsMouseButtonDown(MouseButtons.Middle))
                 {
                     if (trainerSettings.DestroyTile)
                     {
-                        TrainerHelper.DestroyTileFromCursor(false, trainerSettings.DestroyMore);
+                        TrainerHelper.DestroyTileFromCursor(false, trainerSettings.BigBrushSize);
                     }
 
                     if (trainerSettings.DestroyWall)
                     {
-                        TrainerHelper.DestroyTileFromCursor(true, trainerSettings.DestroyMore);
+                        TrainerHelper.DestroyTileFromCursor(true, trainerSettings.BigBrushSize);
                     }
                 }
             }
@@ -239,16 +257,12 @@ namespace TrainerPlugin
         {
             if (trainerSettings.DrawGrid)
             {
-                int offx = (int)(Main.screenPosition.X) % 16;
-                int offy = (int)(Main.screenPosition.Y) % 16;
+                TrainerHelper.DrawGrid(sb, gridTexture);
+            }
 
-                for (int y = -offy; y < Main.screenHeight + 16; y += 16)
-                {
-                    for (int x = -offx; x < Main.screenWidth + 16; x += 16)
-                    {
-                        sb.Draw(gridtexture, new Vector2(x, y), Color.White);
-                    }
-                }
+            if (trainerSettings.DrawGridCursor)
+            {
+                TrainerHelper.DrawGridCursor(sb, border);
             }
         }
     }

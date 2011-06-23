@@ -33,15 +33,11 @@ namespace XNAHelpers
             : base(game)
         {
             Visible = false;
-
             AnimationTime = 0.3f;
             MaxLineCount = 20;
-
             consoleState = ConsoleState.Closed;
             stateStartTime = 0;
-
             input = new InputManager();
-
             outputBuffer = new StringBuilder(1024);
             stringWriter = new StringWriter(outputBuffer);
             Console.SetOut(stringWriter);
@@ -89,7 +85,7 @@ namespace XNAHelpers
 
         public override void Update(GameTime gameTime)
         {
-            input.Update();
+            input.Update(gameTime);
 
             double now = gameTime.TotalGameTime.TotalSeconds;
             double elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -136,7 +132,7 @@ namespace XNAHelpers
 
         private void CheckInput()
         {
-            foreach (Keys key in input.GetPressedKeys(true))
+            foreach (Keys key in input.GetKeysPressed())
             {
                 int num = (int)key;
 
@@ -150,7 +146,7 @@ namespace XNAHelpers
                 }
                 else if (num >= 65 && num <= 90) // A - Z
                 {
-                    if (!input.IsShiftDown)
+                    if (!input.IsShiftKeyDown)
                     {
                         num += 32;
                     }

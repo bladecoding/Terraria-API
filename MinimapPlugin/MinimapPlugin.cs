@@ -98,11 +98,11 @@ namespace MinimapPlugin
             // chest = BitmapToTexture(Game.GraphicsDevice, Properties.Resources.chest);
         }
 
-        private void GameHooks_Update(GameTime obj)
+        private void GameHooks_Update(GameTime gameTime)
         {
             if (Game.IsActive && settings != null)
             {
-                input.Update();
+                input.Update(gameTime);
 
                 if (input.IsKeyPressed(Keys.F5))
                 {

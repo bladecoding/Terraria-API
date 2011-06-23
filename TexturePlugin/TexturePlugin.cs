@@ -57,11 +57,11 @@ namespace TexturePlugin
             base.Dispose();
         }
 
-        private void TerrariaHooks_Update(GameTime obj)
+        private void TerrariaHooks_Update(GameTime gameTime)
         {
             if (Game.IsActive)
             {
-                input.Update();
+                input.Update(gameTime);
 
                 if (input.IsKeyPressed(Keys.F8))
                 {

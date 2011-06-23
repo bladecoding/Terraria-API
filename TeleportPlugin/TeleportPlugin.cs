@@ -82,7 +82,7 @@ namespace TeleportPlugin
         {
             if (Game.IsActive && helper != null)
             {
-                input.Update();
+                input.Update(gameTime);
 
                 if (input.IsKeyDown(Keys.F1))
                 {
