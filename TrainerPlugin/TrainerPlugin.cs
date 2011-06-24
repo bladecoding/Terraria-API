@@ -236,8 +236,8 @@ namespace TrainerPlugin
             {
                 me.manaCost = 0;
             }
-
-            Main.lightTiles = settings.LightTiles;
+            //Todo: Fix this
+            //Main.lightTiles = settings.LightTiles;
 
             if (settings.LightYourCharacter)
             {
@@ -248,9 +248,9 @@ namespace TrainerPlugin
             {
                 TrainerHelper.LightCursor();
             }
-
-            Main.grabSun = settings.GrabSun;
-            Main.stopSpawns = settings.StopSpawns;
+            //Todo: Fix these
+            //Main.grabSun = settings.GrabSun;
+            //Main.stopSpawns = settings.StopSpawns;
         }
 
         private void DrawHooks_DrawInterface(SpriteBatch sb, HandledEventArgs e)

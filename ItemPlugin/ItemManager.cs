@@ -61,7 +61,7 @@ namespace ItemPlugin
         private void AddItem(int type)
         {
             Item item = new Item();
-            item.RealSetDefaults(type);
+            item.RealSetDefaults(type, true);
             AddItem(item);
         }
 
