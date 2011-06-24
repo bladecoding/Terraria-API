@@ -37,10 +37,8 @@ namespace TrainerPlugin
             get { return "Just a simple 'trainer'"; }
         }
 
-        private InputManager input;
         private TrainerForm trainerForm;
-        private TrainerSettings trainerSettings;
-        private TrainerSettings defaultSettings;
+        private TrainerSettings trainerSettings, defaultSettings, currentSettings;
         private Texture2D gridTexture;
         private Texture2D border;
 
@@ -52,7 +50,6 @@ namespace TrainerPlugin
         public TrainerPlugin(Main game)
             : base(game)
         {
-            input = new InputManager();
             trainerSettings = new TrainerSettings();
             defaultSettings = new TrainerSettings();
             trainerForm = new TrainerForm(trainerSettings);
@@ -63,6 +60,7 @@ namespace TrainerPlugin
             GameHooks.LoadContent += GameHooks_LoadContent;
             GameHooks.Update += TerrariaHooks_Update;
             PlayerHooks.UpdatePhysics += PlayerHooks_UpdatePhysics;
+            DrawHooks.DrawTiles += DrawHooks_DrawTiles;
             DrawHooks.DrawInterface += DrawHooks_DrawInterface;
         }
 
@@ -84,26 +82,24 @@ namespace TrainerPlugin
         {
             if (Game.IsActive && trainerSettings != null)
             {
-                input.Update(gameTime);
-
-                if (input.IsKeyPressed(Keys.F7))
+                if (InputManager.IsKeyPressed(Keys.F7))
                 {
                     trainerForm.Visible = !trainerForm.Visible;
                 }
-                else if (input.IsControlKeyDown && input.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
+                else if (InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
                 {
                     TrainerHelper.OpenBank();
                 }
-                else if (input.IsControlKeyDown && input.IsKeyDown(Keys.Z, 250) && trainerSettings.CreateWater)
+                else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.Z, 250) && trainerSettings.CreateWater)
                 {
                     TrainerHelper.AddLiquidToCursor(true);
                 }
-                else if (input.IsControlKeyDown && input.IsKeyDown(Keys.X, 250) && trainerSettings.CreateLava)
+                else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.X, 250) && trainerSettings.CreateLava)
                 {
                     TrainerHelper.AddLiquidToCursor(false);
                 }
 
-                if (input.IsMouseButtonDown(MouseButtons.Right, 50) && trainerSettings.CreateTile)
+                if (InputManager.IsMouseButtonDown(MouseButtons.Right, 50) && trainerSettings.CreateTile)
                 {
                     Item item = me.inventory[me.selectedItem];
 
@@ -119,7 +115,7 @@ namespace TrainerPlugin
                         }
                     }
                 }
-                else if (input.IsMouseButtonDown(MouseButtons.Middle))
+                else if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
                 {
                     if (trainerSettings.DestroyTile)
                     {
@@ -140,12 +136,14 @@ namespace TrainerPlugin
             {
                 if (trainerSettings.EnableTrainer)
                 {
-                    ApplySettings(trainerSettings);
+                    currentSettings = trainerSettings;
                 }
                 else
                 {
-                    ApplySettings(defaultSettings);
+                    currentSettings = defaultSettings;
                 }
+
+                ApplySettings(currentSettings);
             }
         }
 
@@ -236,8 +234,6 @@ namespace TrainerPlugin
             {
                 me.manaCost = 0;
             }
-            //Todo: Fix this
-            //Main.lightTiles = settings.LightTiles;
 
             if (settings.LightYourCharacter)
             {
@@ -248,9 +244,25 @@ namespace TrainerPlugin
             {
                 TrainerHelper.LightCursor();
             }
-            //Todo: Fix these
-            //Main.grabSun = settings.GrabSun;
-            //Main.stopSpawns = settings.StopSpawns;
+        }
+
+        private void DrawHooks_DrawTiles(SpriteBatch arg1, bool arg2, HandledEventArgs arg3)
+        {
+            // TODO: Not working properly
+
+            if (!arg2 && currentSettings.LightTiles)
+            {
+                for (int l = Lighting.firstToLightX; l < Lighting.lastToLightX; l++)
+                {
+                    for (int m = Lighting.firstToLightY; m < Lighting.lastToLightY; m++)
+                    {
+                        if (l >= 0 && l < Main.maxTilesX && m >= 0 && m < Main.maxTilesY)
+                        {
+                            Lighting.color[l - Lighting.firstTileX + 21, m - Lighting.firstTileY + 21] = 1f;
+                        }
+                    }
+                }
+            }
         }
 
         private void DrawHooks_DrawInterface(SpriteBatch sb, HandledEventArgs e)

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Terraria;
 using TerrariaAPI.Hooks;
+using XNAHelpers;
 
 namespace TerrariaAPI
 {
@@ -144,6 +145,8 @@ namespace TerrariaAPI
                 MessageBox.Show("There were errors while loading the mods, check console or error logs for more details.",
                     "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            GameHooks.Update += gameTime => InputManager.Update(gameTime);
 
             var sortedPlugins = Plugins.OrderBy(x => x.Plugin.Order).ThenBy(x => x.Plugin.Name);
 

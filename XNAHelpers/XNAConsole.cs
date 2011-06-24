@@ -26,7 +26,6 @@ namespace XNAHelpers
         private Texture2D background, border;
         private ConsoleState consoleState;
         private double stateStartTime;
-        private InputManager input;
         private string inputMessage;
 
         public XNAConsole(Game game)
@@ -37,7 +36,6 @@ namespace XNAHelpers
             MaxLineCount = 20;
             consoleState = ConsoleState.Closed;
             stateStartTime = 0;
-            input = new InputManager();
             outputBuffer = new StringBuilder(1024);
             stringWriter = new StringWriter(outputBuffer);
             Console.SetOut(stringWriter);
@@ -85,8 +83,6 @@ namespace XNAHelpers
 
         public override void Update(GameTime gameTime)
         {
-            input.Update(gameTime);
-
             double now = gameTime.TotalGameTime.TotalSeconds;
             double elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -108,14 +104,14 @@ namespace XNAHelpers
                     }
                     break;
                 case ConsoleState.Open:
-                    if (input.IsKeyPressed(Keys.OemTilde))
+                    if (InputManager.IsKeyPressed(Keys.OemTilde))
                     {
                         consoleState = ConsoleState.Closing;
                         stateStartTime = now;
                     }
                     break;
                 case ConsoleState.Closed:
-                    if (input.IsKeyPressed(Keys.OemTilde))
+                    if (InputManager.IsKeyPressed(Keys.OemTilde))
                     {
                         consoleState = ConsoleState.Opening;
                         stateStartTime = now;
@@ -132,7 +128,7 @@ namespace XNAHelpers
 
         private void CheckInput()
         {
-            foreach (Keys key in input.GetKeysPressed())
+            foreach (Keys key in InputManager.GetKeysPressed())
             {
                 int num = (int)key;
 
@@ -146,7 +142,7 @@ namespace XNAHelpers
                 }
                 else if (num >= 65 && num <= 90) // A - Z
                 {
-                    if (!input.IsShiftKeyDown)
+                    if (!InputManager.IsShiftKeyDown)
                     {
                         num += 32;
                     }

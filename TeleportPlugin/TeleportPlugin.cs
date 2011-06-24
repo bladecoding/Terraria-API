@@ -44,7 +44,6 @@ namespace TeleportPlugin
 
         public const string SettingsFilename = "TeleportSettings.xml";
 
-        private InputManager input = new InputManager();
         private TeleportHelper helper;
         private TeleportForm teleportForm;
 
@@ -82,21 +81,19 @@ namespace TeleportPlugin
         {
             if (Game.IsActive && helper != null)
             {
-                input.Update(gameTime);
-
-                if (input.IsKeyDown(Keys.F1))
+                if (InputManager.IsKeyDown(Keys.F1))
                 {
                     helper.TeleportToLastPlayer();
                 }
-                else if (input.IsKeyDown(Keys.F2))
+                else if (InputManager.IsKeyDown(Keys.F2))
                 {
                     helper.TeleportToLastLocation();
                 }
-                else if (input.IsKeyPressed(Keys.F3))
+                else if (InputManager.IsKeyPressed(Keys.F3))
                 {
                     helper.TeleportToCursor();
                 }
-                else if (input.IsKeyPressed(Keys.F4))
+                else if (InputManager.IsKeyPressed(Keys.F4))
                 {
                     if (teleportForm == null || teleportForm.IsDisposed)
                     {

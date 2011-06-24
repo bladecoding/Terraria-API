@@ -42,7 +42,6 @@ namespace MinimapPlugin
 
         public const string SettingsFilename = "MinimapSettings.xml";
 
-        private InputManager input = new InputManager();
         private WorldRenderer rend;
         private Texture2D minimap;
         // private Texture2D chest;
@@ -102,13 +101,11 @@ namespace MinimapPlugin
         {
             if (Game.IsActive && settings != null)
             {
-                input.Update(gameTime);
-
-                if (input.IsKeyPressed(Keys.F5))
+                if (InputManager.IsKeyPressed(Keys.F5))
                 {
                     settings.ShowMinimap = !settings.ShowMinimap;
                 }
-                else if (input.IsKeyPressed(Keys.F6))
+                else if (InputManager.IsKeyPressed(Keys.F6))
                 {
                     if (settingsForm == null || settingsForm.IsDisposed)
                     {

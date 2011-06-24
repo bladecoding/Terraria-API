@@ -35,13 +35,11 @@ namespace ItemPlugin
             get { return "Give/Edit items"; }
         }
 
-        private InputManager input;
         private ItemForm itemForm;
 
         public ItemPlugin(Main game)
             : base(game)
         {
-            input = new InputManager();
         }
 
         public override void Initialize()
@@ -65,9 +63,7 @@ namespace ItemPlugin
         {
             if (Game.IsActive)
             {
-                input.Update(gameTime);
-
-                if (input.IsKeyPressed(Keys.F9) && itemForm != null)
+                if (InputManager.IsKeyPressed(Keys.F9) && itemForm != null)
                 {
                     itemForm.Visible = !itemForm.Visible;
                 }

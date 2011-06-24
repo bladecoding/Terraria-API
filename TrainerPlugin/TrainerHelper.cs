@@ -236,15 +236,12 @@ namespace TrainerPlugin
                 {
                     int offsetX = x2 * 16;
                     int offsetY = y2 * 16;
-                    float alpha;
 
-                    if (x2 == 0 && y2 == 0)
+                    float alpha = transparency;
+
+                    if (x2 != 0 && y2 != 0)
                     {
-                        alpha = transparency;
-                    }
-                    else
-                    {
-                        alpha = transparency / 5;
+                        alpha /= 5;
                     }
 
                     DrawingHelper.DrawBorder(sb, border, new Rectangle(x + offsetX, y + offsetY, 16, 16), alpha);

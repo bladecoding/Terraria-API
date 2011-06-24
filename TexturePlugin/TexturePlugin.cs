@@ -32,7 +32,6 @@ namespace TexturePlugin
         }
 
         private TextureForm textureform;
-        private InputManager input = new InputManager();
 
         public TexturePlugin(Main game)
             : base(game)
@@ -61,9 +60,7 @@ namespace TexturePlugin
         {
             if (Game.IsActive)
             {
-                input.Update(gameTime);
-
-                if (input.IsKeyPressed(Keys.F8))
+                if (InputManager.IsKeyPressed(Keys.F8))
                 {
                     if (textureform == null || textureform.IsDisposed)
                     {

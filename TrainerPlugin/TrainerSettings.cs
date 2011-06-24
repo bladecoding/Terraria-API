@@ -44,10 +44,6 @@ namespace TrainerPlugin
         public bool LightYourCharacter { get; set; }
         [DefaultValue(false), Description("Your cursor position will emit light.")]
         public bool LightCursor { get; set; }
-        [DefaultValue(false), Description("You can grab the sun and move it.")]
-        public bool GrabSun { get; set; }
-        [DefaultValue(false), Description("Stops npc spawns.")]
-        public bool StopSpawns { get; set; }
         [DefaultValue(false), Description("Draws tile grid.")]
         public bool DrawGrid { get; set; }
         [DefaultValue(false), Description("Draws tile grid to where cursor position is.")]

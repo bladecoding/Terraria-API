@@ -75,10 +75,6 @@
       <Name>TerrariaAPI</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\XNAHelpers\XNAHelpers.csproj">
-      <Project>{BE066E72-276F-45AC-A755-FD6911F0F1A5}</Project>
-      <Name>XNAHelpers</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
