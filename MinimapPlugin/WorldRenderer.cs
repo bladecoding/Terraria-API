@@ -76,7 +76,7 @@ namespace MinimapPlugin
                             tileType = (int)TileType.None;
                         }
 
-                        tiles[x + y * width] = Colors[tileType];
+                        tiles[x + y * width] = tileType < Colors.Length ? Colors[tileType] : TerrariaColors.UNKNOWN;
                     }
                 }
             }
