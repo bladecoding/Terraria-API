@@ -18,7 +18,7 @@ namespace MinimapPlugin
             MaxX = worldWidth;
             MaxY = worldHeight;
             SurfaceY = (int)worldSurface;
-            Colors = MinimapHelper.GetMinimapColors();
+            Colors = TerrariaColors.GetColors();
         }
 
         public int[] GenerateMinimap(int tileX, int tileY, int width, int height, float zoom = 1.0f, bool showSky = true,
@@ -27,9 +27,11 @@ namespace MinimapPlugin
             int left = tileX - (int)((width * zoom) / 2);
             int top = tileY - (int)((height * zoom) / 2);
 
-            int[] ints = new int[width * height];
+            int[] tiles = new int[width * height];
 
-            int posX, posY, index;
+            int posX, posY, tileType;
+
+            Tile tile;
 
             for (int y = 0; y < height; y++)
             {
@@ -45,31 +47,41 @@ namespace MinimapPlugin
                     if (posX < 0 || posX > MaxX)
                         continue;
 
-                    Tile tile = Tiles[posX, posY];
-
-                    index = x + (y * width);
+                    tile = Tiles[posX, posY];
 
                     if (tile != null)
                     {
                         if (tile.liquid > 0)
                         {
-                            ints[index] = tile.lava ? TerrariaColors.LAVA : TerrariaColors.WATER;
+                            tileType = tile.lava ? (int)TileType.Lava : (int)TileType.Water;
                         }
                         else if (tile.active)
                         {
-                            if (tile.type < Colors.Length)
-                                ints[index] = Colors[tile.type];
-                            else
-                                ints[index] = TerrariaColors.UNKNOWN;
+                            tileType = tile.type;
                         }
-                        else if (posY >= SurfaceY || tile.wall > 0)
+                        else if (tile.wall > 0)
                         {
-                            ints[index] = TerrariaColors.WALL_STONE;
+                            tileType = TerrariaColors.WallOffset + tile.wall;
+                        }
+                        else if (posY >= SurfaceY)
+                        {
+                            tileType = (int)TileType.WallBackground;
                         }
                         else if (showSky)
                         {
-                            ints[index] = TerrariaColors.SKY;
+                            tileType = (int)TileType.Sky;
                         }
+                        else
+                        {
+                            tileType = (int)TileType.None;
+                        }
+
+                        if (tileType >= Colors.Length)
+                        {
+                            tileType = (int)TileType.Unknown;
+                        }
+
+                        tiles[x + y * width] = Colors[tileType];
                     }
                 }
             }
@@ -79,24 +91,18 @@ namespace MinimapPlugin
             if (showBorder)
             {
                 int right = width - 1;
-                int bottom = height - 1;
+                int bottom = (height - 1) * width;
 
                 for (int x = 0; x < width; x++)
                 {
-                    index = x + (0 * width);
-                    ints[index] = borderColor;
-
-                    index = x + (bottom * width);
-                    ints[index] = borderColor;
+                    tiles[x] = borderColor; // Top line
+                    tiles[x + bottom] = borderColor; // Bottom line
                 }
 
                 for (int y = 0; y < height; y++)
                 {
-                    index = 0 + (y * width);
-                    ints[index] = borderColor;
-
-                    index = right + (y * width);
-                    ints[index] = borderColor;
+                    tiles[y * width] = borderColor; // Left line
+                    tiles[right + (y * width)] = borderColor; // Right line
                 }
             }
 
@@ -107,18 +113,16 @@ namespace MinimapPlugin
 
                 for (int x = 0; x < width; x++)
                 {
-                    index = x + (middleY * width);
-                    ints[index] = borderColor;
+                    tiles[x + (middleY * width)] = borderColor; // Horizontal line
                 }
 
                 for (int y = 0; y < height; y++)
                 {
-                    index = middleX + (y * width);
-                    ints[index] = borderColor;
+                    tiles[middleX + (y * width)] = borderColor; // Vertical line
                 }
             }
 
-            return ints;
+            return tiles;
         }
     }
 }

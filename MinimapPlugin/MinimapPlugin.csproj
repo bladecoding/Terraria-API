@@ -66,7 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
+    <Compile Include="TerrariaColors.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="MinimapForm.cs">
       <SubType>Form</SubType>
@@ -74,7 +74,6 @@
     <Compile Include="MinimapForm.Designer.cs">
       <DependentUpon>MinimapForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MinimapHelper.cs" />
     <Compile Include="MinimapPlugin.cs" />
     <Compile Include="MinimapSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -90,6 +90,32 @@ namespace MinimapPlugin
         UnderworldFurnance,
         DecorativePot,
         Bed,
-        Unknown
+        Cactus,
+        Coral,
+        HerbSprout,
+        HerbStalk,
+        Herb,
+        Tombstone,
+        Unknown,
+
+        None = 255,
+        Sky = 256,
+        Water = 257,
+        Lava = 258,
+
+        WallStone = 259,
+        WallDirt,
+        WallStone2,
+        WallWood,
+        WallBrick,
+        WallRed,
+        WallBlue,
+        WallGreen,
+        WallPink,
+        WallGold,
+        WallSilver,
+        WallCopper,
+        WallHellstone,
+        WallBackground,
     }
 }
