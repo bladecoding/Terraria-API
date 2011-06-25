@@ -57,7 +57,10 @@ namespace MinimapPlugin
                         }
                         else if (tile.active)
                         {
-                            ints[index] = Colors[tile.type];
+                            if (tile.type < Colors.Length)
+                                ints[index] = Colors[tile.type];
+                            else
+                                ints[index] = TerrariaColors.UNKNOWN;
                         }
                         else if (posY >= SurfaceY || tile.wall > 0)
                         {

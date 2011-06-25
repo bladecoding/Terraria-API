@@ -250,7 +250,7 @@ namespace TrainerPlugin
         {
             // TODO: Not working properly
 
-            if (!arg2 && currentSettings.LightTiles)
+            /*if (!arg2 && currentSettings.LightTiles)
             {
                 for (int l = Lighting.firstToLightX; l < Lighting.lastToLightX; l++)
                 {
@@ -262,7 +262,7 @@ namespace TrainerPlugin
                         }
                     }
                 }
-            }
+            }*/
         }
 
         private void DrawHooks_DrawInterface(SpriteBatch sb, HandledEventArgs e)
