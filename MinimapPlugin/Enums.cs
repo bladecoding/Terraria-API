@@ -47,7 +47,7 @@ namespace MinimapPlugin
         ChandlerCopper,
         ChandlerSilver,
         ChandlerGold,
-        Meterorite, // Credit Vib Rib
+        Meterorite,
         BlockStone,
         BlockRedStone,
         Clay,
@@ -67,8 +67,8 @@ namespace MinimapPlugin
         Glass,
         Signs,
         Obsidian,
-        Ash, // Credit Infinite Monkeys
-        Hellstone, // Credit Vib Rib
+        Ash,
+        Hellstone,
         Mud,
         UndergroundJungleGrass,
         UndergroundJunglePlants,
@@ -79,7 +79,7 @@ namespace MinimapPlugin
         Topaz,
         Amethyst,
         Diamond,
-        UndergroundJungleThorns, // Credit Dr VideoGames 0031
+        UndergroundJungleThorns,
         UndergroundMushroomGrass,
         UndergroundMushroomPlants,
         UndergroundMushroomTrees,
@@ -95,15 +95,16 @@ namespace MinimapPlugin
         HerbSprout,
         HerbStalk,
         Herb,
-        Tombstone,
-        Unknown,
+        Tombstone = 85,
 
-        None = 255,
-        Sky = 256,
-        Water = 257,
-        Lava = 258,
+        // TileOtherOffset
+        None = 256,
+        Sky = 257,
+        Water = 258,
+        Lava = 259,
 
-        WallStone = 259,
+        // WallOffset
+        WallStone = 300,
         WallDirt,
         WallStone2,
         WallWood,
@@ -116,6 +117,6 @@ namespace MinimapPlugin
         WallSilver,
         WallCopper,
         WallHellstone,
-        WallBackground,
+        WallBackground
     }
 }

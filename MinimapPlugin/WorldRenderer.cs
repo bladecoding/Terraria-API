@@ -61,7 +61,7 @@ namespace MinimapPlugin
                         }
                         else if (tile.wall > 0)
                         {
-                            tileType = TerrariaColors.WallOffset + tile.wall;
+                            tileType = TerrariaColors.WallOffset + tile.wall - 1;
                         }
                         else if (posY >= SurfaceY)
                         {
@@ -74,11 +74,6 @@ namespace MinimapPlugin
                         else
                         {
                             tileType = (int)TileType.None;
-                        }
-
-                        if (tileType >= Colors.Length)
-                        {
-                            tileType = (int)TileType.Unknown;
                         }
 
                         tiles[x + y * width] = Colors[tileType];

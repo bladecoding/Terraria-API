@@ -38,8 +38,8 @@ namespace TrainerPlugin
         public bool NoPotionCooldown { get; set; }
         [DefaultValue(false), Description("Items won't use mana.")]
         public bool NoManaCost { get; set; }
-        [DefaultValue(false), Description("All tiles will be visible and light.")]
-        public bool LightTiles { get; set; }
+        //[DefaultValue(false), Description("All tiles will be visible and light.")]
+        //public bool LightTiles { get; set; }
         [DefaultValue(false), Description("Your character will emit light. Like orb of light.")]
         public bool LightYourCharacter { get; set; }
         [DefaultValue(false), Description("Your cursor position will emit light.")]

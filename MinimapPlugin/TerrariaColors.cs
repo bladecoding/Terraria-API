@@ -7,7 +7,9 @@ namespace MinimapPlugin
 {
     public static class TerrariaColors
     {
-        public const int WallOffset = (int)TileType.WallStone - 1;
+        public const int TileTypeCount = 86;
+        public const int TileOtherOffset = (int)TileType.None;
+        public const int WallOffset = (int)TileType.WallStone;
 
         public static int DIRT = new Color(175, 131, 101).ToAbgr();
         public static int STONE = new Color(128, 128, 128).ToAbgr();
@@ -66,12 +68,12 @@ namespace MinimapPlugin
         public static int WALL_DUNGEON_BLUE = new Color(29, 31, 72).ToAbgr();
         public static int WALL_DUNGEON_GREEN = new Color(14, 68, 16).ToAbgr();
 
-        public static int NONE = Color.Transparent.ToAbgr();
         public static int UNKNOWN = Color.Magenta.ToAbgr();
+        public static int NONE = Color.Transparent.ToAbgr();
 
         public static int[] GetColors()
         {
-            int[] colors = new int[273];
+            int[] colors = new int[512];
 
             colors[0] = TerrariaColors.DIRT;
             colors[1] = TerrariaColors.STONE;
@@ -159,33 +161,41 @@ namespace MinimapPlugin
             colors[83] = TerrariaColors.HERB;
             colors[84] = TerrariaColors.HERB;
             colors[85] = TerrariaColors.TOMBSTONE;
-            colors[86] = TerrariaColors.UNKNOWN;
 
-            for (int i = 86; i < 255; i++)
+            colors[TileOtherOffset] = TerrariaColors.NONE;
+            colors[TileOtherOffset + 1] = TerrariaColors.SKY;
+            colors[TileOtherOffset + 2] = TerrariaColors.WATER;
+            colors[TileOtherOffset + 3] = TerrariaColors.LAVA;
+
+            colors[WallOffset] = TerrariaColors.WALL_STONE;
+            colors[WallOffset + 1] = TerrariaColors.WALL_DIRT;
+            colors[WallOffset + 2] = TerrariaColors.WALL_STONE2;
+            colors[WallOffset + 3] = TerrariaColors.WALL_WOOD;
+            colors[WallOffset + 4] = TerrariaColors.WALL_BRICK;
+            colors[WallOffset + 5] = TerrariaColors.WALL_BRICK;
+            colors[WallOffset + 6] = TerrariaColors.WALL_DUNGEON_BLUE;
+            colors[WallOffset + 7] = TerrariaColors.WALL_DUNGEON_GREEN;
+            colors[WallOffset + 8] = TerrariaColors.WALL_DUNGEON_PINK;
+            colors[WallOffset + 9] = TerrariaColors.WALL_BRICK;
+            colors[WallOffset + 10] = TerrariaColors.WALL_BRICK;
+            colors[WallOffset + 11] = TerrariaColors.WALL_BRICK;
+            colors[WallOffset + 12] = TerrariaColors.WALL_BRICK;
+            colors[WallOffset + 13] = TerrariaColors.WALL_BACKGROUND;
+
+            for (int i = TerrariaColors.TileTypeCount; i < TerrariaColors.TileOtherOffset; i++)
             {
                 colors[i] = TerrariaColors.UNKNOWN;
             }
 
-            colors[255] = TerrariaColors.NONE;
-            colors[256] = TerrariaColors.SKY;
-            colors[257] = TerrariaColors.WATER;
-            colors[258] = TerrariaColors.LAVA;
+            for (int i = TileOtherOffset + 4; i < TerrariaColors.WallOffset; i++)
+            {
+                colors[i] = TerrariaColors.UNKNOWN;
+            }
 
-            // Walls
-            colors[259] = TerrariaColors.WALL_STONE;
-            colors[260] = TerrariaColors.WALL_DIRT;
-            colors[261] = TerrariaColors.WALL_STONE2;
-            colors[262] = TerrariaColors.WALL_WOOD;
-            colors[263] = TerrariaColors.WALL_BRICK;
-            colors[264] = TerrariaColors.WALL_BRICK;
-            colors[265] = TerrariaColors.WALL_DUNGEON_BLUE;
-            colors[266] = TerrariaColors.WALL_DUNGEON_GREEN;
-            colors[267] = TerrariaColors.WALL_DUNGEON_PINK;
-            colors[268] = TerrariaColors.WALL_BRICK;
-            colors[269] = TerrariaColors.WALL_BRICK;
-            colors[270] = TerrariaColors.WALL_BRICK;
-            colors[271] = TerrariaColors.WALL_BRICK;
-            colors[272] = TerrariaColors.WALL_BACKGROUND;
+            for (int i = WallOffset + 14; i < colors.Length; i++)
+            {
+                colors[i] = TerrariaColors.UNKNOWN;
+            }
 
             return colors;
         }
