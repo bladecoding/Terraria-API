@@ -34,13 +34,12 @@ namespace TrainerPlugin
 
         public override string Description
         {
-            get { return "Just a simple 'trainer'"; }
+            get { return "?"; }
         }
 
         private TrainerForm trainerForm;
         private TrainerSettings trainerSettings, defaultSettings, currentSettings;
-        private Texture2D gridTexture;
-        private Texture2D border;
+        private Texture2D gridTexture, border;
 
         private Player me
         {
@@ -60,7 +59,6 @@ namespace TrainerPlugin
             GameHooks.LoadContent += GameHooks_LoadContent;
             GameHooks.Update += TerrariaHooks_Update;
             PlayerHooks.UpdatePhysics += PlayerHooks_UpdatePhysics;
-            DrawHooks.DrawTiles += DrawHooks_DrawTiles;
             DrawHooks.DrawInterface += DrawHooks_DrawInterface;
         }
 
@@ -82,58 +80,6 @@ namespace TrainerPlugin
         {
             if (Game.IsActive && trainerSettings != null)
             {
-                if (InputManager.IsKeyPressed(Keys.F7))
-                {
-                    trainerForm.Visible = !trainerForm.Visible;
-                }
-                else if (InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B) && trainerSettings.AllowBankOpen)
-                {
-                    TrainerHelper.OpenBank();
-                }
-                else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.Z, 250) && trainerSettings.CreateWater)
-                {
-                    TrainerHelper.AddLiquidToCursor(true);
-                }
-                else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.X, 250) && trainerSettings.CreateLava)
-                {
-                    TrainerHelper.AddLiquidToCursor(false);
-                }
-
-                if (InputManager.IsMouseButtonDown(MouseButtons.Right, 50) && trainerSettings.CreateTile)
-                {
-                    Item item = me.inventory[me.selectedItem];
-
-                    if (item.active)
-                    {
-                        if (item.createTile >= 0)
-                        {
-                            TrainerHelper.AddTileToCursor(item.createTile, false, trainerSettings.BigBrushSize);
-                        }
-                        else if (item.createWall >= 0)
-                        {
-                            TrainerHelper.AddTileToCursor(item.createWall, true, trainerSettings.BigBrushSize);
-                        }
-                    }
-                }
-                else if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
-                {
-                    if (trainerSettings.DestroyTile)
-                    {
-                        TrainerHelper.DestroyTileFromCursor(false, trainerSettings.BigBrushSize);
-                    }
-
-                    if (trainerSettings.DestroyWall)
-                    {
-                        TrainerHelper.DestroyTileFromCursor(true, trainerSettings.BigBrushSize);
-                    }
-                }
-            }
-        }
-
-        private void PlayerHooks_UpdatePhysics(Player obj)
-        {
-            if (Game.IsActive && trainerSettings != null)
-            {
                 if (trainerSettings.EnableTrainer)
                 {
                     currentSettings = trainerSettings;
@@ -143,202 +89,259 @@ namespace TrainerPlugin
                     currentSettings = defaultSettings;
                 }
 
-                ApplySettings(currentSettings);
-            }
-        }
-
-        private void ApplySettings(TrainerSettings settings)
-        {
-            if (settings.InfiniteHealth)
-            {
-                me.statLife = me.statLifeMax;
-            }
-
-            if (settings.InfiniteMana)
-            {
-                me.statMana = me.statManaMax;
-            }
-
-            if (settings.InfiniteBreath)
-            {
-                me.breath = me.breathMax;
-            }
-
-            if (settings.InfiniteAmmo)
-            {
-                foreach (Item item in me.inventory)
+                if (InputManager.IsKeyPressed(Keys.F7))
                 {
-                    if (item.ammo > 0)
+                    trainerForm.Visible = !trainerForm.Visible;
+                }
+                else if (InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B) && currentSettings.AllowBankOpen)
+                {
+                    TrainerHelper.OpenBank();
+                }
+                else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.Z, 250) && currentSettings.CreateWater)
+                {
+                    TrainerHelper.AddLiquidToCursor(true);
+                }
+                else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.X, 250) && currentSettings.CreateLava)
+                {
+                    TrainerHelper.AddLiquidToCursor(false);
+                }
+
+                if (InputManager.IsMouseButtonDown(MouseButtons.Right, 50) && currentSettings.CreateTile)
+                {
+                    Item item = me.inventory[me.selectedItem];
+
+                    if (item.active)
                     {
-                        item.stack = item.maxStack - 1;
+                        if (item.createTile >= 0)
+                        {
+                            TrainerHelper.AddTileToCursor(item.createTile, false, currentSettings.BigBrushSize);
+                        }
+                        else if (item.createWall >= 0)
+                        {
+                            TrainerHelper.AddTileToCursor(item.createWall, true, currentSettings.BigBrushSize);
+                        }
+                    }
+                }
+                else if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
+                {
+                    if (currentSettings.DestroyTile)
+                    {
+                        TrainerHelper.DestroyTileFromCursor(false, currentSettings.BigBrushSize);
+                    }
+
+                    if (currentSettings.DestroyWall)
+                    {
+                        TrainerHelper.DestroyTileFromCursor(true, currentSettings.BigBrushSize);
                     }
                 }
             }
+        }
 
-            if (settings.NoFallDamage)
+        private void PlayerHooks_UpdatePhysics(Player obj)
+        {
+            if (Game.IsActive && currentSettings != null)
             {
-                me.noFallDmg = true;
+                #region Abilities
+
+                if (currentSettings.InfiniteHealth)
+                {
+                    me.statLife = me.statLifeMax;
+                }
+
+                if (currentSettings.InfiniteMana)
+                {
+                    me.statMana = me.statManaMax;
+                }
+
+                if (currentSettings.InfiniteBreath)
+                {
+                    me.breath = me.breathMax;
+                }
+
+                if (currentSettings.InfiniteAmmo)
+                {
+                    foreach (Item item in me.inventory)
+                    {
+                        if (item.ammo > 0)
+                        {
+                            item.stack = item.maxStack - 1;
+                        }
+                    }
+                }
+
+                if (currentSettings.NoFallDamage)
+                {
+                    me.noFallDmg = true;
+                }
+
+                if (currentSettings.NoKnockback)
+                {
+                    me.noKnockback = true;
+                }
+
+                if (currentSettings.JumpBoost)
+                {
+                    me.jumpBoost = true;
+                }
+
+                if (currentSettings.DoubleJump)
+                {
+                    me.doubleJump = true;
+                }
+
+                if (currentSettings.InfiniteJump)
+                {
+                    me.jumpAgain = true;
+                }
+
+                if (currentSettings.RocketBoots)
+                {
+                    me.rocketBoots = true;
+                }
+
+                if (currentSettings.UseFlipper)
+                {
+                    me.accFlipper = true;
+                }
+
+                if (currentSettings.FireWalk)
+                {
+                    me.fireWalk = true;
+                }
+
+                if (currentSettings.SpawnMax)
+                {
+                    me.spawnMax = true;
+                }
+
+                if (currentSettings.InstantRespawn)
+                {
+                    me.respawnTimer = 0;
+                }
+
+                if (currentSettings.NoPotionCooldown)
+                {
+                    me.potionDelay = 0;
+                }
+
+                if (currentSettings.NoManaCost)
+                {
+                    me.manaCost = 0;
+                }
+
+                me.SpeedModifier *= currentSettings.MovementSpeed;
+
+                #endregion Abilities
+
+                #region Other
+
+                if (currentSettings.LightYourCharacter)
+                {
+                    TrainerHelper.LightCharacter();
+                }
+
+                if (currentSettings.LightCursor)
+                {
+                    TrainerHelper.LightCursor();
+                }
+
+                #endregion Other
+
+                #region Potions
+
+                if (currentSettings.ObsidianSkin)
+                {
+                    me.lavaImmune = true;
+                    me.fireWalk = true;
+                }
+
+                if (currentSettings.Regeneration)
+                {
+                    me.lifeRegen += 4;
+                }
+
+                if (currentSettings.Swiftness)
+                {
+                    me.SpeedModifier *= 1.25f;
+                }
+
+                if (currentSettings.Gills)
+                {
+                    me.gills = true;
+                }
+
+                if (currentSettings.Ironskin)
+                {
+                    me.statDefense += 10;
+                }
+
+                if (currentSettings.ManaRegeneration)
+                {
+                    me.manaRegen += 20;
+                }
+
+                if (currentSettings.MagicPower)
+                {
+                    me.magicBoost *= 1.2f;
+                }
+
+                if (currentSettings.Featherfall)
+                {
+                    me.slowFall = true;
+                }
+
+                if (currentSettings.Spelunker)
+                {
+                    me.findTreasure = true;
+                }
+
+                if (currentSettings.Invisibility)
+                {
+                    me.invis = true;
+                }
+
+                if (currentSettings.Shine)
+                {
+                    TrainerHelper.LightCharacter();
+                }
+
+                if (currentSettings.NightOwl)
+                {
+                    me.nightVision = true;
+                }
+
+                if (currentSettings.Battle)
+                {
+                    me.enemySpawns = true;
+                }
+
+                if (currentSettings.Thorns)
+                {
+                    me.thorns = true;
+                }
+
+                if (currentSettings.WaterWalking)
+                {
+                    me.waterWalk = true;
+                }
+
+                if (currentSettings.Archery)
+                {
+                    me.archer = true;
+                }
+
+                if (currentSettings.Hunter)
+                {
+                    me.detectCreature = true;
+                }
+
+                if (currentSettings.Gravitation)
+                {
+                    me.gravControl = true;
+                }
+
+                #endregion Potions
             }
-
-            if (settings.NoKnockback)
-            {
-                me.noKnockback = true;
-            }
-
-            if (settings.JumpBoost)
-            {
-                me.jumpBoost = true;
-            }
-
-            if (settings.DoubleJump)
-            {
-                me.doubleJump = true;
-            }
-
-            if (settings.InfiniteJump)
-            {
-                me.jumpAgain = true;
-            }
-
-            if (settings.RocketBoots)
-            {
-                me.rocketBoots = true;
-            }
-
-            if (settings.UseFlipper)
-            {
-                me.accFlipper = true;
-            }
-
-            if (settings.FireWalk)
-            {
-                me.fireWalk = true;
-            }
-
-            if (settings.SpawnMax)
-            {
-                me.spawnMax = true;
-            }
-
-            if (settings.InstantRespawn)
-            {
-                me.respawnTimer = 0;
-            }
-
-            if (settings.NoPotionCooldown)
-            {
-                me.potionDelay = 0;
-            }
-
-            if (settings.NoManaCost)
-            {
-                me.manaCost = 0;
-            }
-
-            if (settings.LightYourCharacter)
-            {
-                TrainerHelper.LightCharacter();
-            }
-
-            if (settings.LightCursor)
-            {
-                TrainerHelper.LightCursor();
-            }
-
-            #region Potions
-
-            if (settings.ObsidianSkin)
-            {
-                me.lavaImmune = true;
-                me.fireWalk = true;
-            }
-
-            if (settings.Regeneration)
-            {
-                me.lifeRegen += 4;
-            }
-
-            if (settings.Swiftness)
-            {
-                me.SpeedModifier *= 1.25f;
-            }
-
-            if (settings.Gills)
-            {
-                me.gills = true;
-            }
-
-            if (settings.Ironskin)
-            {
-                me.statDefense += 10;
-            }
-
-            if (settings.ManaRegeneration)
-            {
-                me.manaRegen += 20;
-            }
-
-            if (settings.MagicPower)
-            {
-                me.magicBoost *= 1.2f;
-            }
-
-            if (settings.Featherfall)
-            {
-                me.slowFall = true;
-            }
-
-            if (settings.Spelunker)
-            {
-                me.findTreasure = true;
-            }
-
-            if (settings.Invisibility)
-            {
-                me.invis = true;
-            }
-
-            if (settings.Shine)
-            {
-                TrainerHelper.LightCharacter();
-            }
-
-            if (settings.NightOwl)
-            {
-                me.nightVision = true;
-            }
-
-            if (settings.Battle)
-            {
-                me.enemySpawns = true;
-            }
-
-            if (settings.Thorns)
-            {
-                me.thorns = true;
-            }
-
-            if (settings.WaterWalking)
-            {
-                me.waterWalk = true;
-            }
-
-            if (settings.Archery)
-            {
-                me.archer = true;
-            }
-
-            if (settings.Hunter)
-            {
-                me.detectCreature = true;
-            }
-
-            if (settings.Gravitation)
-            {
-                me.gravControl = true;
-            }
-
-            #endregion Potions
         }
 
         private void DrawHooks_DrawTiles(SpriteBatch arg1, bool arg2, HandledEventArgs arg3)
@@ -362,12 +365,12 @@ namespace TrainerPlugin
 
         private void DrawHooks_DrawInterface(SpriteBatch sb, HandledEventArgs e)
         {
-            if (trainerSettings.DrawGrid)
+            if (currentSettings.DrawGrid)
             {
                 TrainerHelper.DrawGrid(sb, gridTexture);
             }
 
-            if (trainerSettings.DrawGridCursor)
+            if (currentSettings.DrawGridCursor)
             {
                 TrainerHelper.DrawGridCursor(sb, border);
             }

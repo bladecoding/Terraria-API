@@ -39,6 +39,8 @@ namespace TrainerPlugin
         public bool NoPotionCooldown { get; set; }
         [Category("Abilities"), DefaultValue(false), Description("Items won't use mana.")]
         public bool NoManaCost { get; set; }
+        [Category("Abilities"), DefaultValue(1f), Description("Movement speed will be multiplied with this number.")]
+        public float MovementSpeed { get; set; }
 
         [Category("Building"), DefaultValue(true), Description("When you press right mouse button tile will be created to where cursor is. Tile type will be your current selected inventory item, if it can create tile.")]
         public bool CreateTile { get; set; }
@@ -106,6 +108,7 @@ namespace TrainerPlugin
         public TrainerSettings()
         {
             EnableTrainer = true;
+            MovementSpeed = 1f;
             AllowBankOpen = true;
             CreateWater = true;
             CreateLava = true;
