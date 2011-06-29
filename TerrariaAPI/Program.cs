@@ -17,7 +17,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 5, 0, 0);
+        public static readonly Version ApiVersion = new Version(1, 5, 0, 2);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
@@ -145,6 +145,8 @@ namespace TerrariaAPI
                 MessageBox.Show("There were errors while loading the mods, check console or error logs for more details.",
                     "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            Console.WriteLine("TerrariaAPI v{0}", ApiVersion);
 
             GameHooks.Update += gameTime => InputManager.Update(gameTime);
 
