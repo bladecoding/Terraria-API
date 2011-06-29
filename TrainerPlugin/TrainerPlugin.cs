@@ -244,11 +244,108 @@ namespace TrainerPlugin
             {
                 TrainerHelper.LightCursor();
             }
+
+            #region Potions
+
+            if (settings.ObsidianSkin)
+            {
+                me.lavaImmune = true;
+                me.fireWalk = true;
+            }
+
+            if (settings.Regeneration)
+            {
+                me.lifeRegen += 4;
+            }
+
+            if (settings.Swiftness)
+            {
+                // TODO: Swiftness
+                // x *= 1.25f;
+                // y *= 1.25f;
+            }
+
+            if (settings.Gills)
+            {
+                me.gills = true;
+            }
+
+            if (settings.Ironskin)
+            {
+                me.statDefense += 10;
+            }
+
+            if (settings.ManaRegeneration)
+            {
+                me.manaRegen += 20;
+            }
+
+            if (settings.MagicPower)
+            {
+                me.magicBoost *= 1.2f;
+            }
+
+            if (settings.Featherfall)
+            {
+                me.slowFall = true;
+            }
+
+            if (settings.Spelunker)
+            {
+                me.findTreasure = true;
+            }
+
+            if (settings.Invisibility)
+            {
+                me.invis = true;
+            }
+
+            if (settings.Shine)
+            {
+                TrainerHelper.LightCharacter();
+            }
+
+            if (settings.NightOwl)
+            {
+                me.nightVision = true;
+            }
+
+            if (settings.Battle)
+            {
+                me.enemySpawns = true;
+            }
+
+            if (settings.Thorns)
+            {
+                me.thorns = true;
+            }
+
+            if (settings.WaterWalking)
+            {
+                me.waterWalk = true;
+            }
+
+            if (settings.Archery)
+            {
+                me.archer = true;
+            }
+
+            if (settings.Hunter)
+            {
+                me.detectCreature = true;
+            }
+
+            if (settings.Gravitation)
+            {
+                me.gravControl = true;
+            }
+
+            #endregion Potions
         }
 
         private void DrawHooks_DrawTiles(SpriteBatch arg1, bool arg2, HandledEventArgs arg3)
         {
-            // TODO: Not working properly
+            // TODO: LightTiles
 
             /*if (!arg2 && currentSettings.LightTiles)
             {

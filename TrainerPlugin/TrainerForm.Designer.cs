@@ -39,7 +39,7 @@
             this.pgTrainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pgTrainer.Location = new System.Drawing.Point(0, 0);
             this.pgTrainer.Name = "pgTrainer";
-            this.pgTrainer.PropertySort = System.Windows.Forms.PropertySort.NoSort;
+            this.pgTrainer.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.pgTrainer.Size = new System.Drawing.Size(308, 468);
             this.pgTrainer.TabIndex = 0;
             this.pgTrainer.ToolbarVisible = false;
