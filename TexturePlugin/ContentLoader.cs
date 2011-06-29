@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using XNAHelpers;
 
 namespace TexturePlugin
 {
@@ -17,7 +16,7 @@ namespace TexturePlugin
             foreach (var f in provider.GetFiles())
             {
                 var img = new Bitmap(new MemoryStream(provider.GetData(f)));
-                textures.Add(f, BitmapToTexture(gd, img));
+                textures.Add(f, DrawingHelper.BitmapToTexture(gd, img));
             }
             return textures;
         }
@@ -36,30 +35,6 @@ namespace TexturePlugin
             LoadLiquids(textures);
             LoadArmors(textures);
             LoadMisc(textures);
-        }
-
-        private static Texture2D BitmapToTexture(GraphicsDevice gd, Bitmap img)
-        {
-            var ret = new Texture2D(gd, img.Width, img.Height);
-            var bd = img.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            int[] ints = new int[img.Width * img.Height];
-            byte[] bytes = new byte[bd.Stride * img.Height];
-            Marshal.Copy(bd.Scan0, bytes, 0, bytes.Length);
-            for (int y = 0; y < img.Height; y++)
-            {
-                for (int x = 0; x < img.Width; x++)
-                {
-                    int idx = (y * bd.Stride) + (x * 4);
-                    int r = bytes[idx];
-                    int g = bytes[idx + 1];
-                    int b = bytes[idx + 2];
-                    int a = bytes[idx + 3];
-                    ints[(y * img.Width) + x] = (a << 24) | (r << 16) | (g << 8) | b;
-                }
-            }
-            ret.SetData(ints);
-            img.UnlockBits(bd);
-            return ret;
         }
 
         private static Texture2D GetOrNull(Dictionary<string, Texture2D> textures, string name)

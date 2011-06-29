@@ -260,9 +260,7 @@ namespace TrainerPlugin
 
             if (settings.Swiftness)
             {
-                // TODO: Swiftness
-                // x *= 1.25f;
-                // y *= 1.25f;
+                me.SpeedModifier *= 1.25f;
             }
 
             if (settings.Gills)
