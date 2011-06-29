@@ -40,7 +40,7 @@
             this.pgTrainer.Location = new System.Drawing.Point(0, 0);
             this.pgTrainer.Name = "pgTrainer";
             this.pgTrainer.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.pgTrainer.Size = new System.Drawing.Size(308, 468);
+            this.pgTrainer.Size = new System.Drawing.Size(309, 562);
             this.pgTrainer.TabIndex = 0;
             this.pgTrainer.ToolbarVisible = false;
             this.pgTrainer.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.pgTrainer_PropertyValueChanged);
@@ -49,7 +49,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(308, 468);
+            this.ClientSize = new System.Drawing.Size(309, 562);
             this.Controls.Add(this.pgTrainer);
             this.MaximizeBox = false;
             this.Name = "TrainerForm";

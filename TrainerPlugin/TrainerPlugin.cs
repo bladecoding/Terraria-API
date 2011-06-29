@@ -11,9 +11,6 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TrainerPlugin
 {
-    /// <summary>
-    /// F7 = Show trainer form
-    /// </summary>
     [APIVersion(1, 5)]
     public class TrainerPlugin : TerrariaPlugin
     {
@@ -34,7 +31,7 @@ namespace TrainerPlugin
 
         public override string Description
         {
-            get { return "?"; }
+            get { return "F7 = Open trainer window"; }
         }
 
         private TrainerForm trainerForm;
@@ -78,7 +75,7 @@ namespace TrainerPlugin
 
         private void TerrariaHooks_Update(GameTime gameTime)
         {
-            if (Game.IsActive && trainerSettings != null)
+            if (trainerSettings != null)
             {
                 if (trainerSettings.EnableTrainer)
                 {
@@ -139,7 +136,7 @@ namespace TrainerPlugin
 
         private void PlayerHooks_UpdatePhysics(Player obj)
         {
-            if (Game.IsActive && currentSettings != null)
+            if (currentSettings != null)
             {
                 #region Abilities
 
@@ -165,6 +162,17 @@ namespace TrainerPlugin
                         if (item.ammo > 0)
                         {
                             item.stack = item.maxStack - 1;
+                        }
+                    }
+                }
+
+                if (currentSettings.InfiniteBuffTime)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (me.buffType[i] > 0 && me.buffTime[i] > 0)
+                        {
+                            me.buffTime[i] = 3600;
                         }
                     }
                 }
@@ -243,6 +251,16 @@ namespace TrainerPlugin
                 if (currentSettings.LightCursor)
                 {
                     TrainerHelper.LightCursor();
+                }
+
+                if (currentSettings.AllowKillGuide)
+                {
+                    me.killGuide = true;
+                }
+
+                if (currentSettings.DeathAura)
+                {
+                    TrainerHelper.KillWhoTouchingMe();
                 }
 
                 #endregion Other
@@ -365,14 +383,17 @@ namespace TrainerPlugin
 
         private void DrawHooks_DrawInterface(SpriteBatch sb, HandledEventArgs e)
         {
-            if (currentSettings.DrawGrid)
+            if (currentSettings != null)
             {
-                TrainerHelper.DrawGrid(sb, gridTexture);
-            }
+                if (currentSettings.DrawGrid)
+                {
+                    TrainerHelper.DrawGrid(sb, gridTexture);
+                }
 
-            if (currentSettings.DrawGridCursor)
-            {
-                TrainerHelper.DrawGridCursor(sb, border);
+                if (currentSettings.DrawGridCursor)
+                {
+                    TrainerHelper.DrawGridCursor(sb, border);
+                }
             }
         }
     }

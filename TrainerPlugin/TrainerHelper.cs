@@ -248,5 +248,39 @@ namespace TrainerPlugin
                 }
             }
         }
+
+        public static void KillWhoTouchingMe()
+        {
+            int offset = 10;
+            Rectangle rect = new Rectangle((int)me.position.X - offset, (int)me.position.Y - offset, me.width + offset, me.height + offset);
+
+            NPC npc;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                npc = Main.npc[i];
+
+                if (npc.active && !npc.friendly && npc.damage > 0 &&
+                    rect.Intersects(new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height)))
+                {
+                    int direction = -1;
+
+                    if (npc.position.X + (float)(npc.width / 2) < me.position.X + (float)(me.width / 2))
+                    {
+                        direction = 1;
+                    }
+
+                    int damage = 10000;
+                    float knockback = 50;
+
+                    npc.StrikeNPC(damage, knockback, -direction);
+
+                    if (Main.netMode != 0)
+                    {
+                        NetMessage.SendData((int)PacketTypes.NPCStrike, -1, -1, "", i, (float)damage, knockback, (float)-direction, 0);
+                    }
+                }
+            }
+        }
     }
 }

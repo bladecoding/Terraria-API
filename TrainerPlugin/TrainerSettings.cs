@@ -15,6 +15,8 @@ namespace TrainerPlugin
         public bool InfiniteBreath { get; set; }
         [Category("Abilities"), DefaultValue(false), Description("All your ammo items in your inventory will be max possible ammo stack. Including fallen star.")]
         public bool InfiniteAmmo { get; set; }
+        [Category("Abilities"), DefaultValue(false), Description("Active buffs time set to 1 minute and freeze.")]
+        public bool InfiniteBuffTime { get; set; }
         [Category("Abilities"), DefaultValue(false), Description("You won't take fall damage. (Lucky Horseshoe)")]
         public bool NoFallDamage { get; set; }
         [Category("Abilities"), DefaultValue(false), Description("Prevents knockback, so you won't push backward when you take damage. (Cobalt Shield)")]
@@ -67,6 +69,10 @@ namespace TrainerPlugin
         public bool DrawGridCursor { get; set; }
         [Category("Other"), DefaultValue(true), Description("When you press Ctrl + B piggy bank will open. Only works in single player.")]
         public bool AllowBankOpen { get; set; }
+        [Category("Other"), DefaultValue(false), Description("You can kill guide npc.")]
+        public bool AllowKillGuide { get; set; }
+        [Category("Other"), DefaultValue(false), Description("If enemy NPC touch you, it will die instantly.")]
+        public bool DeathAura { get; set; }
 
         [Category("Potions"), DefaultValue(false), Description("Provides immunity to lava.")]
         public bool ObsidianSkin { get; set; }
