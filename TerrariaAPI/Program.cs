@@ -140,13 +140,17 @@ namespace TerrariaAPI
                 }
             }
 
+            Console.WriteLine("TerrariaAPI v{0}", ApiVersion);
+
             if (error)
             {
-                MessageBox.Show("There were errors while loading the mods, check console or error logs for more details.",
+#if CLIENT
+                MessageBox.Show("There were errors while loading the mods, check logs.txt for more details.",
                     "Terraria API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
+                Console.WriteLine("There were errors while loading the mods, check logs.txt for more details.");
+#endif
             }
-
-            Console.WriteLine("TerrariaAPI v{0}", ApiVersion);
 
             GameHooks.Update += gameTime => InputManager.Update(gameTime);
 
