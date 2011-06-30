@@ -17,7 +17,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 5, 0, 2);
+        public static readonly Version ApiVersion = new Version(1, 5, 0, 3);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
@@ -152,7 +152,10 @@ namespace TerrariaAPI
 #endif
             }
 
+#if CLIENT
             GameHooks.Update += gameTime => InputManager.Update(gameTime);
+#endif
+
 
             var sortedPlugins = Plugins.OrderBy(x => x.Plugin.Order).ThenBy(x => x.Plugin.Name);
 
