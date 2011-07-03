@@ -75,7 +75,7 @@ namespace TrainerPlugin
 
         private void TerrariaHooks_Update(GameTime gameTime)
         {
-            if (trainerSettings != null)
+            if (trainerSettings != null && Game.IsActive)
             {
                 if (trainerSettings.EnableTrainer)
                 {
@@ -90,45 +90,49 @@ namespace TrainerPlugin
                 {
                     trainerForm.Visible = !trainerForm.Visible;
                 }
-                else if (InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B) && currentSettings.AllowBankOpen)
-                {
-                    TrainerHelper.OpenBank();
-                }
-                else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.Z, 250) && currentSettings.CreateWater)
-                {
-                    TrainerHelper.AddLiquidToCursor(true);
-                }
-                else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.X, 250) && currentSettings.CreateLava)
-                {
-                    TrainerHelper.AddLiquidToCursor(false);
-                }
 
-                if (InputManager.IsMouseButtonDown(MouseButtons.Right, 50) && currentSettings.CreateTile)
+                if (GameHooks.IsWorldRunning)
                 {
-                    Item item = me.inventory[me.selectedItem];
-
-                    if (item.active)
+                    if (InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B) && currentSettings.AllowBankOpen)
                     {
-                        if (item.createTile >= 0)
-                        {
-                            TrainerHelper.AddTileToCursor(item.createTile, false, currentSettings.BigBrushSize);
-                        }
-                        else if (item.createWall >= 0)
-                        {
-                            TrainerHelper.AddTileToCursor(item.createWall, true, currentSettings.BigBrushSize);
-                        }
+                        TrainerHelper.OpenBank();
                     }
-                }
-                else if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
-                {
-                    if (currentSettings.DestroyTile)
+                    else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.Z, 250) && currentSettings.CreateWater)
                     {
-                        TrainerHelper.DestroyTileFromCursor(false, currentSettings.BigBrushSize);
+                        TrainerHelper.AddLiquidToCursor(true);
+                    }
+                    else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.X, 250) && currentSettings.CreateLava)
+                    {
+                        TrainerHelper.AddLiquidToCursor(false);
                     }
 
-                    if (currentSettings.DestroyWall)
+                    if (InputManager.IsMouseButtonDown(MouseButtons.Right, 50) && currentSettings.CreateTile)
                     {
-                        TrainerHelper.DestroyTileFromCursor(true, currentSettings.BigBrushSize);
+                        Item item = me.inventory[me.selectedItem];
+
+                        if (item.active)
+                        {
+                            if (item.createTile >= 0)
+                            {
+                                TrainerHelper.AddTileToCursor(item.createTile, false, currentSettings.BigBrushSize);
+                            }
+                            else if (item.createWall >= 0)
+                            {
+                                TrainerHelper.AddTileToCursor(item.createWall, true, currentSettings.BigBrushSize);
+                            }
+                        }
+                    }
+                    else if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
+                    {
+                        if (currentSettings.DestroyTile)
+                        {
+                            TrainerHelper.DestroyTileFromCursor(false, currentSettings.BigBrushSize);
+                        }
+
+                        if (currentSettings.DestroyWall)
+                        {
+                            TrainerHelper.DestroyTileFromCursor(true, currentSettings.BigBrushSize);
+                        }
                     }
                 }
             }
@@ -136,7 +140,7 @@ namespace TrainerPlugin
 
         private void PlayerHooks_UpdatePhysics(Player obj)
         {
-            if (currentSettings != null)
+            if (GameHooks.IsWorldRunning && currentSettings != null)
             {
                 #region Abilities
 
@@ -383,7 +387,7 @@ namespace TrainerPlugin
 
         private void DrawHooks_DrawInterface(SpriteBatch sb, HandledEventArgs e)
         {
-            if (currentSettings != null)
+            if (GameHooks.IsWorldRunning && currentSettings != null)
             {
                 if (currentSettings.DrawGrid)
                 {
