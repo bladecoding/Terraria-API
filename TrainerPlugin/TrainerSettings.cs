@@ -73,6 +73,8 @@ namespace TrainerPlugin
         public bool AllowKillGuide { get; set; }
         [Category("Other"), DefaultValue(false), Description("If enemy NPC touch you, it will die instantly.")]
         public bool DeathAura { get; set; }
+        [Category("Other"), DefaultValue(false), Description("If enemy NPC touch cursor, it will die instantly.")]
+        public bool CursorKillNPC { get; set; }
 
         [Category("Potions"), DefaultValue(false), Description("Provides immunity to lava.")]
         public bool ObsidianSkin { get; set; }

@@ -267,6 +267,11 @@ namespace TrainerPlugin
                     TrainerHelper.KillWhoTouchingMe();
                 }
 
+                if (currentSettings.CursorKillNPC)
+                {
+                    TrainerHelper.KillWhoTouchingCursor();
+                }
+
                 #endregion Other
 
                 #region Potions

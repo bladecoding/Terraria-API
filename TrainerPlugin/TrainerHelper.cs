@@ -13,6 +13,16 @@ namespace TrainerPlugin
             get { return Main.player[Main.myPlayer]; }
         }
 
+        private static float cursorPositionX
+        {
+            get { return Main.screenPosition.X + Main.mouseState.X; }
+        }
+
+        private static float cursorPositionY
+        {
+            get { return Main.screenPosition.Y + Main.mouseState.Y; }
+        }
+
         private static int tilePlayerX
         {
             get { return (int)((me.position.X + me.width * 0.5f) / 16f); }
@@ -25,12 +35,12 @@ namespace TrainerPlugin
 
         private static int tileTargetX
         {
-            get { return (int)((Main.screenPosition.X + Main.mouseState.X) / 16f); }
+            get { return (int)(cursorPositionX / 16f); }
         }
 
         private static int tileTargetY
         {
-            get { return (int)((Main.screenPosition.Y + Main.mouseState.Y) / 16f); }
+            get { return (int)(cursorPositionY / 16f); }
         }
 
         public static void LightCharacter()
@@ -252,8 +262,19 @@ namespace TrainerPlugin
         public static void KillWhoTouchingMe()
         {
             int offset = 10;
-            Rectangle rect = new Rectangle((int)me.position.X - offset, (int)me.position.Y - offset, me.width + offset, me.height + offset);
+            Rectangle rect = new Rectangle((int)me.position.X - offset, (int)me.position.Y - offset, me.width + offset * 2, me.height + offset * 2);
+            HitNPC(rect, 1337, 50);
+        }
 
+        public static void KillWhoTouchingCursor()
+        {
+            int offset = 10;
+            Rectangle rect = new Rectangle((int)cursorPositionX - offset, (int)cursorPositionY - offset, offset * 2, offset * 2);
+            HitNPC(rect, 1337, 50);
+        }
+
+        public static void HitNPC(Rectangle rect, int damage, float knockback)
+        {
             NPC npc;
 
             for (int i = 0; i < 1000; i++)
@@ -270,14 +291,13 @@ namespace TrainerPlugin
                         direction = 1;
                     }
 
-                    int damage = 10000;
-                    float knockback = 50;
+                    int damageArmorIgnore = damage + (int)(npc.defense * 0.5);
 
-                    npc.StrikeNPC(damage, knockback, -direction);
+                    npc.StrikeNPC(damageArmorIgnore, knockback, -direction);
 
                     if (Main.netMode != 0)
                     {
-                        NetMessage.SendData((int)PacketTypes.NPCStrike, -1, -1, "", i, (float)damage, knockback, (float)-direction, 0);
+                        NetMessage.SendData((int)PacketTypes.NPCStrike, -1, -1, "", i, (float)damageArmorIgnore, knockback, (float)-direction, 0);
                     }
                 }
             }
