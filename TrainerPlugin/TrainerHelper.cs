@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using TerrariaAPI;
@@ -299,6 +300,70 @@ namespace TrainerPlugin
                     {
                         NetMessage.SendData((int)PacketTypes.NPCStrike, -1, -1, "", i, (float)damageArmorIgnore, knockback, (float)-direction, 0);
                     }
+                }
+            }
+        }
+
+        public static void DrawPartyText(SpriteBatch sb)
+        {
+            for (int i = 0; i < 255; i++)
+            {
+                if (Main.player[i].active && Main.myPlayer != i && !Main.player[i].dead &&
+                    (Main.player[Main.myPlayer].team == 0 || Main.player[Main.myPlayer].team != Main.player[i].team))
+                {
+                    string text = Main.player[i].name;
+                    if (Main.player[i].statLife < Main.player[i].statLifeMax)
+                    {
+                        text = string.Format("{0}: {1}/{2}", text, Main.player[i].statLife, Main.player[i].statLifeMax);
+                    }
+                    Vector2 vector = Main.fontMouseText.MeasureString(text);
+                    float num3 = 0f;
+                    if (Main.player[i].chatShowTime > 0)
+                    {
+                        num3 = -vector.Y;
+                    }
+                    float num4 = 0f;
+                    float num5 = (float)Main.mouseTextColor / 255f;
+                    Color color = new Color((int)((byte)((float)Main.teamColor[Main.player[i].team].R * num5)), (int)((byte)((float)Main.teamColor[Main.player[i].team].G * num5)), (int)((byte)((float)Main.teamColor[Main.player[i].team].B * num5)), (int)Main.mouseTextColor);
+                    Vector2 vector2 = new Vector2((float)(Main.screenWidth / 2) + Main.screenPosition.X, (float)(Main.screenHeight / 2) + Main.screenPosition.Y);
+                    float num6 = Main.player[i].position.X + (float)(Main.player[i].width / 2) - vector2.X;
+                    float num7 = Main.player[i].position.Y - vector.Y - 2f + num3 - vector2.Y;
+                    float num8 = (float)Math.Sqrt((double)(num6 * num6 + num7 * num7));
+                    int num9 = Main.screenHeight;
+                    if (Main.screenHeight > Main.screenWidth)
+                    {
+                        num9 = Main.screenWidth;
+                    }
+                    num9 = num9 / 2 - 30;
+                    if (num9 < 100)
+                    {
+                        num9 = 100;
+                    }
+                    if (num8 < (float)num9)
+                    {
+                        vector.X = Main.player[i].position.X + (float)(Main.player[i].width / 2) - vector.X / 2f - Main.screenPosition.X;
+                        vector.Y = Main.player[i].position.Y - vector.Y - 2f + num3 - Main.screenPosition.Y;
+                    }
+                    else
+                    {
+                        num4 = num8;
+                        num8 = (float)num9 / num8;
+                        vector.X = (float)(Main.screenWidth / 2) + num6 * num8 - vector.X / 2f;
+                        vector.Y = (float)(Main.screenHeight / 2) + num7 * num8;
+                    }
+
+                    if (num4 > 0f)
+                    {
+                        string textDistance = "(" + (int)(num4 / 16f * 2f) + " ft)";
+
+                        Vector2 vectorDistance = Main.fontMouseText.MeasureString(textDistance);
+                        vectorDistance.X = vector.X + Main.fontMouseText.MeasureString(text).X / 2f - vectorDistance.X / 2f;
+                        vectorDistance.Y = vector.Y + Main.fontMouseText.MeasureString(text).Y / 2f - vectorDistance.Y / 2f - 20f;
+
+                        DrawingHelper.DrawTextWithShadow(sb, textDistance, vectorDistance, Main.fontMouseText, color, Color.Black);
+                    }
+
+                    DrawingHelper.DrawTextWithShadow(sb, text, vector, Main.fontMouseText, color, Color.Black);
                 }
             }
         }

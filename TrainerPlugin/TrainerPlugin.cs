@@ -106,7 +106,7 @@ namespace TrainerPlugin
                         TrainerHelper.AddLiquidToCursor(false);
                     }
 
-                    if (InputManager.IsMouseButtonDown(MouseButtons.Right, 50) && currentSettings.CreateTile)
+                    if (InputManager.IsMouseButtonDown(MouseButtons.Right) && currentSettings.CreateTile)
                     {
                         Item item = me.inventory[me.selectedItem];
 
@@ -402,6 +402,11 @@ namespace TrainerPlugin
                 if (currentSettings.DrawGridCursor)
                 {
                     TrainerHelper.DrawGridCursor(sb, border);
+                }
+
+                if (currentSettings.DrawPartyText)
+                {
+                    TrainerHelper.DrawPartyText(sb);
                 }
             }
         }

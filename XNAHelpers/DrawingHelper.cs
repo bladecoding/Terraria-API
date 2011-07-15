@@ -49,14 +49,14 @@ namespace XNAHelpers
             return texture;
         }
 
-        private static readonly Vector2[] shadowOffset = { new Vector2(-1, -1), new Vector2(1, -1), new Vector2(1, 1), new Vector2(-1, 1) };
-
-        public static void DrawTextWithShadow(SpriteBatch sb, string text, Vector2 position, SpriteFont font, Color textColor, Color shadowColor)
+        public static void DrawTextWithShadow(SpriteBatch sb, string text, Vector2 position, SpriteFont font, Color textColor, Color shadowColor, int shadowOffset = 1)
         {
-            sb.DrawString(font, text, position + shadowOffset[0], shadowColor);
-            sb.DrawString(font, text, position + shadowOffset[1], shadowColor);
-            sb.DrawString(font, text, position + shadowOffset[2], shadowColor);
-            sb.DrawString(font, text, position + shadowOffset[3], shadowColor);
+            Vector2[] shadowOffsets = { new Vector2(-shadowOffset, -shadowOffset), new Vector2(shadowOffset, -shadowOffset),
+                new Vector2(shadowOffset, shadowOffset), new Vector2(-shadowOffset, shadowOffset) };
+            sb.DrawString(font, text, position + shadowOffsets[0], shadowColor);
+            sb.DrawString(font, text, position + shadowOffsets[1], shadowColor);
+            sb.DrawString(font, text, position + shadowOffsets[2], shadowColor);
+            sb.DrawString(font, text, position + shadowOffsets[3], shadowColor);
             sb.DrawString(font, text, position, textColor);
         }
 

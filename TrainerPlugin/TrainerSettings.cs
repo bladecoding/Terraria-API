@@ -75,6 +75,8 @@ namespace TrainerPlugin
         public bool DeathAura { get; set; }
         [Category("Other"), DefaultValue(false), Description("If enemy NPC touch cursor, it will die instantly.")]
         public bool CursorKillNPC { get; set; }
+        [Category("Other"), DefaultValue(false), Description("Even if you are not in party still player names will draw.")]
+        public bool DrawPartyText { get; set; }
 
         [Category("Potions"), DefaultValue(false), Description("Provides immunity to lava.")]
         public bool ObsidianSkin { get; set; }
