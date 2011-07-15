@@ -25,7 +25,7 @@ namespace TrainerPlugin
         public bool JumpBoost { get; set; }
         [Category("Abilities"), DefaultValue(false), Description("You can double jump. (Cloud in a Bottle)")]
         public bool DoubleJump { get; set; }
-        [Category("Abilities"), DefaultValue(false), Description("You can jump more than two times with double jump. Double jump is required. You can't use rocket boots when this active.")]
+        [Category("Abilities"), DefaultValue(false), Description("You can jump more than two times. You can't use rocket boots when this active.")]
         public bool InfiniteJump { get; set; }
         [Category("Abilities"), DefaultValue(false), Description("You can fly with mana. (Rocket Boots)")]
         public bool RocketBoots { get; set; }

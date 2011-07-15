@@ -1,6 +1,9 @@
-﻿// Credit Terraria World Viewer - http://terrariaworldviewer.codeplex.com
+﻿// Colors from BinaryConstruct - Terraria Map Editor
 
-using Microsoft.Xna.Framework;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using XNAHelpers;
 
 namespace MinimapPlugin
@@ -11,193 +14,148 @@ namespace MinimapPlugin
         public const int TileOtherOffset = (int)TileType.None;
         public const int WallOffset = (int)TileType.WallStone;
 
-        public static int DIRT = new Color(175, 131, 101).ToAbgr();
-        public static int STONE = new Color(128, 128, 128).ToAbgr();
-        public static int GRASS = new Color(28, 216, 94).ToAbgr();
-        public static int PLANTS = new Color(13, 101, 36).ToAbgr();
-        public static int LIGHT_SOURCE = new Color(253, 62, 3).ToAbgr();
-        public static int IRON = new Color(189, 159, 139).ToAbgr();
-        public static int COPPER = new Color(255, 149, 50).ToAbgr();
-        public static int GOLD = new Color(185, 164, 23).ToAbgr();
-        public static int WOOD = new Color(86, 62, 44).ToAbgr();
-        public static int WOOD_BLOCK = new Color(168, 121, 87).ToAbgr();
-        public static int SILVER = new Color(217, 223, 223).ToAbgr();
-        public static int DECORATIVE = new Color(0, 255, 242).ToAbgr();
-        public static int IMPORTANT = new Color(255, 0, 0).ToAbgr();
-        public static int CORRUPTION_STONE = new Color(98, 95, 167).ToAbgr();
-        public static int CORRUPTION_GRASS = new Color(141, 137, 223).ToAbgr();
-        public static int CORRUPTION_STONE2 = new Color(75, 74, 130).ToAbgr();
-        public static int CORRUPTION_VINES = new Color(122, 97, 143).ToAbgr();
-        public static int BLOCK = new Color(178, 0, 255).ToAbgr();
-        public static int METEORITE = Color.Magenta.ToAbgr();
-        public static int CLAY = new Color(216, 115, 101).ToAbgr();
-        public static int DUNGEON_GREEN = new Color(26, 136, 34).ToAbgr();
-        public static int DUNGEON_PINK = new Color(169, 49, 117).ToAbgr();
-        public static int DUNGEON_BLUE = new Color(66, 69, 194).ToAbgr();
-        public static int SPIKES = new Color(109, 109, 109).ToAbgr();
-        public static int WEB = new Color(255, 255, 255).ToAbgr();
-        public static int SAND = new Color(255, 218, 56).ToAbgr();
-        public static int OBSIDIAN = new Color(87, 81, 173).ToAbgr();
-        public static int ASH = new Color(68, 68, 76).ToAbgr();
-        public static int HELLSTONE = new Color(102, 34, 34).ToAbgr();
-        public static int MUD = new Color(92, 68, 73).ToAbgr();
-        public static int UNDERGROUNDJUNGLE_GRASS = new Color(143, 215, 29).ToAbgr();
-        public static int UNDERGROUNDJUNGLE_PLANTS = new Color(143, 215, 29).ToAbgr();
-        public static int UNDERGROUNDJUNGLE_VINES = new Color(138, 206, 28).ToAbgr();
-        public static int UNDERGROUNDJUNGLE_THORNS = new Color(94, 48, 55).ToAbgr();
-        public static int GEMS = new Color(42, 130, 250).ToAbgr();
-        public static int CACTUS = Color.DarkGreen.ToAbgr();
-        public static int CORAL = Color.LightPink.ToAbgr();
-        public static int HERB = Color.OliveDrab.ToAbgr();
-        public static int TOMBSTONE = Color.DimGray.ToAbgr();
-        public static int UNDERGROUNDMUSHROOM_GRASS = new Color(93, 127, 255).ToAbgr();
-        public static int UNDERGROUNDMUSHROOM_PLANTS = new Color(177, 174, 131).ToAbgr();
-        public static int UNDERGROUNDMUSHROOM_TREES = new Color(150, 143, 110).ToAbgr();
-
-        public static int LAVA = new Color(255, 72, 0).ToAbgr();
-        public static int WATER = new Color(0, 12, 255).ToAbgr();
-        public static int SKY = new Color(155, 209, 255).ToAbgr();
-
-        public static int WALL_STONE = new Color(66, 66, 66).ToAbgr();
-        public static int WALL_DIRT = new Color(88, 61, 46).ToAbgr();
-        public static int WALL_STONE2 = new Color(61, 58, 78).ToAbgr();
-        public static int WALL_WOOD = new Color(73, 51, 36).ToAbgr();
-        public static int WALL_BRICK = new Color(60, 60, 60).ToAbgr();
-        public static int WALL_BACKGROUND = new Color(50, 50, 60).ToAbgr();
-        public static int WALL_DUNGEON_PINK = new Color(84, 25, 60).ToAbgr();
-        public static int WALL_DUNGEON_BLUE = new Color(29, 31, 72).ToAbgr();
-        public static int WALL_DUNGEON_GREEN = new Color(14, 68, 16).ToAbgr();
-
-        public static int UNKNOWN = Color.Magenta.ToAbgr();
-        public static int NONE = Color.Transparent.ToAbgr();
-
         public static int[] GetColors()
         {
-            int[] colors = new int[512];
+            uint[] colors = new uint[512];
 
-            colors[0] = TerrariaColors.DIRT;
-            colors[1] = TerrariaColors.STONE;
-            colors[2] = TerrariaColors.GRASS;
-            colors[3] = TerrariaColors.PLANTS;
-            colors[4] = TerrariaColors.LIGHT_SOURCE;
-            colors[5] = TerrariaColors.WOOD;
-            colors[6] = TerrariaColors.IRON;
-            colors[7] = TerrariaColors.COPPER;
-            colors[8] = TerrariaColors.GOLD;
-            colors[9] = TerrariaColors.SILVER;
-            colors[10] = TerrariaColors.DECORATIVE;
-            colors[11] = TerrariaColors.DECORATIVE;
-            colors[12] = TerrariaColors.IMPORTANT;
-            colors[13] = TerrariaColors.DECORATIVE;
-            colors[14] = TerrariaColors.DECORATIVE;
-            colors[15] = TerrariaColors.DECORATIVE;
-            colors[16] = TerrariaColors.DECORATIVE;
-            colors[17] = TerrariaColors.DECORATIVE;
-            colors[18] = TerrariaColors.DECORATIVE;
-            colors[19] = TerrariaColors.WOOD;
-            colors[20] = TerrariaColors.PLANTS;
-            colors[21] = TerrariaColors.IMPORTANT;
-            colors[22] = TerrariaColors.CORRUPTION_STONE;
-            colors[23] = TerrariaColors.CORRUPTION_GRASS;
-            colors[24] = TerrariaColors.CORRUPTION_GRASS;
-            colors[25] = TerrariaColors.CORRUPTION_STONE2;
-            colors[26] = TerrariaColors.IMPORTANT;
-            colors[27] = TerrariaColors.PLANTS;
-            colors[28] = TerrariaColors.IMPORTANT;
-            colors[29] = TerrariaColors.DECORATIVE;
-            colors[30] = TerrariaColors.WOOD_BLOCK;
-            colors[31] = TerrariaColors.IMPORTANT;
-            colors[32] = TerrariaColors.CORRUPTION_VINES;
-            colors[33] = TerrariaColors.LIGHT_SOURCE;
-            colors[34] = TerrariaColors.LIGHT_SOURCE;
-            colors[35] = TerrariaColors.LIGHT_SOURCE;
-            colors[36] = TerrariaColors.LIGHT_SOURCE;
-            colors[37] = TerrariaColors.METEORITE;
-            colors[38] = TerrariaColors.BLOCK;
-            colors[39] = TerrariaColors.BLOCK;
-            colors[40] = TerrariaColors.CLAY;
-            colors[41] = TerrariaColors.DUNGEON_BLUE;
-            colors[42] = TerrariaColors.LIGHT_SOURCE;
-            colors[43] = TerrariaColors.DUNGEON_GREEN;
-            colors[44] = TerrariaColors.DUNGEON_PINK;
-            colors[45] = TerrariaColors.BLOCK;
-            colors[46] = TerrariaColors.BLOCK;
-            colors[47] = TerrariaColors.BLOCK;
-            colors[48] = TerrariaColors.SPIKES;
-            colors[49] = TerrariaColors.LIGHT_SOURCE;
-            colors[50] = TerrariaColors.DECORATIVE;
-            colors[51] = TerrariaColors.WEB;
-            colors[52] = TerrariaColors.PLANTS;
-            colors[53] = TerrariaColors.SAND;
-            colors[54] = TerrariaColors.DECORATIVE;
-            colors[55] = TerrariaColors.DECORATIVE;
-            colors[56] = TerrariaColors.OBSIDIAN;
-            colors[57] = TerrariaColors.ASH;
-            colors[58] = TerrariaColors.HELLSTONE;
-            colors[59] = TerrariaColors.MUD;
-            colors[60] = TerrariaColors.UNDERGROUNDJUNGLE_GRASS;
-            colors[61] = TerrariaColors.UNDERGROUNDJUNGLE_PLANTS;
-            colors[62] = TerrariaColors.UNDERGROUNDJUNGLE_VINES;
-            colors[63] = TerrariaColors.GEMS;
-            colors[64] = TerrariaColors.GEMS;
-            colors[65] = TerrariaColors.GEMS;
-            colors[66] = TerrariaColors.GEMS;
-            colors[67] = TerrariaColors.GEMS;
-            colors[68] = TerrariaColors.GEMS;
-            colors[69] = TerrariaColors.UNDERGROUNDJUNGLE_THORNS;
-            colors[70] = TerrariaColors.UNDERGROUNDMUSHROOM_GRASS;
-            colors[71] = TerrariaColors.UNDERGROUNDMUSHROOM_PLANTS;
-            colors[72] = TerrariaColors.UNDERGROUNDMUSHROOM_TREES;
-            colors[73] = TerrariaColors.PLANTS;
-            colors[74] = TerrariaColors.PLANTS;
-            colors[75] = TerrariaColors.BLOCK;
-            colors[76] = TerrariaColors.BLOCK;
-            colors[77] = TerrariaColors.IMPORTANT;
-            colors[78] = TerrariaColors.DECORATIVE;
-            colors[79] = TerrariaColors.DECORATIVE;
-            colors[80] = TerrariaColors.CACTUS;
-            colors[81] = TerrariaColors.CORAL;
-            colors[82] = TerrariaColors.HERB;
-            colors[83] = TerrariaColors.HERB;
-            colors[84] = TerrariaColors.HERB;
-            colors[85] = TerrariaColors.TOMBSTONE;
+            colors[0] = 0xff916a4f; // Dirt
+            colors[1] = 0xff808080; // Stone
+            colors[2] = 0xff1cd85e; // Grass
+            colors[3] = 0xff0d6524; // Plants
+            colors[4] = 0xfffd3e03; // Torches
+            colors[5] = 0xff634631; // Trees
+            colors[6] = 0xff6b594e; // Iron
+            colors[7] = 0xffc6561d; // Copper
+            colors[8] = 0xffb9a417; // Gold
+            colors[9] = 0xffd9dfdf; // Silver
+            colors[10] = 0xff00fff2; // Door1
+            colors[11] = 0xff00fff2; // Door2
+            colors[12] = 0xffff0000; // HeartStone
+            colors[13] = 0xff00fff2; // Bottle
+            colors[14] = 0xff00fff2; // Table
+            colors[15] = 0xff00fff2; // Chair
+            colors[16] = 0xff00fff2; // Anvil
+            colors[17] = 0xff00fff2; // Furnace
+            colors[18] = 0xff00fff2; // Workbench
+            colors[19] = 0xff6b3a18; // WoodenPlatform
+            colors[20] = 0xff0d6524; // PlantsDecorative
+            colors[21] = 0xffffd800; // Chest
+            colors[22] = 0xff625fa7; // Demonite
+            colors[23] = 0xff8d89df; // CorruptionGrass
+            colors[24] = 0xff8d89df; // CorruptionPlants
+            colors[25] = 0xff4b4a82; // Ebonstone
+            colors[26] = 0xff9000ff; // DemonAltar
+            colors[27] = 0xffc4ff14; // Sunflower
+            colors[28] = 0xff8c2726; // Pot
+            colors[29] = 0xff00fff2; // PiggyBank
+            colors[30] = 0xff684934; // BlockWood
+            colors[31] = 0xff000000; // ShadowOrb
+            colors[32] = 0xff7a618f; // CorruptionVines
+            colors[33] = 0xfffd3e03; // Candle
+            colors[34] = 0xfffd3e03; // ChandlerCopper
+            colors[35] = 0xfffd3e03; // ChandlerSilver
+            colors[36] = 0xfffd3e03; // ChandlerGold
+            colors[37] = 0xffdf9f89; // Meterorite
+            colors[38] = 0xff909090; // BlockStone
+            colors[39] = 0xffb200ff; // BlockRedStone
+            colors[40] = 0xffac5b4d; // Clay
+            colors[41] = 0xff545498; // BlockBlueStone
+            colors[42] = 0xffef904b; // LightGlobe
+            colors[43] = 0xff39a851; // BlockGreenStone
+            colors[44] = 0xffb200ff; // BlockPinkStone
+            colors[45] = 0xffffd514; // BlockGold
+            colors[46] = 0xffe5e5e5; // BlockSilver
+            colors[47] = 0xffff5900; // BlockCopper
+            colors[48] = 0xff6d6d6d; // Spikes
+            colors[49] = 0xff2b8fff; // CandleBlue
+            colors[50] = 0xff00fff2; // Books
+            colors[51] = 0xffffffff; // Web
+            colors[52] = 0xff0d6524; // Vines
+            colors[53] = 0xffffda38; // Sand
+            colors[54] = 0x20ffffff; // Glass
+            colors[55] = 0xffffae5e; // Signs
+            colors[56] = 0xff5751ad; // Obsidian
+            colors[57] = 0xff44444c; // Ash
+            colors[58] = 0xff662222; // Hellstone
+            colors[59] = 0xff5c4449; // Mud
+            colors[60] = 0xff8fd71d; // UndergroundJungleGrass
+            colors[61] = 0xff8fd71d; // UndergroundJunglePlants
+            colors[62] = 0xff8ace1c; // UndergroundJungleVines
+            colors[63] = 0xff2a82fa; // GemSapphire
+            colors[64] = 0xff2a82fa; // GemRuby
+            colors[65] = 0xff2a82fa; // GemEmerald
+            colors[66] = 0xff2a82fa; // GemTopaz
+            colors[67] = 0xff2a82fa; // GemAmethyst
+            colors[68] = 0xff2a82fa; // GemDiamond
+            colors[69] = 0xff5e3037; // UndergroundJungleThorns
+            colors[70] = 0xff5d7fff; // UndergroundMushroomGrass
+            colors[71] = 0xffb1ae83; // UndergroundMushroomPlants
+            colors[72] = 0xff968f6e; // UndergroundMushroomTrees
+            colors[73] = 0xff0d6524; // Plants2
+            colors[74] = 0xff0d6524; // Plants3
+            colors[75] = 0xffb200ff; // BlockObsidian
+            colors[76] = 0xffc6001d; // BlockHellstone
+            colors[77] = 0xffd50010; // Hellforge
+            colors[78] = 0xff00fff2; // DecorativePot
+            colors[79] = 0xff00fff2; // Bed
+            colors[80] = 0xff00a500; // Cactus
+            colors[81] = 0xffe55340; // Coral
+            colors[82] = 0xffff7800; // HerbSprouts
+            colors[83] = 0xffff7800; // HerbStalks
+            colors[84] = 0xffff7800; // Herbs
+            colors[85] = 0xffc0c0c0; // Tombstone
 
-            colors[TileOtherOffset] = TerrariaColors.NONE;
-            colors[TileOtherOffset + 1] = TerrariaColors.SKY;
-            colors[TileOtherOffset + 2] = TerrariaColors.WATER;
-            colors[TileOtherOffset + 3] = TerrariaColors.LAVA;
+            colors[TileOtherOffset] = 0x00000000; // None
+            colors[TileOtherOffset + 1] = 0xff9bd1ff; // Sky
+            colors[TileOtherOffset + 2] = 0x80000cff; // Water
+            colors[TileOtherOffset + 3] = 0xf0ff4800; // Lava
 
-            colors[WallOffset] = TerrariaColors.WALL_STONE;
-            colors[WallOffset + 1] = TerrariaColors.WALL_DIRT;
-            colors[WallOffset + 2] = TerrariaColors.WALL_STONE2;
-            colors[WallOffset + 3] = TerrariaColors.WALL_WOOD;
-            colors[WallOffset + 4] = TerrariaColors.WALL_BRICK;
-            colors[WallOffset + 5] = TerrariaColors.WALL_BRICK;
-            colors[WallOffset + 6] = TerrariaColors.WALL_DUNGEON_BLUE;
-            colors[WallOffset + 7] = TerrariaColors.WALL_DUNGEON_GREEN;
-            colors[WallOffset + 8] = TerrariaColors.WALL_DUNGEON_PINK;
-            colors[WallOffset + 9] = TerrariaColors.WALL_BRICK;
-            colors[WallOffset + 10] = TerrariaColors.WALL_BRICK;
-            colors[WallOffset + 11] = TerrariaColors.WALL_BRICK;
-            colors[WallOffset + 12] = TerrariaColors.WALL_BRICK;
-            colors[WallOffset + 13] = TerrariaColors.WALL_BACKGROUND;
+            colors[WallOffset] = 0xff424242; // WallStone
+            colors[WallOffset + 1] = 0xff583d2e; // WallDirt
+            colors[WallOffset + 2] = 0xff312545; // WallCorruption
+            colors[WallOffset + 3] = 0xff4a2e1c; // WallWood
+            colors[WallOffset + 4] = 0xff454545; // WallBrick
+            colors[WallOffset + 5] = 0xff500000; // WallRed
+            colors[WallOffset + 6] = 0xff000060; // WallBlue
+            colors[WallOffset + 7] = 0xff005000; // WallGreen
+            colors[WallOffset + 8] = 0xff48004F; // WallPink
+            colors[WallOffset + 9] = 0xff774707; // WallGold
+            colors[WallOffset + 10] = 0xff828282; // WallSilver
+            colors[WallOffset + 11] = 0xff3F1907; // WallCopper
+            colors[WallOffset + 12] = 0xff3F0707; // WallHellstone
+            colors[WallOffset + 13] = 0xff3F0707; // WallUnknown
 
             for (int i = TerrariaColors.TileTypeCount; i < TerrariaColors.TileOtherOffset; i++)
             {
-                colors[i] = TerrariaColors.UNKNOWN;
+                colors[i] = 0xffff00ff; // Unknown
             }
 
             for (int i = TileOtherOffset + 4; i < TerrariaColors.WallOffset; i++)
             {
-                colors[i] = TerrariaColors.UNKNOWN;
+                colors[i] = 0xffff00ff; // Unknown
             }
 
             for (int i = WallOffset + 14; i < colors.Length; i++)
             {
-                colors[i] = TerrariaColors.UNKNOWN;
+                colors[i] = 0xffff00ff; // Unknown
             }
 
-            return colors;
+            return colors.Select(x => x.ToAbgr()).ToArray();
+        }
+
+        public static void ParseColors()
+        {
+            string pattern = @"(\d+)\|(.+?)\|\#(.+?)\b";
+            MatchCollection matches = Regex.Matches(File.ReadAllText("colors.txt"), pattern);
+            StringBuilder sb = new StringBuilder();
+            foreach (Match match in matches)
+            {
+                if (match.Groups.Count == 4)
+                {
+                    sb.AppendFormat("colors[{0}] = 0x{1}; // {2}\r\n", match.Groups[1], match.Groups[3].ToString().ToLowerInvariant(), match.Groups[2]);
+                }
+            }
+            File.WriteAllText("colors2.txt", sb.ToString());
         }
     }
 }

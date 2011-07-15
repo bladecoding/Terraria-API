@@ -1,6 +1,4 @@
-﻿// Credit Terraria World Viewer - http://terrariaworldviewer.codeplex.com
-
-namespace MinimapPlugin
+﻿namespace MinimapPlugin
 {
     public enum MinimapPosition
     {

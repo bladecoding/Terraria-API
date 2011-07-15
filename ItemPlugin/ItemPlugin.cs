@@ -17,7 +17,7 @@ namespace ItemPlugin
     {
         public override string Name
         {
-            get { return "Item"; }
+            get { return "Item Editor"; }
         }
 
         public override Version Version

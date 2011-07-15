@@ -13,7 +13,7 @@ namespace TexturePlugin
     {
         public override string Name
         {
-            get { return "TextureLoader"; }
+            get { return "Texture Loader"; }
         }
 
         public override Version Version

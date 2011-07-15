@@ -31,9 +31,14 @@ namespace TerrariaAPI.Hooks
         public static void OnChatReceived(byte playerID, Color color, string message)
         {
 #if CLIENT
-            if (playerID < 255 && Main.player[playerID].active)
+            // 255 = Server
+            if (playerID == 255)
             {
-                Console.WriteLine("{0}: {1}", Main.player[playerID].name, message);
+                Console.WriteLine("<Server> {0}", message);
+            }
+            else if (Main.player[playerID].active)
+            {
+                Console.WriteLine("<{0}> {1}", Main.player[playerID].name, message);
             }
 #endif
 

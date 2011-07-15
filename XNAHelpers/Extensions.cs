@@ -43,5 +43,15 @@ namespace XNAHelpers
         {
             return (color.A << 24) | (color.B << 16) | (color.G << 8) | color.R;
         }
+
+        public static int ToAbgr(this int color)
+        {
+            return ((color >> 24) & 0xff) << 24 | (color & 0xff) << 16 | ((color >> 8) & 0xff) << 8 | ((color >> 16) & 0xff);
+        }
+
+        public static int ToAbgr(this uint color)
+        {
+            return ((int)color).ToAbgr();
+        }
     }
 }

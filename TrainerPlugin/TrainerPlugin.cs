@@ -23,7 +23,7 @@ namespace TrainerPlugin
 
         public override Version Version
         {
-            get { return new Version(1, 0); }
+            get { return new Version(2, 0); }
         }
 
         public override string Author
@@ -211,14 +211,14 @@ namespace TrainerPlugin
                     me.jumpBoost = true;
                 }
 
-                if (currentSettings.DoubleJump)
-                {
-                    me.doubleJump = true;
-                }
-
                 if (currentSettings.InfiniteJump)
                 {
+                    me.doubleJump = true;
                     me.jumpAgain = true;
+                }
+                else if (currentSettings.DoubleJump)
+                {
+                    me.doubleJump = true;
                 }
 
                 if (currentSettings.RocketBoots)
