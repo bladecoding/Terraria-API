@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -43,12 +45,11 @@ namespace TrainerPlugin
             get { return Main.player[Main.myPlayer]; }
         }
 
+        public const string SettingsFilename = "TrainerSettings.xml";
+
         public TrainerPlugin(Main game)
             : base(game)
         {
-            trainerSettings = new TrainerSettings();
-            defaultSettings = new TrainerSettings();
-            trainerForm = new TrainerForm(trainerSettings);
         }
 
         public override void Initialize()
@@ -57,12 +58,14 @@ namespace TrainerPlugin
             GameHooks.Update += TerrariaHooks_Update;
             PlayerHooks.UpdatePhysics += PlayerHooks_UpdatePhysics;
             DrawHooks.DrawInterface += DrawHooks_DrawInterface;
-        }
 
-        private void GameHooks_LoadContent(ContentManager obj)
-        {
-            gridTexture = TrainerHelper.CreateGrid(Game.GraphicsDevice, 0.1f);
-            border = DrawingHelper.CreateOnePixelTexture(Game.GraphicsDevice, Color.White);
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                string path = Path.Combine(Program.PluginSettingsPath, SettingsFilename);
+                trainerSettings = SettingsHelper.Load<TrainerSettings>(path);
+                defaultSettings = new TrainerSettings();
+                trainerForm = new TrainerForm(trainerSettings);
+            });
         }
 
         public override void DeInitialize()
@@ -71,6 +74,18 @@ namespace TrainerPlugin
             GameHooks.Update -= TerrariaHooks_Update;
             PlayerHooks.UpdatePhysics -= PlayerHooks_UpdatePhysics;
             DrawHooks.DrawInterface -= DrawHooks_DrawInterface;
+
+            if (trainerSettings != null)
+            {
+                string path = Path.Combine(Program.PluginSettingsPath, SettingsFilename);
+                SettingsHelper.Save(trainerSettings, path);
+            }
+        }
+
+        private void GameHooks_LoadContent(ContentManager obj)
+        {
+            gridTexture = TrainerHelper.CreateGrid(Game.GraphicsDevice, 0.1f);
+            border = DrawingHelper.CreateOnePixelTexture(Game.GraphicsDevice, Color.White);
         }
 
         private void TerrariaHooks_Update(GameTime gameTime)
