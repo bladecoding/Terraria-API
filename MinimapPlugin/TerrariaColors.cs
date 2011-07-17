@@ -11,8 +11,8 @@ namespace MinimapPlugin
     public static class TerrariaColors
     {
         public const int TileTypeCount = 86;
-        public const int TileOtherOffset = (int)TileType.None;
-        public const int WallOffset = (int)TileType.WallStone;
+        public const int WallOffset = 256;
+        public const int LiquidOffset = 320;
 
         public static int[] GetColors()
         {
@@ -72,7 +72,7 @@ namespace MinimapPlugin
             colors[51] = 0xffffffff; // Web
             colors[52] = 0xff0d6524; // Vines
             colors[53] = 0xffffda38; // Sand
-            colors[54] = 0x20ffffff; // Glass
+            colors[54] = 0xffffffff; // Glass
             colors[55] = 0xffffae5e; // Signs
             colors[56] = 0xff5751ad; // Obsidian
             colors[57] = 0xff44444c; // Ash
@@ -104,41 +104,26 @@ namespace MinimapPlugin
             colors[83] = 0xffff7800; // HerbStalks
             colors[84] = 0xffff7800; // Herbs
             colors[85] = 0xffc0c0c0; // Tombstone
+            colors[86] = 0xffff00ff; // Unknown
 
-            colors[TileOtherOffset] = 0x00000000; // None
-            colors[TileOtherOffset + 1] = 0xff9bd1ff; // Sky
-            colors[TileOtherOffset + 2] = 0x80000cff; // Water
-            colors[TileOtherOffset + 3] = 0xf0ff4800; // Lava
+            colors[WallOffset] = 0xff9bd1ff; // Sky
+            colors[WallOffset + 1] = 0xff424242; // WallStone
+            colors[WallOffset + 2] = 0xff583d2e; // WallDirt
+            colors[WallOffset + 3] = 0xff312545; // WallCorruption
+            colors[WallOffset + 4] = 0xff4a2e1c; // WallWood
+            colors[WallOffset + 5] = 0xff454545; // WallBrick
+            colors[WallOffset + 6] = 0xff500000; // WallRed
+            colors[WallOffset + 7] = 0xff000060; // WallBlue
+            colors[WallOffset + 8] = 0xff005000; // WallGreen
+            colors[WallOffset + 9] = 0xff48004F; // WallPink
+            colors[WallOffset + 10] = 0xff774707; // WallGold
+            colors[WallOffset + 11] = 0xff828282; // WallSilver
+            colors[WallOffset + 12] = 0xff3F1907; // WallCopper
+            colors[WallOffset + 13] = 0xff3F0707; // WallHellstone
+            colors[WallOffset + 14] = 0xff3F0707; // WallUnknown
 
-            colors[WallOffset] = 0xff424242; // WallStone
-            colors[WallOffset + 1] = 0xff583d2e; // WallDirt
-            colors[WallOffset + 2] = 0xff312545; // WallCorruption
-            colors[WallOffset + 3] = 0xff4a2e1c; // WallWood
-            colors[WallOffset + 4] = 0xff454545; // WallBrick
-            colors[WallOffset + 5] = 0xff500000; // WallRed
-            colors[WallOffset + 6] = 0xff000060; // WallBlue
-            colors[WallOffset + 7] = 0xff005000; // WallGreen
-            colors[WallOffset + 8] = 0xff48004F; // WallPink
-            colors[WallOffset + 9] = 0xff774707; // WallGold
-            colors[WallOffset + 10] = 0xff828282; // WallSilver
-            colors[WallOffset + 11] = 0xff3F1907; // WallCopper
-            colors[WallOffset + 12] = 0xff3F0707; // WallHellstone
-            colors[WallOffset + 13] = 0xff3F0707; // WallUnknown
-
-            for (int i = TerrariaColors.TileTypeCount; i < TerrariaColors.TileOtherOffset; i++)
-            {
-                colors[i] = 0xffff00ff; // Unknown
-            }
-
-            for (int i = TileOtherOffset + 4; i < TerrariaColors.WallOffset; i++)
-            {
-                colors[i] = 0xffff00ff; // Unknown
-            }
-
-            for (int i = WallOffset + 14; i < colors.Length; i++)
-            {
-                colors[i] = 0xffff00ff; // Unknown
-            }
+            colors[LiquidOffset] = 0xff000cff; // Water
+            colors[LiquidOffset + 1] = 0xffff4800; // Lava
 
             return colors.Select(x => x.ToAbgr()).ToArray();
         }

@@ -57,6 +57,11 @@ namespace MinimapPlugin
             }
         }
 
+        private Player me
+        {
+            get { return Main.player[Main.myPlayer]; }
+        }
+
         public MinimapPlugin(Main main)
             : base(main)
         {
@@ -120,7 +125,7 @@ namespace MinimapPlugin
 
         private void GameHooks_WorldConnect()
         {
-            rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY, Main.worldSurface);
+            rend = new WorldRenderer(Main.tile, Main.maxTilesX, Main.maxTilesY, Main.worldSurface, Main.rockLayer);
         }
 
         private void GameHooks_WorldDisconnect()
@@ -155,12 +160,13 @@ namespace MinimapPlugin
             {
                 if (IsDrawingAllowed)
                 {
-                    int curx = (int)(Main.player[Main.myPlayer].position.X / 16) + settings.PositionOffsetX;
-                    int cury = (int)(Main.player[Main.myPlayer].position.Y / 16) + settings.PositionOffsetY;
+                    int curx = (int)(me.position.X / 16) + (me.width / 16) + settings.PositionOffsetX;
+                    int cury = (int)(me.position.Y / 16) + (me.height / 16) + settings.PositionOffsetY;
                     int width = settings.MinimapWidth;
                     int height = settings.MinimapHeight;
 
-                    int[] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowSky, settings.ShowBorder, settings.ShowCrosshair);
+                    int[] img = rend.GenerateMinimap(curx, cury, width, height, settings.MinimapZoom, settings.ShowWall,
+                        settings.ShowSky, settings.ShowBorder, settings.ShowCrosshair);
 
                     minimap = DrawingHelper.IntsToTexture(Game.GraphicsDevice, img, width, height);
                 }

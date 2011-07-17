@@ -8,7 +8,7 @@
 
     public enum TileType
     {
-        Dirt,
+        Dirt = 0,
         Stone,
         Grass,
         Plants,
@@ -93,18 +93,16 @@
         HerbSprout,
         HerbStalk,
         Herb,
-        Tombstone = 85,
+        Tombstone,
+        Unknown = 86
+    }
 
-        // TileOtherOffset
-        None = 256,
-        Sky = 257,
-        Water = 258,
-        Lava = 259,
-
-        // WallOffset
-        WallStone = 300,
+    public enum WallType
+    {
+        Sky = TerrariaColors.WallOffset,
+        WallStone,
         WallDirt,
-        WallStone2,
+        WallCorruption,
         WallWood,
         WallBrick,
         WallRed,
@@ -115,6 +113,12 @@
         WallSilver,
         WallCopper,
         WallHellstone,
-        WallBackground
+        WallUnknown
+    }
+
+    public enum LiquidType
+    {
+        Water = TerrariaColors.LiquidOffset,
+        Lava
     }
 }

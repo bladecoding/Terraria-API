@@ -23,6 +23,8 @@ namespace MinimapPlugin
         [DefaultValue(1.0f)]
         public float MinimapTransparency { get; set; }
         [DefaultValue(true)]
+        public bool ShowWall { get; set; }
+        [DefaultValue(true), Description("ShowWall must be true for this option to work.")]
         public bool ShowSky { get; set; }
         [DefaultValue(true)]
         public bool ShowBorder { get; set; }
@@ -40,6 +42,7 @@ namespace MinimapPlugin
             MinimapPosition = MinimapPosition.RightBottom;
             MinimapPositionOffset = 10;
             MinimapTransparency = 1.0f;
+            ShowWall = true;
             ShowSky = true;
             ShowBorder = true;
             ShowCrosshair = true;
