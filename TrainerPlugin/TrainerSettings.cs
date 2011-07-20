@@ -6,7 +6,8 @@ namespace TrainerPlugin
     {
         [Category("\tGeneral"), DefaultValue(true), Description("For be able to enable/disable all settings quickly.")]
         public bool EnableTrainer { get; set; }
-
+        [Category("Abilities"), DefaultValue(false), Description("Immune to damage.")]
+        public bool Immune { get; set; }
         [Category("Abilities"), DefaultValue(false), Description("If health < max health then health = max health.")]
         public bool InfiniteHealth { get; set; }
         [Category("Abilities"), DefaultValue(false), Description("If mana < max mana then mana = max mana.")]
@@ -77,6 +78,8 @@ namespace TrainerPlugin
         public bool CursorKillNPC { get; set; }
         [Category("Other"), DefaultValue(false), Description("Even if you are not in party still player names will draw.")]
         public bool DrawPartyText { get; set; }
+        [Category("Other"), DefaultValue(false), Description("Use numpad for move camera. 0 = Lock/Unlock, 1 2 3 5 = Move")]
+        public bool AllowCameraMove { get; set; }
 
         [Category("Potions"), DefaultValue(false), Description("Provides immunity to lava.")]
         public bool ObsidianSkin { get; set; }

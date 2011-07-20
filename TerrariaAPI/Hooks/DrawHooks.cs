@@ -31,6 +31,17 @@ namespace TerrariaAPI.Hooks
         }
 
         /// <summary>
+        /// Called after RealDraw ScreenPosition set
+        /// </summary>
+        public static event Action RealDrawAfterScreenPosition;
+
+        public static void OnRealDrawAfterScreenPosition()
+        {
+            if (RealDrawAfterScreenPosition != null)
+                RealDrawAfterScreenPosition();
+        }
+
+        /// <summary>
         /// Called right before DrawMenu
         /// </summary>
         public static event Action<SpriteBatch, HandledEventArgs> DrawMenu;

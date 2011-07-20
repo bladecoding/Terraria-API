@@ -40,6 +40,10 @@ namespace TrainerPlugin
         private TrainerSettings trainerSettings, defaultSettings, currentSettings;
         private Texture2D gridTexture, border;
 
+        private bool cameraLock = true;
+        private Vector2 cameraPosition = Vector2.Zero;
+        private const int cameraSpeed = 20;
+
         private Player me
         {
             get { return Main.player[Main.myPlayer]; }
@@ -58,6 +62,7 @@ namespace TrainerPlugin
             GameHooks.Update += TerrariaHooks_Update;
             PlayerHooks.UpdatePhysics += PlayerHooks_UpdatePhysics;
             DrawHooks.DrawInterface += DrawHooks_DrawInterface;
+            DrawHooks.RealDrawAfterScreenPosition += DrawHooks_RealDrawAfterScreenPosition;
 
             ThreadPool.QueueUserWorkItem(state =>
             {
@@ -74,6 +79,7 @@ namespace TrainerPlugin
             GameHooks.Update -= TerrariaHooks_Update;
             PlayerHooks.UpdatePhysics -= PlayerHooks_UpdatePhysics;
             DrawHooks.DrawInterface -= DrawHooks_DrawInterface;
+            DrawHooks.RealDrawAfterScreenPosition -= DrawHooks_RealDrawAfterScreenPosition;
 
             if (trainerSettings != null)
             {
@@ -108,17 +114,49 @@ namespace TrainerPlugin
 
                 if (GameHooks.IsWorldRunning)
                 {
-                    if (InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B) && currentSettings.AllowBankOpen)
+                    if (currentSettings.AllowBankOpen && InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B))
                     {
                         TrainerHelper.OpenBank();
                     }
-                    else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.Z, 250) && currentSettings.CreateWater)
+                    else if (currentSettings.CreateWater && InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.Z, 250))
                     {
                         TrainerHelper.AddLiquidToCursor(true);
                     }
-                    else if (InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.X, 250) && currentSettings.CreateLava)
+                    else if (currentSettings.CreateLava && InputManager.IsControlKeyDown && InputManager.IsKeyDown(Keys.X, 250))
                     {
                         TrainerHelper.AddLiquidToCursor(false);
+                    }
+                    else if (currentSettings.AllowCameraMove)
+                    {
+                        if (InputManager.IsKeyPressed(Keys.NumPad0))
+                        {
+                            cameraLock = !cameraLock;
+
+                            if (!cameraLock)
+                            {
+                                cameraPosition = Main.screenPosition;
+                            }
+                        }
+
+                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad1) || InputManager.IsKeyDown(Keys.NumPad4))
+                        {
+                            cameraPosition.X -= cameraSpeed;
+                        }
+
+                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad3) || InputManager.IsKeyDown(Keys.NumPad6))
+                        {
+                            cameraPosition.X += cameraSpeed;
+                        }
+
+                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad5) || InputManager.IsKeyDown(Keys.NumPad8))
+                        {
+                            cameraPosition.Y -= cameraSpeed;
+                        }
+
+                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad2))
+                        {
+                            cameraPosition.Y += cameraSpeed;
+                        }
                     }
 
                     if (InputManager.IsMouseButtonDown(MouseButtons.Right) && currentSettings.CreateTile)
@@ -158,6 +196,11 @@ namespace TrainerPlugin
             if (GameHooks.IsWorldRunning && currentSettings != null)
             {
                 #region Abilities
+
+                if (currentSettings.Immune)
+                {
+                    me.immune = true;
+                }
 
                 if (currentSettings.InfiniteHealth)
                 {
@@ -423,6 +466,14 @@ namespace TrainerPlugin
                 {
                     TrainerHelper.DrawPartyText(sb);
                 }
+            }
+        }
+
+        private void DrawHooks_RealDrawAfterScreenPosition()
+        {
+            if (GameHooks.IsWorldRunning && currentSettings != null && currentSettings.AllowCameraMove && !cameraLock)
+            {
+                Main.screenPosition = cameraPosition;
             }
         }
     }
