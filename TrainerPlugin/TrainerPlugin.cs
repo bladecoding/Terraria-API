@@ -42,7 +42,6 @@ namespace TrainerPlugin
 
         private bool cameraLock = true;
         private Vector2 cameraPosition = Vector2.Zero;
-        private const int cameraSpeed = 20;
 
         private Player me
         {
@@ -128,35 +127,7 @@ namespace TrainerPlugin
                     }
                     else if (currentSettings.AllowCameraMove)
                     {
-                        if (InputManager.IsKeyPressed(Keys.NumPad0))
-                        {
-                            cameraLock = !cameraLock;
-
-                            if (!cameraLock)
-                            {
-                                cameraPosition = Main.screenPosition;
-                            }
-                        }
-
-                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad1) || InputManager.IsKeyDown(Keys.NumPad4))
-                        {
-                            cameraPosition.X -= cameraSpeed;
-                        }
-
-                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad3) || InputManager.IsKeyDown(Keys.NumPad6))
-                        {
-                            cameraPosition.X += cameraSpeed;
-                        }
-
-                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad5) || InputManager.IsKeyDown(Keys.NumPad8))
-                        {
-                            cameraPosition.Y -= cameraSpeed;
-                        }
-
-                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad2))
-                        {
-                            cameraPosition.Y += cameraSpeed;
-                        }
+                        MoveCamera(gameTime);
                     }
 
                     if (InputManager.IsMouseButtonDown(MouseButtons.Right) && currentSettings.CreateTile)
@@ -474,6 +445,53 @@ namespace TrainerPlugin
             if (GameHooks.IsWorldRunning && currentSettings != null && currentSettings.AllowCameraMove && !cameraLock)
             {
                 Main.screenPosition = cameraPosition;
+            }
+        }
+
+        private void MoveCamera(GameTime gameTime)
+        {
+            if (InputManager.IsKeyPressed(Keys.NumPad0))
+            {
+                cameraLock = !cameraLock;
+
+                if (!cameraLock)
+                {
+                    cameraPosition = Main.screenPosition;
+                }
+            }
+
+            if (!cameraLock)
+            {
+                float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                Rectangle screen = new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
+
+                if (screen.Contains((int)InputManager.MousePosition.X, (int)InputManager.MousePosition.Y))
+                {
+                    if (InputManager.IsKeyDown(Keys.NumPad1) || InputManager.IsKeyDown(Keys.NumPad4) ||
+                        InputManager.MousePosition.X < currentSettings.CameraCursorOffset)
+                    {
+                        cameraPosition.X -= currentSettings.CameraSpeedPerSecond * delta;
+                    }
+
+                    if (InputManager.IsKeyDown(Keys.NumPad3) || InputManager.IsKeyDown(Keys.NumPad6) ||
+                        Main.screenWidth - InputManager.MousePosition.X < currentSettings.CameraCursorOffset)
+                    {
+                        cameraPosition.X += currentSettings.CameraSpeedPerSecond * delta;
+                    }
+
+                    if (InputManager.IsKeyDown(Keys.NumPad5) || InputManager.IsKeyDown(Keys.NumPad8) ||
+                        InputManager.MousePosition.Y < currentSettings.CameraCursorOffset)
+                    {
+                        cameraPosition.Y -= currentSettings.CameraSpeedPerSecond * delta;
+                    }
+
+                    if (InputManager.IsKeyDown(Keys.NumPad2) ||
+                        Main.screenHeight - InputManager.MousePosition.Y < currentSettings.CameraCursorOffset)
+                    {
+                        cameraPosition.Y += currentSettings.CameraSpeedPerSecond * delta;
+                    }
+                }
             }
         }
     }

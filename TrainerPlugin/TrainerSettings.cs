@@ -78,8 +78,12 @@ namespace TrainerPlugin
         public bool CursorKillNPC { get; set; }
         [Category("Other"), DefaultValue(false), Description("Even if you are not in party still player names will draw.")]
         public bool DrawPartyText { get; set; }
-        [Category("Other"), DefaultValue(false), Description("Use numpad for move camera. 0 = Lock/Unlock, 1 2 3 5 = Move")]
+        [Category("Other"), DefaultValue(true), Description("Use numpad or cursor for move camera. Numpad 0 = Lock/Unlock, Numpad 1 2 3 5 = Move")]
         public bool AllowCameraMove { get; set; }
+        [Category("Other"), DefaultValue(1000), Description("How much pixel camera will move per second.")]
+        public int CameraSpeedPerSecond { get; set; }
+        [Category("Other"), DefaultValue(30), Description("Cursor must be how much pixel close to screen bounds for camera to move.")]
+        public int CameraCursorOffset { get; set; }
 
         [Category("Potions"), DefaultValue(false), Description("Provides immunity to lava.")]
         public bool ObsidianSkin { get; set; }
@@ -128,6 +132,9 @@ namespace TrainerPlugin
             CreateTile = true;
             DestroyTile = true;
             DestroyWall = true;
+            AllowCameraMove = true;
+            CameraSpeedPerSecond = 1000;
+            CameraCursorOffset = 30;
         }
     }
 }
