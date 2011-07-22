@@ -40,6 +40,8 @@ namespace TrainerPlugin
         private TrainerSettings trainerSettings, defaultSettings, currentSettings;
         private Texture2D gridTexture, border;
 
+        private Vector2 tileFirstPosition = Vector2.Zero;
+        private bool tileMouseDown = false;
         private bool cameraLock = true;
         private Vector2 cameraPosition = Vector2.Zero;
 
@@ -111,7 +113,7 @@ namespace TrainerPlugin
                     trainerForm.Visible = !trainerForm.Visible;
                 }
 
-                if (GameHooks.IsWorldRunning)
+                if (GameHooks.IsWorldRunning && !Main.chatMode)
                 {
                     if (currentSettings.AllowBankOpen && InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B))
                     {
@@ -130,23 +132,50 @@ namespace TrainerPlugin
                         MoveCamera(gameTime);
                     }
 
-                    if (InputManager.IsMouseButtonDown(MouseButtons.Right) && currentSettings.CreateTile)
+                    if (currentSettings.CreateTile)
                     {
-                        Item item = me.inventory[me.selectedItem];
-
-                        if (item.active)
+                        if (InputManager.IsControlKeyDown && InputManager.IsMouseButtonPressed(MouseButtons.Right))
                         {
-                            if (item.createTile >= 0)
+                            tileFirstPosition = TrainerHelper.TileTarget;
+                            tileMouseDown = true;
+                        }
+                        else if (tileMouseDown && InputManager.IsMouseButtonReleased(MouseButtons.Right))
+                        {
+                            Item item = me.inventory[me.selectedItem];
+
+                            if (item.active)
                             {
-                                TrainerHelper.AddTileToCursor(item.createTile, false, currentSettings.BigBrushSize);
+                                if (item.createTile >= 0)
+                                {
+                                    TrainerHelper.CreateLineTile(tileFirstPosition, TrainerHelper.TileTarget, item.createTile, false);
+                                }
+                                else if (item.createWall >= 0)
+                                {
+                                    TrainerHelper.CreateLineTile(tileFirstPosition, TrainerHelper.TileTarget, item.createWall, true);
+                                }
                             }
-                            else if (item.createWall >= 0)
+
+                            tileMouseDown = false;
+                        }
+                        else if (!tileMouseDown && InputManager.IsMouseButtonDown(MouseButtons.Right))
+                        {
+                            Item item = me.inventory[me.selectedItem];
+
+                            if (item.active)
                             {
-                                TrainerHelper.AddTileToCursor(item.createWall, true, currentSettings.BigBrushSize);
+                                if (item.createTile >= 0)
+                                {
+                                    TrainerHelper.AddTileToCursor(item.createTile, false, currentSettings.BigBrushSize);
+                                }
+                                else if (item.createWall >= 0)
+                                {
+                                    TrainerHelper.AddTileToCursor(item.createWall, true, currentSettings.BigBrushSize);
+                                }
                             }
                         }
                     }
-                    else if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
+
+                    if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
                     {
                         if (currentSettings.DestroyTile)
                         {

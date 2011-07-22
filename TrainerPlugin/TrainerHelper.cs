@@ -14,6 +14,11 @@ namespace TrainerPlugin
             get { return Main.player[Main.myPlayer]; }
         }
 
+        public static Vector2 CursorPosition
+        {
+            get { return new Vector2(cursorPositionX, cursorPositionY); }
+        }
+
         private static float cursorPositionX
         {
             get { return Main.screenPosition.X + Main.mouseState.X; }
@@ -24,6 +29,11 @@ namespace TrainerPlugin
             get { return Main.screenPosition.Y + Main.mouseState.Y; }
         }
 
+        public static Vector2 TilePlayer
+        {
+            get { return new Vector2(tilePlayerX, tilePlayerY); }
+        }
+
         private static int tilePlayerX
         {
             get { return (int)((me.position.X + me.width * 0.5f) / 16f); }
@@ -32,6 +42,11 @@ namespace TrainerPlugin
         private static int tilePlayerY
         {
             get { return (int)((me.position.Y + me.height * 0.5f) / 16f); }
+        }
+
+        public static Vector2 TileTarget
+        {
+            get { return new Vector2(tileTargetX, tileTargetY); }
         }
 
         private static int tileTargetX
@@ -118,6 +133,53 @@ namespace TrainerPlugin
                 else
                 {
                     DestroyTile(x, y);
+                }
+            }
+        }
+
+        private const int MaxLineLength = 100;
+
+        public static void CreateLineTile(Vector2 pos1, Vector2 pos2, int type, bool isWall = false)
+        {
+            float width = Math.Abs(pos1.X - pos2.X);
+            float height = Math.Abs(pos1.Y - pos2.Y);
+
+            if (width > height)
+            {
+                // Horizontal
+                int left =  (int)Math.Min(pos1.X, pos2.X);
+                int right = left + (int)Math.Min(width, MaxLineLength);
+                int y = (int)pos1.Y;
+
+                for (int x = left; x <= right; x++)
+                {
+                    if (isWall)
+                    {
+                        CreateWall(x, y, type);
+                    }
+                    else
+                    {
+                        CreateTile(x, y, type);
+                    }
+                }
+            }
+            else
+            {
+                // Vertical
+                int top =  (int)Math.Min(pos1.Y, pos2.Y);
+                int bottom = top + (int)Math.Min(height, MaxLineLength);
+                int x = (int)pos1.X;
+
+                for (int y = top; y <= bottom; y++)
+                {
+                    if (isWall)
+                    {
+                        CreateWall(x, y, type);
+                    }
+                    else
+                    {
+                        CreateTile(x, y, type);
+                    }
                 }
             }
         }
