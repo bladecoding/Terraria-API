@@ -40,8 +40,9 @@ namespace TrainerPlugin
         private TrainerSettings trainerSettings, defaultSettings, currentSettings;
         private Texture2D gridTexture, border;
 
-        private Vector2 tileFirstPosition = Vector2.Zero;
-        private bool tileMouseDown = false;
+        private Vector2 createTileFirstPosition, destroyTileFirstPosition;
+        private bool rightMouseDown, middleMouseDown;
+
         private bool cameraLock = true;
         private Vector2 cameraPosition = Vector2.Zero;
 
@@ -136,10 +137,10 @@ namespace TrainerPlugin
                     {
                         if (InputManager.IsControlKeyDown && InputManager.IsMouseButtonPressed(MouseButtons.Right))
                         {
-                            tileFirstPosition = TrainerHelper.TileTarget;
-                            tileMouseDown = true;
+                            createTileFirstPosition = TrainerHelper.TileTarget;
+                            rightMouseDown = true;
                         }
-                        else if (tileMouseDown && InputManager.IsMouseButtonReleased(MouseButtons.Right))
+                        else if (rightMouseDown && InputManager.IsMouseButtonReleased(MouseButtons.Right))
                         {
                             Item item = me.inventory[me.selectedItem];
 
@@ -147,17 +148,17 @@ namespace TrainerPlugin
                             {
                                 if (item.createTile >= 0)
                                 {
-                                    TrainerHelper.CreateLineTile(tileFirstPosition, TrainerHelper.TileTarget, item.createTile, false);
+                                    TrainerHelper.CreateLineTile(createTileFirstPosition, TrainerHelper.TileTarget, item.createTile, false);
                                 }
                                 else if (item.createWall >= 0)
                                 {
-                                    TrainerHelper.CreateLineTile(tileFirstPosition, TrainerHelper.TileTarget, item.createWall, true);
+                                    TrainerHelper.CreateLineTile(createTileFirstPosition, TrainerHelper.TileTarget, item.createWall, true);
                                 }
                             }
 
-                            tileMouseDown = false;
+                            rightMouseDown = false;
                         }
-                        else if (!tileMouseDown && InputManager.IsMouseButtonDown(MouseButtons.Right))
+                        else if (!rightMouseDown && InputManager.IsMouseButtonDown(MouseButtons.Right))
                         {
                             Item item = me.inventory[me.selectedItem];
 
@@ -175,7 +176,26 @@ namespace TrainerPlugin
                         }
                     }
 
-                    if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
+                    if (InputManager.IsControlKeyDown && InputManager.IsMouseButtonPressed(MouseButtons.Middle))
+                    {
+                        destroyTileFirstPosition = TrainerHelper.TileTarget;
+                        middleMouseDown = true;
+                    }
+                    else if (middleMouseDown && InputManager.IsMouseButtonReleased(MouseButtons.Middle))
+                    {
+                        if (currentSettings.DestroyTile)
+                        {
+                            TrainerHelper.DestroyLineTile(destroyTileFirstPosition, TrainerHelper.TileTarget, false);
+                        }
+
+                        if (currentSettings.DestroyWall)
+                        {
+                            TrainerHelper.DestroyLineTile(destroyTileFirstPosition, TrainerHelper.TileTarget, true);
+                        }
+
+                        middleMouseDown = false;
+                    }
+                    else if (!middleMouseDown && InputManager.IsMouseButtonDown(MouseButtons.Middle))
                     {
                         if (currentSettings.DestroyTile)
                         {

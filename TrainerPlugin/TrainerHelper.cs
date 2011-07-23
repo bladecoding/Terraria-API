@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -69,42 +70,26 @@ namespace TrainerPlugin
             Lighting.addLight(tileTargetX, tileTargetY, 1f);
         }
 
+        #region Building
+
         public static void AddTileToCursor(int type, bool isWall = false, bool isBigBrush = false)
         {
-            int x = tileTargetX, y = tileTargetY;
-
-            if (isBigBrush)
+            foreach (Point pos in CreateBrush(isBigBrush))
             {
-                for (int y2 = y - 1; y2 < y + 2; y2++)
-                {
-                    for (int x2 = x - 1; x2 < x + 2; x2++)
-                    {
-                        if (isWall)
-                        {
-                            CreateWall(x2, y2, type);
-                        }
-                        else
-                        {
-                            CreateTile(x2, y2, type);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (isWall)
-                {
-                    CreateWall(x, y, type);
-                }
-                else
-                {
-                    CreateTile(x, y, type);
-                }
+                Create(pos.X, pos.Y, type, isWall);
             }
         }
 
         public static void DestroyTileFromCursor(bool isWall = false, bool isBigBrush = false)
         {
+            foreach (Point pos in CreateBrush(isBigBrush))
+            {
+                Destroy(pos.X, pos.Y, isWall);
+            }
+        }
+
+        public static IEnumerable<Point> CreateBrush(bool isBigBrush = false)
+        {
             int x = tileTargetX, y = tileTargetY;
 
             if (isBigBrush)
@@ -113,33 +98,35 @@ namespace TrainerPlugin
                 {
                     for (int x2 = x - 1; x2 < x + 2; x2++)
                     {
-                        if (isWall)
-                        {
-                            DestroyWall(x2, y2);
-                        }
-                        else
-                        {
-                            DestroyTile(x2, y2);
-                        }
+                        yield return new Point(x2, y2);
                     }
                 }
             }
             else
             {
-                if (isWall)
-                {
-                    DestroyWall(x, y);
-                }
-                else
-                {
-                    DestroyTile(x, y);
-                }
+                yield return new Point(x, y);
+            }
+        }
+
+        public static void CreateLineTile(Vector2 pos1, Vector2 pos2, int type, bool isWall = false)
+        {
+            foreach (Point pos in CreateLine(pos1, pos2))
+            {
+                Create(pos.X, pos.Y, type, isWall);
+            }
+        }
+
+        public static void DestroyLineTile(Vector2 pos1, Vector2 pos2, bool isWall = false)
+        {
+            foreach (Point pos in CreateLine(pos1, pos2))
+            {
+                Destroy(pos.X, pos.Y, isWall);
             }
         }
 
         private const int MaxLineLength = 100;
 
-        public static void CreateLineTile(Vector2 pos1, Vector2 pos2, int type, bool isWall = false)
+        public static IEnumerable<Point> CreateLine(Vector2 pos1, Vector2 pos2)
         {
             float width = Math.Abs(pos1.X - pos2.X);
             float height = Math.Abs(pos1.Y - pos2.Y);
@@ -153,14 +140,7 @@ namespace TrainerPlugin
 
                 for (int x = left; x <= right; x++)
                 {
-                    if (isWall)
-                    {
-                        CreateWall(x, y, type);
-                    }
-                    else
-                    {
-                        CreateTile(x, y, type);
-                    }
+                    yield return new Point(x, y);
                 }
             }
             else
@@ -172,15 +152,20 @@ namespace TrainerPlugin
 
                 for (int y = top; y <= bottom; y++)
                 {
-                    if (isWall)
-                    {
-                        CreateWall(x, y, type);
-                    }
-                    else
-                    {
-                        CreateTile(x, y, type);
-                    }
+                    yield return new Point(x, y);
                 }
+            }
+        }
+
+        public static void Create(int x, int y, int type, bool isWall)
+        {
+            if (isWall)
+            {
+                CreateWall(x, y, type);
+            }
+            else
+            {
+                CreateTile(x, y, type);
             }
         }
 
@@ -210,6 +195,18 @@ namespace TrainerPlugin
             }
         }
 
+        public static void Destroy(int x, int y, bool isWall)
+        {
+            if (isWall)
+            {
+                DestroyWall(x, y);
+            }
+            else
+            {
+                DestroyTile(x, y);
+            }
+        }
+
         public static void DestroyTile(int x, int y)
         {
             if (Main.tile[x, y].active)
@@ -235,6 +232,8 @@ namespace TrainerPlugin
                 }
             }
         }
+
+        #endregion Building
 
         public static void OpenBank()
         {
