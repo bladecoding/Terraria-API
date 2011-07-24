@@ -40,7 +40,7 @@ namespace TrainerPlugin
         private TrainerSettings trainerSettings, defaultSettings, currentSettings;
         private Texture2D gridTexture, border;
 
-        private Vector2 createTileFirstPosition, destroyTileFirstPosition;
+        private Vector2 positionOnClick;
         private bool rightMouseDown, middleMouseDown;
 
         private bool cameraLock = true;
@@ -135,9 +135,9 @@ namespace TrainerPlugin
 
                     if (currentSettings.CreateTile)
                     {
-                        if (InputManager.IsControlKeyDown && InputManager.IsMouseButtonPressed(MouseButtons.Right))
+                        if ((InputManager.IsControlKeyDown || InputManager.IsShiftKeyDown) && InputManager.IsMouseButtonPressed(MouseButtons.Right))
                         {
-                            createTileFirstPosition = TrainerHelper.TileTarget;
+                            positionOnClick = TrainerHelper.TileTarget;
                             rightMouseDown = true;
                         }
                         else if (rightMouseDown && InputManager.IsMouseButtonReleased(MouseButtons.Right))
@@ -148,11 +148,25 @@ namespace TrainerPlugin
                             {
                                 if (item.createTile >= 0)
                                 {
-                                    TrainerHelper.CreateLineTile(createTileFirstPosition, TrainerHelper.TileTarget, item.createTile, false);
+                                    if (InputManager.IsControlKeyDown)
+                                    {
+                                        TrainerHelper.CreateRectangleTile(positionOnClick, TrainerHelper.TileTarget, item.createTile, false);
+                                    }
+                                    else if (InputManager.IsShiftKeyDown)
+                                    {
+                                        TrainerHelper.CreateLineTile(positionOnClick, TrainerHelper.TileTarget, item.createTile, false);
+                                    }
                                 }
                                 else if (item.createWall >= 0)
                                 {
-                                    TrainerHelper.CreateLineTile(createTileFirstPosition, TrainerHelper.TileTarget, item.createWall, true);
+                                    if (InputManager.IsControlKeyDown)
+                                    {
+                                        TrainerHelper.CreateRectangleTile(positionOnClick, TrainerHelper.TileTarget, item.createWall, true);
+                                    }
+                                    else if (InputManager.IsShiftKeyDown)
+                                    {
+                                        TrainerHelper.CreateLineTile(positionOnClick, TrainerHelper.TileTarget, item.createWall, true);
+                                    }
                                 }
                             }
 
@@ -176,21 +190,35 @@ namespace TrainerPlugin
                         }
                     }
 
-                    if (InputManager.IsControlKeyDown && InputManager.IsMouseButtonPressed(MouseButtons.Middle))
+                    if ((InputManager.IsControlKeyDown || InputManager.IsShiftKeyDown) && InputManager.IsMouseButtonPressed(MouseButtons.Middle))
                     {
-                        destroyTileFirstPosition = TrainerHelper.TileTarget;
+                        positionOnClick = TrainerHelper.TileTarget;
                         middleMouseDown = true;
                     }
                     else if (middleMouseDown && InputManager.IsMouseButtonReleased(MouseButtons.Middle))
                     {
                         if (currentSettings.DestroyTile)
                         {
-                            TrainerHelper.DestroyLineTile(destroyTileFirstPosition, TrainerHelper.TileTarget, false);
+                            if (InputManager.IsControlKeyDown)
+                            {
+                                TrainerHelper.DestroyRectangleTile(positionOnClick, TrainerHelper.TileTarget, false);
+                            }
+                            else if (InputManager.IsShiftKeyDown)
+                            {
+                                TrainerHelper.DestroyLineTile(positionOnClick, TrainerHelper.TileTarget, false);
+                            }
                         }
 
                         if (currentSettings.DestroyWall)
                         {
-                            TrainerHelper.DestroyLineTile(destroyTileFirstPosition, TrainerHelper.TileTarget, true);
+                            if (InputManager.IsControlKeyDown)
+                            {
+                                TrainerHelper.DestroyRectangleTile(positionOnClick, TrainerHelper.TileTarget, true);
+                            }
+                            else if (InputManager.IsShiftKeyDown)
+                            {
+                                TrainerHelper.DestroyLineTile(positionOnClick, TrainerHelper.TileTarget, true);
+                            }
                         }
 
                         middleMouseDown = false;

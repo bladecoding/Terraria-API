@@ -45,7 +45,7 @@ namespace TrainerPlugin
         [Category("Abilities"), DefaultValue(1f), Description("Movement speed will be multiplied with this number.")]
         public float MovementSpeed { get; set; }
 
-        [Category("Building"), DefaultValue(true), Description("When you press right mouse button tile/wall will be created to where cursor is. Tile/Wall type will be your current selected inventory item, if it can create tile or wall. Hold ctrl for draw lines.")]
+        [Category("Building"), DefaultValue(true), Description("When you press right mouse button tile/wall will be created to where cursor is. Tile/Wall type will be your current selected inventory item, if it can create tile or wall.")]
         public bool CreateTile { get; set; }
         [Category("Building"), DefaultValue(true), Description("When you press middle mouse button tile will be destroyed from where cursor is.")]
         public bool DestroyTile { get; set; }

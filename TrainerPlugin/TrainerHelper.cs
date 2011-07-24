@@ -88,23 +88,21 @@ namespace TrainerPlugin
             }
         }
 
-        public static IEnumerable<Point> CreateBrush(bool isBigBrush = false)
+        public static IEnumerable<Point> CreateBrush(bool isBigBrush)
         {
-            int x = tileTargetX, y = tileTargetY;
+            int size = isBigBrush ? 1 : 0;
 
-            if (isBigBrush)
+            return CreateBrush(tileTargetX, tileTargetY, size);
+        }
+
+        public static IEnumerable<Point> CreateBrush(int x, int y, int size)
+        {
+            for (int y2 = y - size; y2 <= y + size; y2++)
             {
-                for (int y2 = y - 1; y2 < y + 2; y2++)
+                for (int x2 = x - size; x2 <= x + size; x2++)
                 {
-                    for (int x2 = x - 1; x2 < x + 2; x2++)
-                    {
-                        yield return new Point(x2, y2);
-                    }
+                    yield return new Point(x2, y2);
                 }
-            }
-            else
-            {
-                yield return new Point(x, y);
             }
         }
 
@@ -131,7 +129,7 @@ namespace TrainerPlugin
             float width = Math.Abs(pos1.X - pos2.X);
             float height = Math.Abs(pos1.Y - pos2.Y);
 
-            if (width > height)
+            if (width >= height)
             {
                 // Horizontal
                 int left =  (int)Math.Min(pos1.X, pos2.X);
@@ -151,6 +149,48 @@ namespace TrainerPlugin
                 int x = (int)pos1.X;
 
                 for (int y = top; y <= bottom; y++)
+                {
+                    yield return new Point(x, y);
+                }
+            }
+        }
+
+        public static void CreateRectangleTile(Vector2 pos1, Vector2 pos2, int type, bool isWall = false)
+        {
+            foreach (Point pos in CreateRectangle(pos1, pos2))
+            {
+                Create(pos.X, pos.Y, type, isWall);
+            }
+        }
+
+        public static void DestroyRectangleTile(Vector2 pos1, Vector2 pos2, bool isWall = false)
+        {
+            foreach (Point pos in CreateRectangle(pos1, pos2))
+            {
+                Destroy(pos.X, pos.Y, isWall);
+            }
+        }
+
+        private const int MaxRectangleSize = 25;
+
+        public static IEnumerable<Point> CreateRectangle(Vector2 pos1, Vector2 pos2)
+        {
+            int left = (int)pos1.X;
+            int top = (int)pos1.Y;
+            int width = (int)(pos2.X - pos1.X + 1);
+            int height = (int)(pos2.Y - pos1.Y + 1);
+
+            if (width < 0) left += width;
+            if (height < 0) top += height;
+
+            width = Math.Min(Math.Abs(width), MaxRectangleSize);
+            height = Math.Min(Math.Abs(height), MaxRectangleSize);
+
+            Rectangle rect = new Rectangle(left, top, width, height);
+
+            for (int y = rect.Top; y < rect.Bottom; y++)
+            {
+                for (int x = rect.Left; x < rect.Right; x++)
                 {
                     yield return new Point(x, y);
                 }
