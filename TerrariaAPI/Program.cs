@@ -306,7 +306,7 @@ namespace TerrariaAPI
                             {
                                 if (Compatible(t))
                                 {
-                                    Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game)));
+                                    Plugins.Add(new PluginContainer((TerrariaPlugin)Activator.CreateInstance(t, Game), false));
                                 }
                                 else
                                 {
@@ -332,6 +332,8 @@ namespace TerrariaAPI
                 if (!Plugins[i].Dll)
                     Plugins[i].Initialize();
             }
+
+            e.Handled = true;
         }
     }
 }
