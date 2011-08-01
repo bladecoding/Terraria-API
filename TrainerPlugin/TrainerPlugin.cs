@@ -40,9 +40,11 @@ namespace TrainerPlugin
         private TrainerSettings trainerSettings, defaultSettings, currentSettings;
         private Texture2D gridTexture, border;
 
+        private Vector2 positionOnClick;
+        private bool rightMouseDown, middleMouseDown;
+
         private bool cameraLock = true;
         private Vector2 cameraPosition = Vector2.Zero;
-        private const int cameraSpeed = 20;
 
         private Player me
         {
@@ -112,7 +114,7 @@ namespace TrainerPlugin
                     trainerForm.Visible = !trainerForm.Visible;
                 }
 
-                if (GameHooks.IsWorldRunning)
+                if (GameHooks.IsWorldRunning && !Main.chatMode)
                 {
                     if (currentSettings.AllowBankOpen && InputManager.IsControlKeyDown && InputManager.IsKeyPressed(Keys.B))
                     {
@@ -128,54 +130,100 @@ namespace TrainerPlugin
                     }
                     else if (currentSettings.AllowCameraMove)
                     {
-                        if (InputManager.IsKeyPressed(Keys.NumPad0))
-                        {
-                            cameraLock = !cameraLock;
-
-                            if (!cameraLock)
-                            {
-                                cameraPosition = Main.screenPosition;
-                            }
-                        }
-
-                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad1) || InputManager.IsKeyDown(Keys.NumPad4))
-                        {
-                            cameraPosition.X -= cameraSpeed;
-                        }
-
-                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad3) || InputManager.IsKeyDown(Keys.NumPad6))
-                        {
-                            cameraPosition.X += cameraSpeed;
-                        }
-
-                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad5) || InputManager.IsKeyDown(Keys.NumPad8))
-                        {
-                            cameraPosition.Y -= cameraSpeed;
-                        }
-
-                        if (!cameraLock && InputManager.IsKeyDown(Keys.NumPad2))
-                        {
-                            cameraPosition.Y += cameraSpeed;
-                        }
+                        MoveCamera(gameTime);
                     }
 
-                    if (InputManager.IsMouseButtonDown(MouseButtons.Right) && currentSettings.CreateTile)
+                    if (currentSettings.CreateTile)
                     {
-                        Item item = me.inventory[me.selectedItem];
-
-                        if (item.active)
+                        if ((InputManager.IsControlKeyDown || InputManager.IsShiftKeyDown) && InputManager.IsMouseButtonPressed(MouseButtons.Right))
                         {
-                            if (item.createTile >= 0)
+                            positionOnClick = TrainerHelper.TileTarget;
+                            rightMouseDown = true;
+                        }
+                        else if (rightMouseDown && InputManager.IsMouseButtonReleased(MouseButtons.Right))
+                        {
+                            Item item = me.inventory[me.selectedItem];
+
+                            if (item.active)
                             {
-                                TrainerHelper.AddTileToCursor(item.createTile, false, currentSettings.BigBrushSize);
+                                if (item.createTile >= 0)
+                                {
+                                    if (InputManager.IsControlKeyDown)
+                                    {
+                                        TrainerHelper.CreateRectangleTile(positionOnClick, TrainerHelper.TileTarget, item.createTile, false);
+                                    }
+                                    else if (InputManager.IsShiftKeyDown)
+                                    {
+                                        TrainerHelper.CreateLineTile(positionOnClick, TrainerHelper.TileTarget, item.createTile, false);
+                                    }
+                                }
+                                else if (item.createWall >= 0)
+                                {
+                                    if (InputManager.IsControlKeyDown)
+                                    {
+                                        TrainerHelper.CreateRectangleTile(positionOnClick, TrainerHelper.TileTarget, item.createWall, true);
+                                    }
+                                    else if (InputManager.IsShiftKeyDown)
+                                    {
+                                        TrainerHelper.CreateLineTile(positionOnClick, TrainerHelper.TileTarget, item.createWall, true);
+                                    }
+                                }
                             }
-                            else if (item.createWall >= 0)
+
+                            rightMouseDown = false;
+                        }
+                        else if (!rightMouseDown && InputManager.IsMouseButtonDown(MouseButtons.Right))
+                        {
+                            Item item = me.inventory[me.selectedItem];
+
+                            if (item.active)
                             {
-                                TrainerHelper.AddTileToCursor(item.createWall, true, currentSettings.BigBrushSize);
+                                if (item.createTile >= 0)
+                                {
+                                    TrainerHelper.AddTileToCursor(item.createTile, false, currentSettings.BigBrushSize);
+                                }
+                                else if (item.createWall >= 0)
+                                {
+                                    TrainerHelper.AddTileToCursor(item.createWall, true, currentSettings.BigBrushSize);
+                                }
                             }
                         }
                     }
-                    else if (InputManager.IsMouseButtonDown(MouseButtons.Middle))
+
+                    if ((InputManager.IsControlKeyDown || InputManager.IsShiftKeyDown) && InputManager.IsMouseButtonPressed(MouseButtons.Middle))
+                    {
+                        positionOnClick = TrainerHelper.TileTarget;
+                        middleMouseDown = true;
+                    }
+                    else if (middleMouseDown && InputManager.IsMouseButtonReleased(MouseButtons.Middle))
+                    {
+                        if (currentSettings.DestroyTile)
+                        {
+                            if (InputManager.IsControlKeyDown)
+                            {
+                                TrainerHelper.DestroyRectangleTile(positionOnClick, TrainerHelper.TileTarget, false);
+                            }
+                            else if (InputManager.IsShiftKeyDown)
+                            {
+                                TrainerHelper.DestroyLineTile(positionOnClick, TrainerHelper.TileTarget, false);
+                            }
+                        }
+
+                        if (currentSettings.DestroyWall)
+                        {
+                            if (InputManager.IsControlKeyDown)
+                            {
+                                TrainerHelper.DestroyRectangleTile(positionOnClick, TrainerHelper.TileTarget, true);
+                            }
+                            else if (InputManager.IsShiftKeyDown)
+                            {
+                                TrainerHelper.DestroyLineTile(positionOnClick, TrainerHelper.TileTarget, true);
+                            }
+                        }
+
+                        middleMouseDown = false;
+                    }
+                    else if (!middleMouseDown && InputManager.IsMouseButtonDown(MouseButtons.Middle))
                     {
                         if (currentSettings.DestroyTile)
                         {
@@ -474,6 +522,53 @@ namespace TrainerPlugin
             if (GameHooks.IsWorldRunning && currentSettings != null && currentSettings.AllowCameraMove && !cameraLock)
             {
                 Main.screenPosition = cameraPosition;
+            }
+        }
+
+        private void MoveCamera(GameTime gameTime)
+        {
+            if (InputManager.IsKeyPressed(Keys.NumPad0))
+            {
+                cameraLock = !cameraLock;
+
+                if (!cameraLock)
+                {
+                    cameraPosition = Main.screenPosition;
+                }
+            }
+
+            if (!cameraLock)
+            {
+                float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                Rectangle screen = new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
+
+                if (screen.Contains((int)InputManager.MousePosition.X, (int)InputManager.MousePosition.Y))
+                {
+                    if (InputManager.IsKeyDown(Keys.NumPad1) || InputManager.IsKeyDown(Keys.NumPad4) ||
+                        InputManager.MousePosition.X < currentSettings.CameraCursorOffset)
+                    {
+                        cameraPosition.X -= currentSettings.CameraSpeedPerSecond * delta;
+                    }
+
+                    if (InputManager.IsKeyDown(Keys.NumPad3) || InputManager.IsKeyDown(Keys.NumPad6) ||
+                        Main.screenWidth - InputManager.MousePosition.X < currentSettings.CameraCursorOffset)
+                    {
+                        cameraPosition.X += currentSettings.CameraSpeedPerSecond * delta;
+                    }
+
+                    if (InputManager.IsKeyDown(Keys.NumPad5) || InputManager.IsKeyDown(Keys.NumPad8) ||
+                        InputManager.MousePosition.Y < currentSettings.CameraCursorOffset)
+                    {
+                        cameraPosition.Y -= currentSettings.CameraSpeedPerSecond * delta;
+                    }
+
+                    if (InputManager.IsKeyDown(Keys.NumPad2) ||
+                        Main.screenHeight - InputManager.MousePosition.Y < currentSettings.CameraCursorOffset)
+                    {
+                        cameraPosition.Y += currentSettings.CameraSpeedPerSecond * delta;
+                    }
+                }
             }
         }
     }
