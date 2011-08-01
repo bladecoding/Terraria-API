@@ -86,5 +86,33 @@ namespace TerrariaAPI.Hooks
             Chat(msg, whoami, text, args);
             return args.Handled;
         }
+
+
+        public delegate void SendBytesD(ServerSock socket, byte[] buffer, int offset, int count, HandledEventArgs e);
+        /// <summary>
+        /// Called before bytes are sent to a client. Handled stops bytes from being sent
+        /// </summary>
+        public static event SendBytesD SendBytes;
+        public static bool OnSendBytes(ServerSock socket, byte[] buffer, int offset, int count)
+        {
+            if (SendBytes == null)
+                return false;
+
+            var args = new HandledEventArgs();
+            SendBytes(socket, buffer, offset, count, args);
+            return args.Handled;
+        }
+
+
+        public delegate void SocketResetD(ServerSock socket);
+        /// <summary>
+        /// Called before ServerSock.Reset is called.
+        /// </summary>
+        public static event SocketResetD SocketReset;
+        public static void OnSocketReset(ServerSock socket)
+        {
+            if (SendBytes != null)
+                SocketReset(socket);
+        }
     }
 }
