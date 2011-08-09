@@ -399,7 +399,7 @@ namespace TrainerPlugin
 
                     if (Main.netMode != 0)
                     {
-                        NetMessage.SendData((int)PacketTypes.NPCStrike, -1, -1, "", i, (float)damageArmorIgnore, knockback, (float)-direction, 0);
+                        NetMessage.SendData((int)PacketTypes.NpcStrike, -1, -1, "", i, (float)damageArmorIgnore, knockback, (float)-direction, 0);
                     }
                 }
             }
