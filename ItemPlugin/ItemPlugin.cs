@@ -12,7 +12,7 @@ namespace ItemPlugin
     /// <summary>
     /// F9 = Show item editor form
     /// </summary>
-    [APIVersion(1, 5)]
+    [APIVersion(1, 7)]
     public class ItemPlugin : TerrariaPlugin
     {
         public override string Name

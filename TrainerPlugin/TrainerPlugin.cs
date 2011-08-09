@@ -13,7 +13,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TrainerPlugin
 {
-    [APIVersion(1, 5)]
+    [APIVersion(1, 7)]
     public class TrainerPlugin : TerrariaPlugin
     {
         public override string Name

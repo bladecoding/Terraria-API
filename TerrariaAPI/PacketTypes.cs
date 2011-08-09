@@ -53,7 +53,9 @@
         SignRead = 46,
         SignNew = 47,
         LiquidSet = 48,
-        PlayerSpawnSelf = 49
+        PlayerSpawnSelf = 49,
+        PlayerBuff = 50,
+        NPCSpawnBoss = 51
     }
 
     public enum TileCommand

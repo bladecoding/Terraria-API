@@ -8,7 +8,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace TexturePlugin
 {
-    [APIVersion(1, 5)]
+    [APIVersion(1, 7)]
     public class TexturePlugin : TerrariaPlugin
     {
         public override string Name

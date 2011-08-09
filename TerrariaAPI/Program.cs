@@ -17,7 +17,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 6, 0, 4);
+        public static readonly Version ApiVersion = new Version(1, 7, 0, 6);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
@@ -83,7 +83,7 @@ namespace TerrariaAPI
                             }
                             else
                             {
-                                AppendLog("Outdated plugin: {0} ({1})", f.Name, t.GetType());
+                                AppendLog("Outdated plugin: {0} ({1})", f.Name, t);
 
                                 error = true;
                             }
@@ -120,7 +120,7 @@ namespace TerrariaAPI
                                 }
                                 else
                                 {
-                                    AppendLog("Outdated plugin: {0} ({1})", f.Name, t.GetType());
+                                    AppendLog("Outdated plugin: {0} ({1})", f.Name, t);
 
                                     error = true;
                                 }
@@ -310,7 +310,7 @@ namespace TerrariaAPI
                                 }
                                 else
                                 {
-                                    AppendLog("Outdated plugin: {0} ({1})", f.Name, t.GetType());
+                                    AppendLog("Outdated plugin: {0} ({1})", f.Name, t);
                                 }
                             }
                         }
