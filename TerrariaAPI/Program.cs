@@ -7,17 +7,15 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.CSharp;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Terraria;
 using TerrariaAPI.Hooks;
-using XNAHelpers;
 
 namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 7, 0, 7);
+        public static readonly Version ApiVersion = new Version(1, 7, 0, 8);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
