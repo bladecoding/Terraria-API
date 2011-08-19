@@ -151,7 +151,7 @@ namespace TerrariaAPI
             }
 
 #if CLIENT
-            GameHooks.Update += gameTime => InputManager.Update(gameTime);
+            GameHooks.Update += gameTime => XNAHelpers.InputManager.Update(gameTime);
 #endif
 
 
