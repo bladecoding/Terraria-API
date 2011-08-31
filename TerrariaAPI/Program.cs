@@ -5,9 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 using Microsoft.CSharp;
-using Microsoft.Xna.Framework.Content;
 using Terraria;
 using TerrariaAPI.Hooks;
 
@@ -15,7 +13,7 @@ namespace TerrariaAPI
 {
     public static class Program
     {
-        public static readonly Version ApiVersion = new Version(1, 7, 0, 8);
+        public static readonly Version ApiVersion = new Version(1, 8, 0, 11);
 
 #if SERVER
         public const string PluginsPath = "ServerPlugins";
@@ -42,9 +40,9 @@ namespace TerrariaAPI
 #if CLIENT
             XNAConsole = new TerrariaConsole(Game);
             Game.Components.Add(XNAConsole);
-#endif
 
             Application.EnableVisualStyles();
+#endif
 
             if (!Directory.Exists(PluginsPath))
             {
@@ -169,8 +167,9 @@ namespace TerrariaAPI
                 Console.WriteLine("Plugins failed to load: " + string.Join(", ", FailedPlugins));
             }
 
+#if CLIENT
             ClientHooks.Chat += ClientHooks_Chat;
-            GameHooks.LoadContent += GameHooks_LoadContent;
+#endif
         }
 
         private static void AppendLog(string format, params object[] args)
@@ -223,13 +222,6 @@ namespace TerrariaAPI
             return ver.Major == ApiVersion.Major && ver.Minor == ApiVersion.Minor;
         }
 
-        private static void GameHooks_LoadContent(ContentManager obj)
-        {
-#if CLIENT
-            XNAConsole.LoadFont(Main.fontMouseText);
-#endif
-        }
-
         public static void DeInitialize()
         {
             foreach (var p in Plugins)
@@ -238,8 +230,9 @@ namespace TerrariaAPI
             foreach (var p in Plugins)
                 p.Dispose();
 
+#if CLIENT
             ClientHooks.Chat -= ClientHooks_Chat;
-            GameHooks.LoadContent -= GameHooks_LoadContent;
+#endif
         }
 
         private static Assembly Compile(string name, string data, bool addfail = true)
@@ -271,6 +264,7 @@ namespace TerrariaAPI
             return r.CompiledAssembly;
         }
 
+#if CLIENT
         private static void ClientHooks_Chat(ref string msg, HandledEventArgs e)
         {
             if (Main.netMode != 1)
@@ -279,7 +273,7 @@ namespace TerrariaAPI
             if (!msg.StartsWith("/preload"))
                 return;
 
-            Main.NewText("Reloading plugins");
+            //Main.NewText("Reloading plugins");
 
             for (int i = Plugins.Count - 1; i >= 0; i--)
             {
@@ -333,5 +327,6 @@ namespace TerrariaAPI
 
             e.Handled = true;
         }
+#endif
     }
 }

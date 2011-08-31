@@ -15,6 +15,7 @@
     <AssemblyName Condition="'$(Configuration)' == 'ReleaseServer'">TerrariaServerAPI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,7 +28,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -72,40 +72,32 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Terraria" Condition="'$(Configuration)' == 'Debug'">
-      <HintPath>..\Terraria\Terraria.exe</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Terraria" Condition="'$(Configuration)' == 'Release'">
       <HintPath>..\Terraria\Terraria.exe</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="TerrariaServer" Condition="'$(Configuration)' == 'DebugServer'">
-      <HintPath>..\TerrariaServer\TerrariaServer.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TerrariaServer" Condition="'$(Configuration)' == 'ReleaseServer'">
       <HintPath>..\TerrariaServer\TerrariaServer.exe</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TerrariaServer, Version=1.0.4.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <ExecutableExtension>.exe</ExecutableExtension>
+      <HintPath>..\TerrariaServer\TerrariaServer.exe</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hooks\Classes\MethodHookAttribute.cs" />
     <Compile Include="Hooks\Classes\SetDefaults.cs" />
     <Compile Include="Hooks\ClientHooks.cs" />
-    <Compile Include="Hooks\DrawHooks.cs" />
     <Compile Include="Hooks\GameHooks.cs" />
     <Compile Include="Hooks\ItemHooks.cs" />
     <Compile Include="Hooks\NetHooks.cs" />
@@ -117,14 +109,8 @@
     <Compile Include="PluginContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TerrariaConsole.cs" />
+    <Compile Include="StreamExt.cs" />
     <Compile Include="TerrariaPlugin.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\XNAHelpers\XNAHelpers.csproj">
-      <Project>{BE066E72-276F-45AC-A755-FD6911F0F1A5}</Project>
-      <Name>XNAHelpers</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

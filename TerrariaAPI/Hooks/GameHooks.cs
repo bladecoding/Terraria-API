@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Terraria;
 
 namespace TerrariaAPI.Hooks
@@ -17,29 +15,21 @@ namespace TerrariaAPI.Hooks
             GameHooks.Update += GameHooks_Update;
         }
 
-        public static event Action<GameTime> Update;
-        public static event Action<GameTime> PostUpdate;
+        public static event Action Update;
+        public static event Action PostUpdate;
 
-        public static void OnUpdate(bool pre, GameTime time)
+        public static void OnUpdate(bool pre)
         {
             if (pre)
             {
                 if (Update != null)
-                    Update(time);
+                    Update();
             }
             else
             {
                 if (PostUpdate != null)
-                    PostUpdate(time);
+                    PostUpdate();
             }
-        }
-
-        public static event Action<ContentManager> LoadContent;
-
-        public static void OnLoadContent(ContentManager manager)
-        {
-            if (LoadContent != null)
-                LoadContent(manager);
         }
 
         public static event Action Initialize;
@@ -59,7 +49,7 @@ namespace TerrariaAPI.Hooks
             }
         }
 
-        private static void GameHooks_Update(GameTime obj)
+        private static void GameHooks_Update()
         {
             // Ugly workaround but it works
             if (oldGameMenu != Main.gameMenu)

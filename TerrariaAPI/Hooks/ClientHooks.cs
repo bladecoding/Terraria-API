@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Text;
-using Microsoft.Xna.Framework;
 using Terraria;
 
 namespace TerrariaAPI.Hooks
@@ -19,7 +19,7 @@ namespace TerrariaAPI.Hooks
             if (Main.netMode != 2 && e.MsgID == PacketTypes.ChatText && e.Length > 3)
             {
                 byte playerID = e.Msg.readBuffer[e.Index];
-                Color color = new Color(e.Msg.readBuffer[e.Index + 1] << 16, e.Msg.readBuffer[e.Index + 2] << 8, e.Msg.readBuffer[e.Index + 3]);
+                Color color = Color.FromArgb(e.Msg.readBuffer[e.Index + 1] << 16, e.Msg.readBuffer[e.Index + 2] << 8, e.Msg.readBuffer[e.Index + 3]);
                 string message = Encoding.ASCII.GetString(e.Msg.readBuffer, e.Index + 4, e.Length - 5);
                 OnChatReceived(playerID, color, message);
             }
