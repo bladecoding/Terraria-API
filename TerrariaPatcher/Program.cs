@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Security.Principal;
 
 namespace TerrariaPatcher
 {
@@ -24,6 +26,17 @@ namespace TerrariaPatcher
         {
             try
             {
+                if (Environment.OSVersion.Version.Major >= 6 && !IsAdministrator())
+                {
+                    Console.WriteLine("TerrariaPatcher requires admin privileges.");
+
+                    var selfProc = new Process();
+                    selfProc.StartInfo.FileName = Assembly.GetExecutingAssembly().Location;
+                    selfProc.StartInfo.Verb = "runas";
+                    selfProc.Start();
+                    return;
+                }
+
                 if (!File.Exists(AssemblyName + ".exe"))
                 {
                     Output(AssemblyName + ".exe not found");
@@ -125,6 +138,13 @@ namespace TerrariaPatcher
             }
 
             Console.ReadLine();
+        }
+
+        public static bool IsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         private static void Output(string str)
