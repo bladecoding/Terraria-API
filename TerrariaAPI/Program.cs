@@ -10,6 +10,7 @@ using Microsoft.CSharp;
 using Microsoft.Xna.Framework.Content;
 using Terraria;
 using TerrariaAPI.Hooks;
+using XNAHelpers;
 
 namespace TerrariaAPI
 {

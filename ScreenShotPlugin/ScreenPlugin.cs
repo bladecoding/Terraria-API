@@ -238,7 +238,7 @@ namespace ScreenShotPlugin
 
                     if (tile.wall > 0)
                     {
-                        var frame = Walls[tile.wall].GetFrame(tile.wallFrameX * 2, tile.wallFrameY * 2);
+                        var frame = Walls[tile.wall].GetFrame(tile.wallFrameX() * 2, tile.wallFrameY() * 2);
                         CopyImgTo(img, x * 16, y * 16, frame);
                     }
                 }
@@ -262,7 +262,7 @@ namespace ScreenShotPlugin
                     if (tile == null)
                         continue;
 
-                    if (tile.active)
+                    if (tile.active())
                     {
                         if (TileTypes[tile.type] == -1)
                             continue;
@@ -290,7 +290,7 @@ namespace ScreenShotPlugin
                     if (tile == null)
                         continue;
 
-                    if (!tile.active)
+                    if (!tile.active())
                         continue;
 
                     if (((tile.type == 0x5) && (tile.frameY >= 0xc6)) && (tile.frameX >= 0x16))

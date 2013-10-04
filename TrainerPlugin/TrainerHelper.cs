@@ -211,7 +211,7 @@ namespace TrainerPlugin
 
         public static void CreateTile(int x, int y, int type)
         {
-            if (!Main.tile[x, y].active)
+            if (!Main.tile[x, y].active())
             {
                 WorldGen.PlaceTile(x, y, type, false, false, Main.myPlayer);
 
@@ -249,7 +249,7 @@ namespace TrainerPlugin
 
         public static void DestroyTile(int x, int y)
         {
-            if (Main.tile[x, y].active)
+            if (Main.tile[x, y].active())
             {
                 WorldGen.KillTile(x, y, false, false, true);
 
@@ -294,7 +294,7 @@ namespace TrainerPlugin
             }
 
             Main.PlaySound(19, (int)me.position.X, (int)me.position.Y, 1);
-            Main.tile[x, y].lava = !isWater;
+            Main.tile[x, y].lava(!isWater);
             Main.tile[x, y].liquid = 255;
 
             if (Main.netMode == 1)

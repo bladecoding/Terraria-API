@@ -733,11 +733,11 @@ namespace ItemPlugin
         {
             get
             {
-                return Item.manaRegen;
+                return Item.manaIncrease;
             }
             set
             {
-                Item.manaRegen = value;
+                Item.manaIncrease = value;
             }
         }
 

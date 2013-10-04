@@ -314,7 +314,7 @@ namespace TrainerPlugin
 
                 if (currentSettings.RocketBoots)
                 {
-                    me.rocketBoots = true;
+                    me.rocketBoots = 1;
                 }
 
                 if (currentSettings.UseFlipper)
@@ -415,7 +415,7 @@ namespace TrainerPlugin
 
                 if (currentSettings.MagicPower)
                 {
-                    me.magicBoost *= 1.2f;
+                    me.magicDamage *= 1.2f;
                 }
 
                 if (currentSettings.Featherfall)
@@ -460,7 +460,7 @@ namespace TrainerPlugin
 
                 if (currentSettings.Archery)
                 {
-                    me.archer = true;
+                    me.archery = true;
                 }
 
                 if (currentSettings.Hunter)

@@ -57,9 +57,9 @@ namespace MinimapPlugin
                     {
                         if (tile.liquid > 0)
                         {
-                            tileType = tile.lava ? (int)LiquidType.Lava : (int)LiquidType.Water;
+                            tileType = tile.lava() ? (int)LiquidType.Lava : (int)LiquidType.Water;
                         }
-                        else if (tile.active)
+                        else if (tile.active())
                         {
                             tileType = tile.type;
                         }

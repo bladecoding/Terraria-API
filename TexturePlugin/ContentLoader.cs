@@ -171,7 +171,7 @@ namespace TexturePlugin
             Main.logoTexture = GetOrNull(textures, "Logo") ?? Main.logoTexture;
             Main.dustTexture = GetOrNull(textures, "Dust") ?? Main.dustTexture;
             Main.sunTexture = GetOrNull(textures, "Sun") ?? Main.sunTexture;
-            Main.moonTexture = GetOrNull(textures, "Moon") ?? Main.moonTexture;
+            //Main.moonTexture = GetOrNull(textures, "Moon") ?? Main.moonTexture;
             Main.blackTileTexture = GetOrNull(textures, "Black_Tile") ?? Main.blackTileTexture;
             Main.heartTexture = GetOrNull(textures, "Heart") ?? Main.heartTexture;
             Main.bubbleTexture = GetOrNull(textures, "Bubble") ?? Main.bubbleTexture;
