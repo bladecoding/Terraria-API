@@ -274,9 +274,6 @@ namespace TerrariaAPI
 
         private static void ClientHooks_Chat(ref string msg, HandledEventArgs e)
         {
-            if (Main.netMode != 1)
-                return;
-
             if (!msg.StartsWith("/preload"))
                 return;
 
